@@ -72,13 +72,18 @@
 
 	\section{Wave Propagation Algorithm (WPA)}
     
+    {\bf Explain what a finite scheme is.  }
+    
     The  order one dimensional (1D)  wave propagation method is given by eqaution \eqref{wpa1}
+	
+	{\bf Explain where $\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n}$  and $\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n}comes from}
 	
 	\begin{equation}
 		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n})
 		\label{wpa1}
 	\end{equation}
 	
+	% Avoid putting integral symbols, and so on, "inline". Put them in their own equation environemnt. 
 	\noindent where  $Q_{i}^{n}$ is a numerical approximation to $\dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx$, $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$, $\Delta t = (t^{n+1} - t^{n})$, $\mathcal{A^{\pm}}\Delta 	Q_{i\pm\frac{1}{2}}^{n} $ are fluctuations determined by the to the Riemann Problems at cell interfaces at $x_{i\pm\frac{1}{2}}$. The net updating contributions from the rightward and leftward moving waves into the grid cell $C_{i}$ from the right and left interface are respectively given by $\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$\cite{ge:2008}.
 	
 	The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
@@ -93,7 +98,8 @@
 	\section{Shallow Water Equations (SWE)}
 	
 The 1D SWE are given in equations \eqref{swe1} and \eqref{swe2} below.
- 	\begin{equation}
+% Use the eqnarray environment for both equations
+ 	\begin{equation}	
 		h_{t} + (hu)_{x} = 0
 		\label{swe1}
 	\end{equation}
