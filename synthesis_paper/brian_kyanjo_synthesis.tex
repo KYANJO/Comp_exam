@@ -320,21 +320,49 @@
 		A = \begin{bmatrix} 0 &  1 \\ -u^{2} + gh & 2u \end{bmatrix}
 	\end{equation}
 	
+	\noindent LeVeque and Pelanti in \cite{leveque2001class} proposed that equation \eqref{p3} can be decomposed into equation \eqref{p5}:
+	
+	\begin{equation}
+				\begin{bmatrix} 
+					H_{i} - H_{i-1}\\ 	HU_{i} - HU_{i-1} \\  \varphi(Q_{i}) - \varphi(Q{i-1}) 
+				\end{bmatrix}_t = \sum_{p=1}^{3} \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
+			\label{p5}
+	\end{equation}
+
+	\noindent where the momentum flux $\varphi(q) = (hu^{2} + \frac{1}{2} gh^{2})$, $Q_{i} = (H_{i},HU_{i})^{T}$ represents the numerical solution of $q = (h,hu)^{T}$ in $C_{i}$, and $w_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{3}$ ,$\forall ~ p \in [1,3] $ with $p$ a set of chosen independent vectors.
 
 
 
 	\section{Reimann Problem for Wet/Dry States}
 	
-	The wet/dry interface propagates at a speed of 
+	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{images/dry-bed}
+		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state \cite{toro2001shock}.}
+		\label{fig:dry-bed}
+	\end{figure}
+	
+	\noindent There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	
+	\noindent The wet/dry interface propagation  speed  is given by eqaution \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:wet-dry}.(a).
 	
 	\begin{equation}
-		U_{i} - 2\sqrt{gH_{i}}
+		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
+		\label{wd0}
+	\end{equation}
+	
+	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by eqaution \eqref{wd0}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:wet-dry}.(b).
+	
+	\begin{equation}
+		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(0)= U_{i} - 2\sqrt{gH_{i}}
+		\label{wd1}
 	\end{equation}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.95\linewidth]{images/wet-dry}
-		\caption{}
+		\caption{ The characteristic struture of  two dry intial state Riemann problem(dry bed) in the x-t plane \cite{ge:2008}.}
 		\label{fig:wet-dry}
 	\end{figure}
 	
