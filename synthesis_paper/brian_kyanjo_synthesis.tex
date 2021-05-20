@@ -96,7 +96,7 @@
 	 		q_{R},& \text{if $x - at > 0,$}\\
 	 		
 	 	\end{cases}    
- 	\label{rp3}   
+    	\label{rp3}   
 	 \end{equation}
  
 	 
@@ -134,11 +134,11 @@
    		\label{wpa3}
    \end{equation}
 
-\noindent where $A \in \mathbb{R}^{m\times m}$ is a constant diagonalizable matrix with real eigenvalues ($\lambda$) such that:
+	\noindent where $A \in \mathbb{R}^{m\times m}$ is a constant diagonalizable matrix with real eigenvalues ($\lambda$) such that:
 
-\begin{equation}
+	\begin{equation}
 	A = R \wedge R^{-1}
-\end{equation}
+	\end{equation}
    
   \noindent where $R$ is a matrices of right eigenvectors and  $\wedge$  is a diagonal matrix of eigenvalues. Consider $w = R^{-1}q$, so that equation \eqref{wpa3} can be reduced to a set of $m$ decoupled equations as shown in equation \eqref{wpa4}.
   
@@ -225,7 +225,7 @@
 	
 	\noindent The linar system of equations \eqref{wpa18}  is solved to obtain vector $\alpha$ .
 	
-		\begin{equation}
+	\begin{equation}
 		q_{R} - q_{L} = R \alpha
 		\label{wpa18}
 	\end{equation}
@@ -325,9 +325,22 @@
 
 	\section{Reimann Problem for Wet/Dry States}
 	
+	The wet/dry interface propagates at a speed of 
+	
+	\begin{equation}
+		U_{i} - 2\sqrt{gH_{i}}
+	\end{equation}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.95\linewidth]{images/wet-dry}
+		\caption{}
+		\label{fig:wet-dry}
+	\end{figure}
 	
 	
-		\section{Numerical Examples}
+	
+	\section{Numerical Examples}
 
 
 
