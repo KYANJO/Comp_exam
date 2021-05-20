@@ -230,7 +230,7 @@
 		\label{wpa18}
 	\end{equation}
 	
-	\noindent Equation \eqref{wpa19}, can be expressed as:
+	\noindent Equation \eqref{wpa18}, can be expressed as:
 		\begin{equation}
 		Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}}
 		\label{wpa19}
@@ -254,7 +254,11 @@
 	\end{equation}
 	
 	% Avoid putting integral symbols, and so on, "inline". Put them in their own equation environemnt. 
-	\noindent where $\Delta t = (t^{n+1} - t^{n})$, $\mathcal{A^{\pm}}\Delta 	Q_{i\pm\frac{1}{2}}^{n} $ are fluctuations determined by the to the Riemann Problems at cell interfaces at $x_{i\pm\frac{1}{2}}$. The net updating contributions from the rightward and leftward moving waves into the grid cell $C_{i}$  from the right and left interface are respectively given by $\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$\cite{ge:2008}.
+	\noindent where $\Delta t = (t^{n+1} - t^{n})$, $\mathcal{A^{\pm}}\Delta 	Q_{i\pm\frac{1}{2}}^{n} $ are fluctuations determined by the to the Riemann Problems at cell interfaces at $x_{i\pm\frac{1}{2}}$. The net updating contributions from the rightward and leftward moving waves into the grid cell $C_{i}$  from the right and left interface are respectively given by $\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$\cite{ge:2008}. In a standard  conservative case (\eqref{fvm0}), the sum of the left-going and right-going fluctuations should satisfy:
+	
+	\begin{equation}
+		\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n} = f(Q_{i}) - f(Q_{i-1})
+	\end{equation}
 	
 	\noindent The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
 	
@@ -265,9 +269,11 @@
 	\noindent where $\tilde{F}_{i\pm\frac{1}{2}}^{n} $ are second order correction terms determined by the waves in the Riemann problems after approximating the average flux along  $x = x_{i\pm \frac{1}{2}}$:
 	
 	\begin{equation}
-			\tilde{F}_{i\pm\frac{1}{2}}^{n} \approx \frac{1}{\Delta t} \int_{t_{n}}^{t_{n+1}} f(q(x_{i\pm\frac{1}{2}},t))dt
+			\tilde{F}_{i\pm\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i\pm \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i\pm \frac{1}{2}}^{p}|\right) \tilde{w}_{i\pm\frac{1}{2}}^{p} \approx \frac{1}{\Delta t} \int_{t_{n}}^{t_{n+1}} f(q(x_{i\pm\frac{1}{2}},t))dt
 		\label{wpa13}
 	\end{equation}
+
+	\noindent Here $\tilde{w}_{i\pm\frac{1}{2}}^{p} $ depicts a limited version of the wave $w_{i\pm\frac{1}{2}}^{p} $, which is obtained after a comparision between $w_{i\pm\frac{1}{2}}^{p} $ and $w_{i\pm\frac{3}{2}}^{p} $ when $s^{p} >0$. 
 
 	
 	\section{Shallow Water Equations (SWE)}
