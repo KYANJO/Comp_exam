@@ -140,25 +140,39 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g):
     else:
         q1 = zeros(x.shape)
         q2 = zeros(x.shape)
+        
+        L = [lam1,lam2]
         for i in range(len(x)):
-            if x[i]<lam1(hl,ul,g)*t:
-                h = hl
-                hu = hl*ul
-            elif lam1(hl,ul,g)*t <= x[i] and x[i]<lam1(hmr,umr,g)*t:
-                #inside the rarefaction
-                h = hl + ((x[i] - t*lam1(hl,ul,g))/((lam1(hmr,umr,g) \
-                    - lam1(hl,ul,g))*t))*(hmr-hl)
-                hu = hr*ur + ((x[i] - t*lam1(hl,ul,g))/((lam1(hmr,umr,g) \
-                    - lam1(hl,ul,g))*t))*(hmr*umr-hl*ul)
-            elif lam1(hmr,umr,g)*t< x[i] and x[i]<t*sr(hms,qr,g):
-                h = hms
-                hu = hms*ums
-            else:
-                h = hr
-                hu = hr*ur
-            q1[i] = h
-            q2[i] = hu
-
+            for k in range(len(L)):
+                if L[k](hl,ul,g)<L[k](hr,ur,g):
+                    if x[i]<L[k](hl,ul,g)*t:
+                        h = hl
+                        hu = hl*ul
+                    elif L[k](hl,ul,g)*t <= x[i] and x[i]<L[k](hmr,umr,g)*t:
+                        #inside the rarefaction
+                        if k==0:
+                            A = ul + 2*sqrt(g*hl)
+                            h = (1/(9*g))*(A-(x[i]/t))**2
+                            u = ul + 2*(sqrt(g*hl) - sqrt(g*h)) 
+                            #u = (x[i]/t) + sqrt(g*h)
+                            hu = h*u
+                        else:
+                            A = ur - 2*sqrt(g*hr)
+                            h = (1/(9*g))*(A-(x[i]/t))**2
+                            u = ur - 2*(sqrt(g*hr) - sqrt(g*h)) 
+                            #u = (x[i]/t) - sqrt(g*h)
+                            hu = h*u
+                            
+                else:
+                    if L[k](hmr,umr,g)*t< x[i] and x[i]<t*sr(hms,qr,g):
+                        h = hms
+                        hu = hms*ums
+                    else:
+                        h = hr
+                        hu = hr*ur
+                q1[i] = h
+                q2[i] = hu
+            
     if mq==0:
         return q1
     elif mq==1:
