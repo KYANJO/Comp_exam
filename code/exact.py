@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 11 00:27:55 2021
-
-@author: mathadmin
-"""
-
 from numpy import *
 
 #shock wave solution
@@ -122,69 +114,80 @@ def lam2(h,u,g):
     return (u + sqrt(g*h))
 
 #shock connection
-def con_shock(q_o,q_l,q_r,g,max_iter,epislon):
+def con_shock(qo,ql,qr,g,max_iter,epislon):
     '''
     Description: determines whether these two states can be connected by either a 1-shock or a 2-shock.
-    Input: states q_l and q_r
+    Input: states ql and qr
     Output: determined shock and its corresponding speed
     '''
-    hl = q_l[0]
-    hr = q_r[0]
-    ho = q_o[0]
+    hl = ql[0]
+    hr = qr[0]
+    ho = qo[0]
     
-    hul = q_l[1]
-    hur = q_r[1]
-    uo = q_o[1]
+    hul = ql[1]
+    hur = qr[1]
+    uo = qo[1]
     
     ul = hul/hl
     ur = hur/hr
     
-    hm,um = newton(ho,uo,hl,hr,ul,ur,g,max_iter,epislon)
+    hm,um = newton(qo,ql,qr,g,max_iter,epislon)
     hum = hm*um
     
-    if hm>hl:
+    if hm>hl and hm>hr:
+        return 'all-shock'
+    
+    elif hm>hl:
         sl = (hul - hum)/(hl-hm)
         return '1-shock'
+    
     elif hm>hr:
         sr = (hur - hum)/(hr-hm)
         return '2-shock'
 
 #Rarefaction connection
-def con_rare(q_o,q_l,q_r,g,max_iter,epislon):
+def con_rare(qo,ql,qr,g,max_iter,epislon):
     '''
     Description: determines whether these two states can be connected by either a 1-shock or a 2-shock.
-    Input: states q_l and q_r
-    Output: determined shock and its corresponding speed
+    Input: states ql and qr
+    Output: determined rarefaction and its corresponding speed
     '''
-    hl = q_l[0]
-    hr = q_r[0]
-    ho = q_o[0]
+    hl = ql[0]
+    hr = qr[0]
+    ho = qo[0]
     
-    hul = q_l[1]
-    hur = q_r[1]
-    uo = q_o[1]
+    hul = ql[1]
+    hur = qr[1]
+    uo = qo[1]
     
     ul = hul/hl
     ur = hur/hr
     
-    hm,um = newton(ho,uo,hl,hr,ul,ur,g,max_iter,epislon)
+    hm,um = newton(qo,ql,qr,g,max_iter,epislon)
     hum = hm*um
     
-    if hm<hl:
+    if hm<hl and hm<hr:
+        return 'all-rarefaction'
+    
+    elif hm<hl:
         sl = (hul - hum)/(hl-hm)
         return '1-rare'
+    
     elif hm<hr:
         sr = (hur - hum)/(hr-hm)
         return '2-rare'
+    
 
 #exact solution
-def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
+def qexact(x,t,mq,qo,ql,qr,qmr,qms,lam1,g,max_iter,epislon):
     
     hl = ql[0]
-    hul = ql[1]
-    
     hr = qr[0]
+    ho = qo[0]
+    
+    hul = ql[1]
     hur = qr[1]
+    uo = qo[1]
     
     ul = hul/hl
     ur = hur/hr
@@ -208,7 +211,8 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
         q2 = zeros(x.shape)
         
         #All rarefaction
-        if prob == 1:
+        if con_rare(qo,ql,qr,g,max_iter,epislon) == 'all-rarefaction':
+            
             for i in range(len(x)):
                 if x[i]<lam1(hl,ul,g)*t:
                     h = hl
@@ -227,7 +231,7 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
                     h = hmr
                     hu = hmr*umr
                 elif x[i]>t*lam2(hmr, umr, g) and x[i]<t*lam2(hr, ur, g):
-                    #else:
+                    #inside the rarefaction
                     A = ur - 2*sqrt(g*hr)
                     h = (1/(9*g))*(A-(x[i]/t))**2
                     #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
@@ -242,13 +246,15 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
                 q2[i] = hu
                 
         #Dam break (1-rarefaction and 2-shock)
-        elif prob == 2:    
+        elif con_rare(qo,ql,qr,g,max_iter,epislon) == '1-rare' and \
+             con_shock(qo,ql,qr,g,max_iter,epislon) == '2-shock':    
 
             for i in range(len(x)):
                 if x[i]<lam1(hl,ul,g)*t:
                     h = hl
                     u = ul
                     hu = h*u
+                    
                 elif lam1(hl,ul,g)*t <= x[i] and x[i]<lam1(hmr,umr,g)*t:
                     #inside the rarefaction
                     A = ul + 2*sqrt(g*hl)
@@ -256,17 +262,22 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
                     #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
                     u = (x[i]/t) + sqrt(g*h)
                     hu = h*u
+                    
                 elif lam1(hmr,umr,g)*t< x[i] and x[i]<t*sr(hms,qr,g):
                     h = hms
-                    hu = hms*ums
+                    u = ums
+                    hu = h*u
+                    
                 else:
                     h = hr
-                    hu = hr*ur
+                    u = ur
+                    hu = h*u
+                    
                 q1[i] = h
                 q2[i] = hu
                 
          #All shock        
-        elif prob == 3:
+        elif con_shock(qo,ql,qr,g,max_iter,epislon) == 'all-shock':
             
             for i in range(len(x)):
                 if 0.5*(sl(hl,ql,g) + sl(hms,qms,g))*t > x[i] :
@@ -276,15 +287,132 @@ def qexact(x,t,mq,ql,qr,qmr,qms,lam1,g,prob):
                 
                 elif sl(hms,qms,g)*t < x[i] and x[i]<t*sr(hms,qr,g):
                     h = hms
-                    hu = hms*ums
+                    u = ums
+                    hu = h*u
+                    
                 else:
                     h = hr
-                    hu = hr*ur
+                    u = ur
+                    hu = h*u
                     
                 q1[i] = h
                 q2[i] = hu
-
-
+                
+        #1-shock and 2-rarefaction    
+        elif con_shock(qo,ql,qr,g,max_iter,epislon) == '1-shock' and \
+             con_rare(qo,ql,qr,g,max_iter,epislon) == '2-rare':
+            
+            for i in range(len(x)):
+                if 0.5*(sl(hl,ql,g) + sl(hms,qms,g))*t > x[i] :
+                    h = hl
+                    u = ul
+                    hu = h*u   
+                
+                elif sl(hms,qms,g)*t < x[i] and x[i]<=t*lam2(hmr, umr, g):
+                    h = hmr
+                    u = umr
+                    hu = h*u
+                    
+                elif x[i]>t*lam2(hmr, umr, g) and x[i]<t*lam2(hr, ur, g):
+                    #inside rarefaction
+                    A = ur - 2*sqrt(g*hr)
+                    h = (1/(9*g))*(A-(x[i]/t))**2
+                    #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
+                    u = (x[i]/t) - sqrt(g*h)
+                    hu = h*u
+                    
+                else:
+                    h = hr
+                    u = ur
+                    hu = h*u
+                    
+                q1[i] = h
+                q2[i] = hu
+        
+        
+        #1-shock only (left going shock)
+        elif con_shock(qo,ql,qr,g,max_iter,epislon) == '1-shock':
+            for i in range(len(x)):
+                if 0.5*(sl(hl,ql,g) + sl(hms,qms,g))*t > x[i] :
+                    h = hl
+                    u = ul
+                    hu = h*u   
+                
+                else:
+                    h = hr
+                    u = ur
+                    hu = h*u
+                    
+                q1[i] = h
+                q2[i] = hu
+            
+            
+        #1-rarefaction only (left going rarefaction)    
+        elif con_rare(qo,ql,qr,g,max_iter,epislon) == '1-rare':
+            for i in range(len(x)):
+                if x[i]<lam1(hl,ul,g)*t:
+                    h = hl
+                    u = ul
+                    hu = h*u
+                    
+                elif lam1(hl,ul,g)*t <= x[i] and x[i]<lam1(hmr,umr,g)*t:
+                    #inside the rarefaction
+                    A = ul + 2*sqrt(g*hl)
+                    h = (1/(9*g))*(A-(x[i]/t))**2
+                    #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
+                    u = (x[i]/t) + sqrt(g*h)
+                    hu = h*u
+                    
+                else:
+                    h = hr
+                    u = ur
+                    hu = h*u
+                    
+                q1[i] = h
+                q2[i] = hu
+            
+        
+        #2-shock only (right going shock)    
+        elif con_shock(qo,ql,qr,g,max_iter,epislon) == '2-shock':   
+            for i in range(len(x)):
+                if x[i]<t*sr(hms,qr,g):
+                    h = hl
+                    u = ul
+                    hu = h*u
+                    
+                else:
+                    h = hr
+                    u = ur
+                    hu = h*u
+                    
+                q1[i] = h
+                q2[i] = hu
+                
+            
+        #2-rarefaction only (right going rarefaction)
+        elif con_rare(qo,ql,qr,g,max_iter,epislon) == '2-rare':
+            for i in range(len(x)):
+                if x[i] < t*lam2(hmr, umr, g) :
+                    h = hl
+                    u = ul
+                    hu = h*u   
+                    
+                elif x[i]>t*lam2(hmr, umr, g) and x[i]<t*lam2(hr, ur, g):
+                    #inside rarefaction
+                    A = ur - 2*sqrt(g*hr)
+                    h = (1/(9*g))*(A-(x[i]/t))**2
+                    #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
+                    u = (x[i]/t) - sqrt(g*h)
+                    hu = h*u
+                    
+                else:
+                    h = hr
+                    u = ur
+                    hu = h*u
+                    
+                q1[i] = h
+                q2[i] = hu
+        
     if mq==0:
         return q1
     elif mq==1:
