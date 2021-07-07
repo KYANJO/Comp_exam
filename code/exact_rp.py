@@ -236,9 +236,6 @@ def qexact(x,t,mq,ql,qr,g):
             #umr = 0
             humr = hmr*umr
             
-            ul = hul/pospart(hl)
-            ur = hur/pospart(hr)
-            
             for i in range(len(x)):
                 if x[i]<lam1(hl,ul,g)*t:
                     h = hl
@@ -276,9 +273,6 @@ def qexact(x,t,mq,ql,qr,g):
             hmr = 0
             umr = d_vr              #wet-dry interface speed
             humr = hmr*umr
-            
-            ul = hul/pospart(hl)
-            ur = hur/pospart(hr)
         
             for i in range(len(x)):
                 if x[i] < t*lam2(hmr, umr,g) :
@@ -308,9 +302,6 @@ def qexact(x,t,mq,ql,qr,g):
             hmr = 0
             umr = d_vl              #wet-dry interface speed
             humr =hmr*umr
-            
-            ul = hul/pospart(hl)
-            ur = hur/pospart(hr)
            
             for i in range(len(x)):
                 if x[i]<lam1(hl,ul,g)*t:
@@ -498,57 +489,6 @@ def qexact(x,t,mq,ql,qr,g):
                     q1[i] = h
                     q2[i] = hu
                 
-            '''#1-rarefaction only (left going rarefaction)    
-            elif con_rare(ql,qr,g) == '1-rare':
-                for i in range(len(x)):
-                    if x[i]<lam1(hl,ul,g)*t:
-                        h = hl
-                        u = ul
-                        hu = h*u
-                        
-                    elif lam1(hl,ul,g)*t <= x[i] and x[i]<lam1(hmr,umr,g)*t:
-                        #inside the rarefaction
-                        A = ul + 2*sqrt(g*hl)
-                        h = (1/(9*g))*(A-(x[i]/t))**2
-                        #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
-                        u = (x[i]/t) + sqrt(g*h)
-                        hu = h*u
-                        
-                    else:
-                        h = hr
-                        u = ur
-                        hu = h*u
-                        
-                    q1[i] = h
-                    q2[i] = hu'''
-                
-            
-            
-            '''        
-                
-            #2-rarefaction only (right going rarefaction)
-            elif con_rare(ql,qr,g) == '2-rare':
-                for i in range(len(x)):
-                    if x[i] < t*lam2(hmr, umr,g) :
-                        h = hl
-                        u = ul
-                        hu = h*u   
-                        
-                    elif x[i]>t*lam2(hmr, umr,g) and x[i]<t*lam2(hr, ur,g):
-                        #inside rarefaction
-                        A = ur - 2*sqrt(g*hr)
-                        h = (1/(9*g))*(A-(x[i]/t))**2
-                        #u = umr + 2*(sqrt(g*hmr) - sqrt(g*h)) 
-                        u = (x[i]/t) - sqrt(g*h)
-                        hu = h*u
-                        
-                    else:
-                        h = hr
-                        u = ur
-                        hu = h*u
-                        
-                    q1[i] = h
-                    q2[i] = hu'''
         
     if mq==0:
         return q1
