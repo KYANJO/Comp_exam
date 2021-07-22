@@ -8,7 +8,7 @@ Created on Mon Jul 12 15:43:05 2021
 '''
 Description:
 ------------
-first order Godunov solver
+first order Godunov and LxF solver
 '''
 g =1
 
@@ -56,7 +56,7 @@ def flux(q):
 
 #--------------------------------------------------------------------
 #Godunov solver and LxF solver
-
+#
 #
 #--------------------------------------------------------------------
 
@@ -79,11 +79,9 @@ def Solver(ax,bx,mx,meqn,Tfinal,nout,g,cfl,\
     #assert rp is not None,    'No user supplied Riemann solver'
     assert qinit is not None, 'No user supplied initialization routine'
    
-
     qnew1 = zeros(mx)
     qnew2 = zeros(mx)
     
-
     #Intial solution
     q0 = qinit(xc,meqn)
     
@@ -108,8 +106,6 @@ def Solver(ax,bx,mx,meqn,Tfinal,nout,g,cfl,\
             else:
                 q1l = array([qold1[i],qold2[i]])
                 q1r = array([qold1[i+1],qold2[i+1]])
-    
-            
             
             if i == 0:
                 q2l = array([qold1[i],qold2[i]])
