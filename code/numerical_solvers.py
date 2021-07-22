@@ -82,8 +82,7 @@ def Solver(ax,bx,mx,meqn,Tfinal,nout,g,cfl,\
 
     qnew1 = zeros(mx)
     qnew2 = zeros(mx)
-    #qold1 = zeros(mx)
-    #qold2 = zeros(mx)
+    
 
     #Intial solution
     q0 = qinit(xc,meqn)
@@ -100,88 +99,57 @@ def Solver(ax,bx,mx,meqn,Tfinal,nout,g,cfl,\
     # solver = 1 : godunuv
     # solver = 2 : lxf
     
-    #Godunuv mtd
-    if solver == 1:
-        #t = t0
-        for n in range(nout):
-            
-            for i in range(mx):
-                if i == mx-1:
-                    q1l = array([qold1[i],qold2[i]])
-                    q1r = array([qold1[i],qold2[i]])
-                else:
-                    q1l = array([qold1[i],qold2[i]])
-                    q1r = array([qold1[i+1],qold2[i+1]])
+    for n in range(nout):
         
+        for i in range(mx):
+            if i == mx-1:
+                q1l = array([qold1[i],qold2[i]])
+                q1r = array([qold1[i],qold2[i]])
+            else:
+                q1l = array([qold1[i],qold2[i]])
+                q1r = array([qold1[i+1],qold2[i+1]])
+    
+            
+            
+            if i == 0:
+                q2l = array([qold1[i],qold2[i]])
+                q2r = array([qold1[i],qold2[i]])
+            else:
+                q2l = array([qold1[i-1],qold2[i-1]])
+                q2r = array([qold1[i],qold2[i]])
+            
+            #Godunuv mtd
+            if solver == 1:
                 hms1,ums1 = newton(q1l,q1r,g)
                 hums1 = hms1*ums1
                 q1e = array([hms1,hums1])
                 
-                f1 = flux(q1e) #f_{i+1/2}
+                f1 = flux(q1e) #f_{i+1/2}    
                 
-                if i == 0:
-                    q2l = array([qold1[i],qold2[i]])
-                    q2r = array([qold1[i],qold2[i]])
-                else:
-                    q2l = array([qold1[i-1],qold2[i-1]])
-                    q2r = array([qold1[i],qold2[i]])
-                    
                 hms2,ums2 = newton(q2l,q2r,g)
                 hums2 = hms2*ums2
                 q2e = array([hms2,hums2])
                 
                 f2 = (flux(q2e)) #f_{i-1/2}
-                    
-                #soln at N+1
-                qnew1[i] = qold1[i] - dtdx*(f1[0]-f2[0])
-        
-                qnew2[i] = qold2[i] - dtdx*(f1[1]-f2[1])
-        
-            Q[:,0,n+1] = qnew1
-            Q[:,1,n+1] = qnew2
-            #overwrite the soln
-            qold1 = qnew1.copy()
-            qold2 = qnew2.copy()
             
-            #update time step
-            #time = time + dt
-    
-    #Lax-Freidrich's mtd
-    elif solver==2:
-    
-        for n in range(nout):
-        
-            for i in range(mx):
-                if i == mx-1:
-                    q1l = array([qold1[i],qold2[i]])
-                    q1r = array([qold1[i],qold2[i]])
-                else:
-                    q1l = array([qold1[i],qold2[i]])
-                    q1r = array([qold1[i+1],qold2[i+1]])
-                
+            #Lax-Freidrich's mtd
+            elif solver==2:    
                 #f_{i+1/2}
                 f1 = 0.5*(flux(q1l) + flux(q1r) - (dx/dt)*(q1r - q1l))
-                
-                if i == 0:
-                    q2l = array([qold1[i],qold2[i]])
-                    q2r = array([qold1[i],qold2[i]])
-                else:
-                    q2l = array([qold1[i-1],qold2[i-1]])
-                    q2r = array([qold1[i],qold2[i]])
-                
                 #f_{i-1/2}
                 f2 = 0.5*(flux(q2l) + flux(q2r) - (dx/dt)*(q2r - q2l)) 
                 
-                #soln at N+1
-                qnew1[i] = qold1[i] - (dt/dx)*(f1[0] - f2[0])
+            #soln at N+1
+            qnew1[i] = qold1[i] - dtdx*(f1[0]-f2[0]) #h
+    
+            qnew2[i] = qold2[i] - dtdx*(f1[1]-f2[1]) #hu
+    
+        Q[:,0,n+1] = qnew1
+        Q[:,1,n+1] = qnew2
         
-                qnew2[i] = qold2[i] - (dt/dx)*(f1[1] - f2[1])
-        
-            Q[:,0,n+1] = qnew1
-            Q[:,1,n+1] = qnew2
-            #overwrite the soln
-            qold1 = qnew1.copy()
-            qold2 = qnew2.copy()
-            
+        #overwrite the soln
+        qold1 = qnew1.copy()
+        qold2 = qnew2.copy()
+  
     return Q,xc,tvec
     
