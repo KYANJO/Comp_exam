@@ -32,8 +32,9 @@ def flux(q):
 #
 #--------------------------------------------------------------------
 
-def wpa_f(ax,bx,mx,meqn,Tfinal,nout,g,\
+def wpa_f(ax,bx,mx,mq,meqn,Tfinal,nout,g,\
             newton=None,\
+            second_order = True,\
             qinit=None):
     
     #spartial mesh
@@ -47,6 +48,10 @@ def wpa_f(ax,bx,mx,meqn,Tfinal,nout,g,\
     dt = Tfinal/nout
     
     dtdx = dt/dx
+    
+    #for many problems we can assume mwaves=meqn
+    mwaves = meqn
+    
     #assert rp is not None,    'No user supplied Riemann solver'
     assert qinit is not None, 'No user supplied initialization routine'
    
@@ -81,17 +86,17 @@ def wpa_f(ax,bx,mx,meqn,Tfinal,nout,g,\
                 q2l = array([qold1[i-1],qold2[i-1]])
                 q2r = array([qold1[i],qold2[i]])
             
-            #at the inteface
+            #at the intefaces
             hms1,ums1 = newton(q1l,q1r,g)
             hums1 = hms1*ums1
             q1e = array([hms1,hums1])
-    
-            f1 = flux(q1e) #f_{i+1/2}    
-    
+            
             hms2,ums2 = newton(q2l,q2r,g)
             hums2 = hms2*ums2
             q2e = array([hms2,hums2])
     
+            #fluxe at the interface
+            f1 = flux(q1e) #f_{i+1/2}    
             f2 = (flux(q2e)) #f_{i-1/2}
 
             
@@ -101,14 +106,66 @@ def wpa_f(ax,bx,mx,meqn,Tfinal,nout,g,\
             amdq = flux(q) - f2
             apdq = f1 - flux(q)
             
-           #soln at N+1
-            qnew1[i] = qold1[i] - (dt/dx)*(apdq[0] + amdq[0])
+            #soln at N+1
+            qnew1[i] = qold1[i] - (dtdx)*(apdq[0] + amdq[0])
     
-            qnew2[i] = qold2[i] - (dt/dx)*(apdq[1] + amdq[1])
-
+            qnew2[i] = qold2[i] - (dtdx)*(apdq[1] + amdq[1])
+            
+            #second order corrections (without limiters)
+            if second_order:
+                #evaluate speeds and waves at the middle state
+                #s_{i-1/2}
+                l2 = ums2 + sqrt(g*hms2) #2nd wave speed
+                l1 = ums2 - sqrt(g*hms2) #1st wave speed
+                
+                #s_{i+1/2}
+                l22 = ums1 + sqrt(g*hms1) #2nd wave speed
+                l11 = ums1 - sqrt(g*hms1) #1st wave speed
+                
+                s1 = array([l1,l2]) #s_{i-1/2}
+                s2 = array([l11,l22]) #s_{i+1/2}
+                
+                #eigen vectors(waves) at w_{i-1/2}
+                r1 = array([1,l1]) 
+                r2 = array([1,l2]) 
+                
+                #eigen vectors(waves) at w_{i+1/2}
+                r11 = array([1,l11]) 
+                r22 = array([1,l22]) 
+                
+                R1 = array([r1,r2]).T
+                R2 = array([r11,r22]).T
+                 
+                #alpha
+                a1 = linalg. inv(R1)*(q2r-q2l)
+                a2 = linalg. inv(R2)*(q1r-q1l)
+            
+                #second order corrections defined at interface
+                Fp = 0 
+                Fm = 0
+                
+                for p in range(mwaves):
+                    
+                    #1st and 2nd waves w^{p}_{1-1/2} = alpha^{p}_{i-1/2}*r^{p}
+                    w1 = a1*R1[p]
+                    w2 = a2*R2[p]
+                        
+                    #second order corrections
+                    Fm += 0.5*abs(s1[p])*(1-abs(s1[p])*dtdx)*w1
+                    Fp += 0.5*abs(s2[p])*(1-abs(s2[p])*dtdx)*w2
+                    
+                #soln at N+1
+                qnew1[i] = qold1[i] - (dtdx)*(apdq[0] + amdq[0]) \
+                           - dtdx*(Fp[0][0] - Fm[0][0]) 
     
-        Q[:,0,n+1] = qnew1
-        Q[:,1,n+1] = qnew2
+                qnew2[i] = qold2[i] - (dtdx)*(apdq[1] + amdq[1]) \
+                           - dtdx*(Fp[0][1] - Fm[0][1])
+                           
+               
+    
+        qq = array([qnew1,qnew2])
+        Q[:,mq,n+1] = qq[mq]
+        
         
         #overwrite the soln
         qold1 = qnew1.copy()
