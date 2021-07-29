@@ -54,6 +54,8 @@ def wpa_f(ax,bx,mx,mq,meqn,Tfinal,nout,g,\
     
     #assert rp is not None,    'No user supplied Riemann solver'
     assert qinit is not None, 'No user supplied initialization routine'
+    assert newton is not None, 'No user supplied newton solver'
+    
    
     qnew1 = zeros(mx)
     qnew2 = zeros(mx)
@@ -125,43 +127,39 @@ def wpa_f(ax,bx,mx,mq,meqn,Tfinal,nout,g,\
                 s1 = array([l1,l2]) #s_{i-1/2}
                 s2 = array([l11,l22]) #s_{i+1/2}
                 
-                #eigen vectors(waves) at w_{i-1/2}
+                #eigen vectors(waves) at {i-1/2}
                 r1 = array([1,l1]) 
                 r2 = array([1,l2]) 
                 
-                #eigen vectors(waves) at w_{i+1/2}
+                #eigen vectors(waves) at {i+1/2}
                 r11 = array([1,l11]) 
                 r22 = array([1,l22]) 
                 
                 R1 = array([r1,r2]).T
                 R2 = array([r11,r22]).T
-                 
+                
                 #alpha
                 a1 = linalg. inv(R1)*(q2r-q2l)
                 a2 = linalg. inv(R2)*(q1r-q1l)
-            
+                
+                #1st and 2nd waves w^{p}_{1-1/2} = alpha^{p}_{i-1/2}*r^{p}
+                w1 = a1*R1[:,[0]].T
+                w2 = a2*R2[:,[1]].T
+                
                 #second order corrections defined at interface
                 Fp = 0 
                 Fm = 0
                 
                 for p in range(mwaves):
-                    
-                    #1st and 2nd waves w^{p}_{1-1/2} = alpha^{p}_{i-1/2}*r^{p}
-                    w1 = a1*R1[p]
-                    w2 = a2*R2[p]
-                        
+                
                     #second order corrections
-                    Fm += 0.5*abs(s1[p])*(1-abs(s1[p])*dtdx)*w1
-                    Fp += 0.5*abs(s2[p])*(1-abs(s2[p])*dtdx)*w2
-                    
+                    Fm += 0.5*abs(s1[p])*(1-abs(s1[p])*dtdx)*w1[p]
+                    Fp += 0.5*abs(s2[p])*(1-abs(s2[p])*dtdx)*w2[p]
+                
                 #soln at N+1
-                qnew1[i] = qold1[i] - (dtdx)*(apdq[0] + amdq[0]) \
-                           - dtdx*(Fp[0][0] - Fm[0][0]) 
+                qnew1[i] -= dtdx*(Fp[0] - Fm[0]) 
     
-                qnew2[i] = qold2[i] - (dtdx)*(apdq[1] + amdq[1]) \
-                           - dtdx*(Fp[0][1] - Fm[0][1])
-                           
-               
+                qnew2[i] -= dtdx*(Fp[1] - Fm[1])                                     
     
         qq = array([qnew1,qnew2])
         Q[:,mq,n+1] = qq[mq]
