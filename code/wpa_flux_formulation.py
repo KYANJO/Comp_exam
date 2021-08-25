@@ -5,7 +5,7 @@ Created on Thu Jul 22 13:09:57 2021
 
 @author: Brian KYANJO
 """
-g =1
+g = 1
 
 from numpy import *
 
@@ -48,10 +48,6 @@ def rp2_swe(Q_ext,newton):
      # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
 
-    # -----------------------------------------------------------------------------------------
-    # TODO : loop over each interface;  compute eigenvalues and eigenvectors at each interface. 
-    # These will depend on Q_{i-1} and Q_{i}.  Use "Roe averages" to evaluate r1, r2, l1 and l2.  
-    
     d0 = delta[:,[0]]
     d1 = delta[:,[1]]
     
