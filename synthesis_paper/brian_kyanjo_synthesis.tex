@@ -26,7 +26,7 @@
 
 %%%%%%%%%%%%%%%%%%%%% students data %%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\student}{Brian KYANJO }
-\newcommand{\course}{Prof. Jodi Mead and Prof. Dylan Mikesell}
+\newcommand{\course}{Dr. Jodi Mead, Michal Kopera, and Dylan Mikesell}
 \newcommand{\assignment}{ Prof. Donna Calhoun}
 
 %%%%%%%%%%%%%%%%%%% using theorem style %%%%%%%%%%%%%%%%%%%%
@@ -55,7 +55,7 @@
 	\thispagestyle{empty}
 	\begin{center}
 		\textbf{A Riemann Solver for Wet/Dry Interfaces in Geoclaw \\[0.5cm]
-		Synthesis Paper}
+			Synthesis Paper}
 		\vspace{.2cm}
 	\end{center}
 	
@@ -68,129 +68,129 @@
 	\vspace{.2cm}
 	
 	\section{Introduction}
-	 A Riemann Problem is a specific intial value problem  (Cauchy problem) of a partial differential equation (PDE) that consists of conservation equations combined with piecewise constant intial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1} for a  linear scalar advection equation \eqref{rp0}. 
-	 \begin{eqnarray}
-	 	q_{t} + a q_{x}& =& 0
-	 	\label{rp0}\\
-	 	q(x,0)& =& \begin{cases}
-	 		q_{L}, & \text{if $x \le 0,$}\\
-	 		q_{R},& \text{if $x > 0,$}\\
-	 		
-	 	\end{cases}  
-	 	\label{rp1}     
-	 \end{eqnarray}
-	 
+	A Riemann Problem is a specific intial value problem  (Cauchy problem) of a partial differential equation (PDE) that consists of conservation equations combined with piecewise constant intial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1} for a  linear scalar advection equation \eqref{rp0}. 
+	\begin{eqnarray}
+		q_{t} + a q_{x}& =& 0
+		\label{rp0}\\
+		q(x,0)& =& \begin{cases}
+			q_{L}, & \text{if $x \le 0,$}\\
+			q_{R},& \text{if $x > 0,$}\\
+			
+		\end{cases}  
+		\label{rp1}     
+	\end{eqnarray}
 	
-	 \noindent where $q_{R}$ and $q_{L}$ are two piecewise constant states separated by a discontinuity. Applying method of characteristics to the initial value problem (IVP) gives  equation \eqref{rp2} of the trajectory characteristic curve.
-	 
-	 \begin{equation}
-	 x = x_{o} + at 
-	 \label{rp2}
-	 \end{equation}
 	
-	 
-	 \noindent Equation \eqref{rp2} is used to obtain the exact solution of the Riemann problem (equatio \eqref{rp3})
-	 \begin{equation}
-	 	q(x,t)  = \begin{cases}
-	 		q_{L}, & \text{if $x - at \le 0,$}\\
-	 		q_{R},& \text{if $x - at > 0,$}\\
-	 		
-	 	\end{cases}    
-    	\label{rp3}   
-	 \end{equation}
- 
-	 
-
-	\section{Wave Propagation Algorithm (WPA)}
-    
-    Computational diffculties arise  due to shocks or dicontinuities. For instance, consider a PDE (equation \eqref{fvm0}) which is a one dimensional (1D) conservation law,  where $q$ is the measure of the conserved quantity density and $f(q)$ is a flux function.
-    \begin{equation}
-    	q_{t}(x,t) + f(q(x,t))_{x} = 0
-    	\label{fvm0}
-    \end{equation}
-     A discontinuity in $q$ violates the PDE in the classical sence and only holds for the intergral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuites where PDEs don't hold, all classical finite difference methods breakdown, resorting to finite volume methods (FVM) which are based on \eqref{fvm1}. 
-    
-    \begin{equation}
-    	\frac{d}{dx} \int_{x_{1}}^{x_{2}} q(x,t)dx = f(q(x_{1},t)) -  f(q(x_{2},t))
-    	\label{fvm1}
-    \end{equation}
-	In FVM, the domain is broken down into grid cells.  The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells \citep{leveque2002finite}.\\
-
-	\noindent The Riemann problem is a fundamental tool in the evolution of FVM. Taking two neighbouring grid cells: $Q_{i-1}$ and $Q_{i}$ to be cell averages, the information used to compute numerical flux and then modifying the cell average at each time step is obtained by solving the Riemann problem with  $Q_{i-1} = q_{L}$   and  $Q_{i} = q_{R}$. Obtaining the eigen values and vectors of the coefficient matrix of $q_{x}$ of a linear hyperbolic system, easily solves its Riemann problem \citep{leveque2002finite}. \\
-    
-    \noindent	Consider $C_{i} = (x_{i-\frac{1}{2}},x_{i+\frac{1}{2}})$ to be the $i^{th}$ grid cell, the average value over the $i^{th}$ interval at time $t^{n}$ is numerically approximated by $Q_{i}^{n}$ in equation \eqref{wpa0}.
-    
-    \begin{equation}
-    	Q_{i}^{n} \approx \dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx
-    	\label{wpa0}
-    \end{equation}
-    
-   \noindent  where  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. Equation \eqref{wpa0} agrees with function $q$ at the midpoint of the interval to $O(\Delta x^{2})$ only if  $q$ is smooth.\\
-   
-  \noindent  Equation \eqref{rp0} can be expressed in form of a linear hyperbolic system of the form:
-   
-   \begin{equation}
-   		q_{t} + Aq_{x} = 0
-   		\label{wpa3}
-   \end{equation}
-
-	\noindent where $A \in \mathbb{R}^{m\times m}$ is a constant diagonalizable matrix with real eigenvalues ($\lambda$) such that:
-
+	\noindent where $q_{R}$ and $q_{L}$ are two piecewise constant states separated by a discontinuity. Applying method of characteristics to the initial value problem (IVP) gives  equation \eqref{rp2} of the trajectory characteristic curve.
+	
 	\begin{equation}
-	A = R \wedge R^{-1}
+		x = x_{o} + at 
+		\label{rp2}
 	\end{equation}
-   
-  \noindent where $R$ is a matrices of right eigenvectors and  $\wedge$  is a diagonal matrix of eigenvalues. Consider $w = R^{-1}q$, so that equation \eqref{wpa3} can be reduced to a set of $m$ decoupled equations as shown in equation \eqref{wpa4}.
-  
-  \begin{equation}
-  	w_{t} + \wedge w_{x} = 0
-  	\label{wpa4}
-  \end{equation}
-  
-  \noindent The  data (equation \eqref{wpa6}) for equation \eqref{wpa4} can be computed using the given data (equation \eqref{wpa5}).
-  \begin{eqnarray}
-  	q(x,0)& =& q_{o} (x) \quad \text{for} \quad - \infty < x < - \infty 
-  	\label{wpa5}\\
-  	w_{o} (x) &\equiv& R^{-1} q_{o}(x)
-  	\label{wpa6}
-  \end{eqnarray}
-  
-  \noindent The advection equation \eqref{wpa7} with solution \eqref{wpa8}, is obtained from the $p^{th}$ equation of \eqref{wpa4}
-  
-  
-  \begin{eqnarray}
-  	w_{t}^{p} + \lambda^{p} w_{x}^{p} &=& 0
-  	\label{wpa7}\\
-  	w^{p} (x,t) &=& w_{o}^{p} (x-\lambda^{p}t)
-  		\label{wpa8}
-  \end{eqnarray}
-   
-   \noindent The solution (\eqref{wpa9}) to equation \eqref{wpa3} is obtained by combining all the computed components $w^{p} (x,t)$ into the vector $w(x,t)$ as shown in equation \eqref{wpa9}.
-   
-   \begin{equation}
-   	q(x,t) = Rw(x,t)
-   	\label{wpa9}
-   \end{equation}
-   
-   \noindent Cosidering vector $q(x,t)$ as a linear combination of the right eigenvectors ($r_{1}, ...,r_{m}$) at each point in space and time, and a superposition of waves moving at different velocities, equation \eqref{wpa9}, can  be expressed as:
-   
-   \begin{equation}
-   	q(x,t) = \sum_{p=1}^{m} w^{p}(x,t) r^{p}
-   	\label{wpa10}
-   \end{equation}
-   
-   \noindent For the Riemann problem (equation \eqref{rp1}), $q_{L}$ and $q_{R}$ can be decomposed into:
-   
-   \begin{eqnarray}
-   	q_{L} = \sum_{p=1}^{m} w_{L}^{p}(x,t) r^{p} 
-   	\label{wpa11}\\
-   	q_{R} = \sum_{p=1}^{m} w_{R}^{p}(x,t) r^{p} 
-   	\label{wpa12}
-   \end{eqnarray}
-
+	
+	
+	\noindent Equation \eqref{rp2} is used to obtain the exact solution of the Riemann problem (equatio \eqref{rp3})
+	\begin{equation}
+		q(x,t)  = \begin{cases}
+			q_{L}, & \text{if $x - at \le 0,$}\\
+			q_{R},& \text{if $x - at > 0,$}\\
+			
+		\end{cases}    
+		\label{rp3}   
+	\end{equation}
+	
+	
+	
+	\section{Wave Propagation Algorithm (WPA)}
+	
+	Computational diffculties arise  due to shocks or dicontinuities in the solution, for instance, consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function.
+	\begin{equation}
+		q_{t}(x,t) + f(q(x,t))_{x} = 0
+		\label{fvm0}
+	\end{equation}
+	A discontinuity in $q$ violates the PDE in the classical sence and only holds for the intergral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuites where PDEs don't hold, all classical finite difference methods breakdown, resorting to finite volume methods (FVM) which are based on \eqref{fvm1}. 
+	
+	\begin{equation}
+		\frac{d}{dx} \int_{x_{1}}^{x_{2}} q(x,t)dx = f(q(x_{1},t)) -  f(q(x_{2},t))
+		\label{fvm1}
+	\end{equation}
+	In FVM, the domain is broken down into grid cells.  The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells \citep{leveque2002finite}.\\
+	
+	\noindent The Riemann problem is a fundamental tool in the evolution of FVM. Taking two neighbouring grid cells: $Q_{i-1}$ and $Q_{i}$ to be cell averages, the information used to compute numerical flux and then modifying the cell average at each time step is obtained by solving the Riemann problem with  $Q_{i-1} = q_{L}$   and  $Q_{i} = q_{R}$. Obtaining the eigen values and vectors of the coefficient matrix of $q_{x}$ of a linear hyperbolic system, easily solves its Riemann problem \citep{leveque2002finite}. \\
+	
+	\noindent	Consider $C_{i} = (x_{i-\frac{1}{2}},x_{i+\frac{1}{2}})$ to be the $i^{th}$ grid cell, the average value over the $i^{th}$ interval at time $t^{n}$ is numerically approximated by $Q_{i}^{n}$ in equation \eqref{wpa0}.
+	
+	\begin{equation}
+		Q_{i}^{n} \approx \dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx
+		\label{wpa0}
+	\end{equation}
+	
+	\noindent  where  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. Equation \eqref{wpa0} agrees with function $q$ at the midpoint of the interval to $O(\Delta x^{2})$ only if  $q$ is smooth.\\
+	
+	\noindent  Equation \eqref{rp0} can be expressed in form of a linear hyperbolic system of the form:
+	
+	\begin{equation}
+		q_{t} + Aq_{x} = 0
+		\label{wpa3}
+	\end{equation}
+	
+	\noindent where $A \in \mathbb{R}^{m\times m}$ is a constant diagonalizable matrix with real eigenvalues ($\lambda$) such that:
+	
+	\begin{equation}
+		A = R \wedge R^{-1}
+	\end{equation}
+	
+	\noindent where $R$ is a matrices of right eigenvectors and  $\wedge$  is a diagonal matrix of eigenvalues. Consider $w = R^{-1}q$, so that equation \eqref{wpa3} can be reduced to a set of $m$ decoupled equations as shown in equation \eqref{wpa4}.
+	
+	\begin{equation}
+		w_{t} + \wedge w_{x} = 0
+		\label{wpa4}
+	\end{equation}
+	
+	\noindent The  data (equation \eqref{wpa6}) for equation \eqref{wpa4} can be computed using the given data (equation \eqref{wpa5}).
+	\begin{eqnarray}
+		q(x,0)& =& q_{o} (x) \quad \text{for} \quad - \infty < x < - \infty 
+		\label{wpa5}\\
+		w_{o} (x) &\equiv& R^{-1} q_{o}(x)
+		\label{wpa6}
+	\end{eqnarray}
+	
+	\noindent The advection equation \eqref{wpa7} with solution \eqref{wpa8}, is obtained from the $p^{th}$ equation of \eqref{wpa4}
+	
+	
+	\begin{eqnarray}
+		w_{t}^{p} + \lambda^{p} w_{x}^{p} &=& 0
+		\label{wpa7}\\
+		w^{p} (x,t) &=& w_{o}^{p} (x-\lambda^{p}t)
+		\label{wpa8}
+	\end{eqnarray}
+	
+	\noindent The solution (\eqref{wpa9}) to equation \eqref{wpa3} is obtained by combining all the computed components $w^{p} (x,t)$ into the vector $w(x,t)$ as shown in equation \eqref{wpa9}.
+	
+	\begin{equation}
+		q(x,t) = Rw(x,t)
+		\label{wpa9}
+	\end{equation}
+	
+	\noindent Cosidering vector $q(x,t)$ as a linear combination of the right eigenvectors ($r_{1}, ...,r_{m}$) at each point in space and time, and a superposition of waves moving at different velocities, equation \eqref{wpa9}, can  be expressed as:
+	
+	\begin{equation}
+		q(x,t) = \sum_{p=1}^{m} w^{p}(x,t) r^{p}
+		\label{wpa10}
+	\end{equation}
+	
+	\noindent For the Riemann problem (equation \eqref{rp1}), $q_{L}$ and $q_{R}$ can be decomposed into:
+	
+	\begin{eqnarray}
+		q_{L} = \sum_{p=1}^{m} w_{L}^{p}(x,t) r^{p} 
+		\label{wpa11}\\
+		q_{R} = \sum_{p=1}^{m} w_{R}^{p}(x,t) r^{p} 
+		\label{wpa12}
+	\end{eqnarray}
+	
 	\noindent Then Riemann data $w_{o}^{p} (x)$  of the $p^{th}$ advection equation \eqref{wpa7} is given by:
 	
-	 \begin{eqnarray}
+	\begin{eqnarray}
 		w_{o}^{p} (x) = \begin{cases}
 			w_{L}^{p}, & \text{if $x < 0,$}\\
 			w_{R}^{p},& \text{if $x > 0,$}\\
@@ -215,7 +215,7 @@
 		(w_{R}^{p} - w_{L}^{p}) r^{p} \equiv \alpha^{p}r^{p}
 		\label{wpa16}
 	\end{equation}
-
+	
 	\noindent where $\alpha$ are coefficients of eigenvectors $r$. Then to solve the Riemann problem, the initial data ($q_{L},q_{R}$) is taken and then the jump ($q_{L} - q_{R}$) is decomposed into a set of  eigenvectors of A:
 	
 	\begin{equation}
@@ -223,7 +223,7 @@
 		\label{wpa17}
 	\end{equation}
 	
-	\noindent The linar system of equations \eqref{wpa18}  is solved to obtain vector $\alpha$ .
+	\noindent The linear system of equations \eqref{wpa18}  is solved to obtain vector $\alpha$ .
 	
 	\begin{equation}
 		q_{R} - q_{L} = R \alpha
@@ -231,22 +231,22 @@
 	\end{equation}
 	
 	\noindent Equation \eqref{wpa18}, can be expressed as:
-		\begin{equation}
+	\begin{equation}
 		Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}}
 		\label{wpa19}
 	\end{equation}
-
+	
 	\noindent The wave speed $s_{i-\frac{1}{2}}^{p}$ associated with the vector $r_{i-\frac{1}{2}}^{p}$, are preselected basing on the characteristic structure of the initial Riemann data \cite{ge:2008}. Therefore the fluctuations $\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n}$  and $\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} $ are defined by equations \eqref{f0} and \eqref{f1}:
-   
-   \begin{eqnarray}
-   	\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}} s_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
-   	\label{f0}\\
-   		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} s_{i+\frac{1}{2}}^{p} w_{i+\frac{1}{2}}^{p}
-   		\label{f1}
-   \end{eqnarray}
-   
-   
-   \noindent Combining equations \eqref{f0} and \eqref{f1}, the  first order 1D  wave propagation method is given by equation \eqref{wpa1}
+	
+	\begin{eqnarray}
+		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}} s_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
+		\label{f0}\\
+		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} s_{i+\frac{1}{2}}^{p} w_{i+\frac{1}{2}}^{p}
+		\label{f1}
+	\end{eqnarray}
+	
+	
+	\noindent Combining equations \eqref{f0} and \eqref{f1}, the  first order 1D  wave propagation method is given by equation \eqref{wpa1}
 	
 	\begin{equation}
 		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n})
@@ -269,18 +269,18 @@
 	\noindent where $\tilde{F}_{i\pm\frac{1}{2}}^{n} $ are second order correction terms determined by the waves in the Riemann problems after approximating the average flux along  $x = x_{i\pm \frac{1}{2}}$:
 	
 	\begin{equation}
-			\tilde{F}_{i\pm\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i\pm \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i\pm \frac{1}{2}}^{p}|\right) \tilde{w}_{i\pm\frac{1}{2}}^{p} \approx \frac{1}{\Delta t} \int_{t_{n}}^{t_{n+1}} f(q(x_{i\pm\frac{1}{2}},t))dt
+		\tilde{F}_{i\pm\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i\pm \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i\pm \frac{1}{2}}^{p}|\right) \tilde{w}_{i\pm\frac{1}{2}}^{p} \approx \frac{1}{\Delta t} \int_{t_{n}}^{t_{n+1}} f(q(x_{i\pm\frac{1}{2}},t))dt
 		\label{wpa13}
 	\end{equation}
-
+	
 	\noindent Here $\tilde{w}_{i\pm\frac{1}{2}}^{p} $ depicts a limited version of the wave $w_{i\pm\frac{1}{2}}^{p} $, which is obtained after a comparision between $w_{i\pm\frac{1}{2}}^{p} $ and $w_{i\pm\frac{3}{2}}^{p} $ when $s^{p} >0$. 
-
+	
 	
 	\section{Shallow Water Equations (SWE)}
 	The SWE are a system of hyperbolic or parabolic (for viscous shear) PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-stokes equations and can be used to model a fluid in a channel of unit width, taking the vertical velocity negilible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
 	
 	\noindent Consider a small-amplitude waves in a fluid that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into two equations \eqref{p1} and \eqref{p2}.
-
+	
 	\begin{eqnarray}
 		h_{t} + (uh)_x &=& 0
 		\label{p1} \\
@@ -321,27 +321,27 @@
 	\noindent LeVeque and Pelanti in \cite{leveque2001class} proposed that equation \eqref{p3} can be decomposed into equation \eqref{p5}:
 	
 	\begin{equation}
-				\begin{bmatrix} 
-					H_{i} - H_{i-1}\\ 	HU_{i} - HU_{i-1} \\  \varphi(Q_{i}) - \varphi(Q_{i-1}) 
-				\end{bmatrix} = \sum_{p=1}^{3} \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
-			\label{p5}
+		\begin{bmatrix} 
+			H_{i} - H_{i-1}\\ 	HU_{i} - HU_{i-1} \\  \varphi(Q_{i}) - \varphi(Q_{i-1}) 
+		\end{bmatrix} = \sum_{p=1}^{3} \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
+		\label{p5}
 	\end{equation}
-
+	
 	\noindent where the momentum flux $\varphi(q) = (hu^{2} + \frac{1}{2} gh^{2})$, $Q_{i} = (H_{i},HU_{i})^{T}$ represents the numerical solution of $q = (h,hu)^{T}$ in $C_{i}$, and $w_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{3}$ ,$\forall ~ p \in [1,3] $ with $p$ a set of chosen independent vectors. \\
 	
-	\noindent The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three componets  in equation \eqref{p5}. Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
+	\noindent The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three components  in equation \eqref{p5}. Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
 	
 	\begin{equation}
 		z_{i-\frac{1}{2}}^{p} = [\mathbf{0}_{2\times1} \quad \mathbf{I}_{2\times2}] \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
 	\end{equation}
-	where $\mathbf{0}_{2\times1}$ is a two by one zeros matrix, $\mathbf{I}_{2\times2}$ is a two by two identity. Then updated fluactutions become:
- 	\begin{eqnarray}
+	where $\mathbf{0}_{2\times1}$ is a two by one zeros matrix, $\mathbf{I}_{2\times2}$ is a two by two identity. Then updated fluctuations become:
+	\begin{eqnarray}
 		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}}  z_{i-\frac{1}{2}}^{p}
 		\label{p7}\\
 		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} z_{i+\frac{1}{2}}^{p}
 		\label{p8}
 	\end{eqnarray}
-
+	
 	\section{Reimann Problem for Wet/Dry States}
 	
 	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
@@ -354,14 +354,14 @@
 	
 	\noindent There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
 	
-	\noindent The wet/dry interface propagation  speed  is given by eqaution \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:wet-dry}.(a).
+	\noindent The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:wet-dry}.(a).
 	
 	\begin{equation}
 		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
 		\label{wd0}
 	\end{equation}
 	
-	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by eqaution \eqref{wd0}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:wet-dry}.(b).
+	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd0}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:wet-dry}.(b).
 	
 	\begin{equation}
 		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(0)= U_{i} - 2\sqrt{gH_{i}}
@@ -371,7 +371,7 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=.95\linewidth]{images/wet-dry}
-		\caption{ The characteristic struture of  two dry intial state Riemann problem(dry bed) in the x-t plane \cite{ge:2008}.}
+		\caption{ The characteristic structure of  two dry initial state Riemann problem(dry bed) in the x-t plane \cite{ge:2008}.}
 		\label{fig:wet-dry}
 	\end{figure}
 	
@@ -379,10 +379,28 @@
 	
 	
 	\section{Numerical Examples}
-
-
-
+	
+Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (witout limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver.
+	\begin{figure}[H]
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{images/1st}
+			\caption{}
+			\label{fig:1st}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{images/2nd}
+			\caption{}
+			\label{fig:2nd}
+		\end{subfigure}
+		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction. }
+	\end{figure}
+	
+	
 	\bibliographystyle{plain}
 	\bibliography{geoclaw}
 	
 \end{document}
+
