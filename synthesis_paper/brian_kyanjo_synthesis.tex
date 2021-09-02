@@ -92,15 +92,74 @@
 	\noindent Equation \eqref{rp2} is used to obtain the exact solution of the Riemann problem (equatio \eqref{rp3})
 	\begin{equation}
 		q(x,t)  = \begin{cases}
-			q_{L}, & \text{if $x - at \le 0,$}\\
-			q_{R},& \text{if $x - at > 0,$}\\
+			q_{l}, & \text{if $x - at \le 0,$}\\
+			q_{r},& \text{if $x - at > 0,$}\\
 			
 		\end{cases}    
 		\label{rp3}   
 	\end{equation}
 	
+		\section{Shallow Water Equations (SWE)}
+	The SWE are a system of hyperbolic or parabolic (for viscous shear) PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-stokes equations and can be used to model a fluid in a channel of unit width, taking the vertical velocity negilible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
+	
+	\noindent Consider a small-amplitude waves in a fluid that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into two equations \eqref{p1} and \eqref{p2}.
+	
+	\begin{eqnarray}
+		h_{t} + (uh)_x &=& 0
+		\label{p1} \\
+		(hu)_t + \left(hu^{2} + \frac{1}{2}gh^{2} \right)_x &=& 0
+		\label{p2}
+	\end{eqnarray}	
+	
+	\noindent where $hu$ measures the flow rate of water past a point,  $\rho$ ($kg/m^3$) is the constant density of the incompressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity.\\
+	
+	\noindent The variation of $h$ and $hu$ at each interface in both space and time leads the waves in the Riemann problem to move at different speeds creating discountinouities (shocks) or changing regions (rarefactions).  At $x = 0$ and $t = 0$,   the discountinuity is located between the left and right state, so the solution at the left ($q_{l}$)and right($q_{r}$) states are given by: 
+	\begin{equation}
+		q_{l} = \begin{bmatrix}
+	h_{l} \\( hu)_{l}
+		\end{bmatrix}  \quad \text{and} \quad q_{r} = \begin{bmatrix}
+		h_{r} \\( hu)_{r}
+	\end{bmatrix} 
+	\end{equation}
+	
+	\noindent As $x$ and $t$ increases, a middle state called the intemediate state($q_{m}$), is generated, the determination of this state characterises the Riemann problem and how it connects to other states via waves in each respective characteristic family\cite{ba-le-mi-ro:2003}.  This can only hold if the connection wave speeds satisfy the Lax entropy condition. Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction  and shock wave from the first and second characteristic family respectively.
+	  
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{images/x-t_plane}
+		\caption{ x-t plane showing the connection of states, 1-rarefaction fan, and the 2-shock.}
+		\label{fig:x-tplane}
+	\end{figure}
+	
+	 \noindent The intermediate state is obtained by solving the Riemann problem using the exact or  approximate method. Although approximate methods are widely used due to their cheap computational cost compared to the exact solvers.
 	
 	
+	\subsection{Exact Riemann Solver for SWE}
+	\noindent The non linear equation is solved at each cell interface for each time step. The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.
+	\begin{equation}
+		s(q_{r} - q_{l}) = f(q_{r}) - f(q_{l})
+		\label{e1}
+	\end{equation}
+	
+	\noindent where $f$ is the flux function. By applying this condition ( equation \eqref{e1}) to shallow water equations: \eqref{p1} and \eqref{p2}) creates a system of two equations that must be satisfied simultaneously. This system is used to derive expression for the Hugoniot Loci which we are used together with the intergral curves (equation \eqref{e2}) to obtain the intermediate state $q_{m}$. \\
+	
+	\noindent As an example, consider a known problem(dam break) with a 1-rarefaction and a 2-shock leading to a system of equations: \eqref{e2} and \eqref{e3} that are equated  to solve a resulting non linear equation for $u_m$ and $h_m$. These equations are obtained by finding  connecting states at the intersection of Rankine-Hugoniot locus  and an integral curve. In other words, to find the exact solution, an intermediate state$q_m$) connects $q_l$ to the 1-rarefaction wave and simultaneously connects $q_r$ to the 2-shock wave must lie on the integral curve (equation \eqref{e2}) passing through $q_l$. 
+	\begin{equation}
+		u_{m} = u_{l} + 2(\sqrt{gh_{l} }- \sqrt{gh_{m}})
+		\label{e2}
+	\end{equation}
+	Likewise, the state($q_m$), must also lie on the Hugonoit locus (equation \eqref{e3}) of the 2-shock wave passing through $q_r$.
+	\begin{equation}
+		u_{m} = u_{r} + (h_{m} - h_{r})\sqrt{\frac{g}{2}\left(\frac{1}{h_m} + \frac{1}{h_r} \right)}
+		\label{e3}
+	\end{equation}
+	
+	\subsection{FV scheme using exact Riemann slover (No WPA yet!)}
+	
+	
+ \subsection{Reformulate FV scheme as a first order WPA algorithm (INtroduce A+, A-) (no eigenvalues/vectors yet)}
+	
+
 	\section{Wave Propagation Algorithm (WPA)}
 	
 	Computational diffculties arise  due to shocks or dicontinuities in the solution, for instance, consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function.
@@ -111,7 +170,7 @@
 	A discontinuity in $q$ violates the PDE in the classical sence and only holds for the intergral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuites where PDEs don't hold, all classical finite difference methods breakdown, resorting to finite volume methods (FVM) which are based on \eqref{fvm1}. 
 	
 	\begin{equation}
-		\frac{d}{dx} \int_{x_{1}}^{x_{2}} q(x,t)dx = f(q(x_{1},t)) -  f(q(x_{2},t))
+		\frac{d}{dt} \int_{x_{1}}^{x_{2}} q(x,t)dx = f(q(x_{1},t)) -  f(q(x_{2},t))
 		\label{fvm1}
 	\end{equation}
 	In FVM, the domain is broken down into grid cells.  The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells \citep{leveque2002finite}.\\
@@ -269,28 +328,15 @@
 	\noindent where $\tilde{F}_{i\pm\frac{1}{2}}^{n} $ are second order correction terms determined by the waves in the Riemann problems after approximating the average flux along  $x = x_{i\pm \frac{1}{2}}$:
 	
 	\begin{equation}
-		\tilde{F}_{i\pm\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i\pm \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i\pm \frac{1}{2}}^{p}|\right) \tilde{w}_{i\pm\frac{1}{2}}^{p} \approx \frac{1}{\Delta t} \int_{t_{n}}^{t_{n+1}} f(q(x_{i\pm\frac{1}{2}},t))dt
+		\tilde{F}_{i\pm\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i\pm \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i\pm \frac{1}{2}}^{p}|\right) \tilde{w}_{i\pm\frac{1}{2}}^{p} 
 		\label{wpa13}
 	\end{equation}
 	
 	\noindent Here $\tilde{w}_{i\pm\frac{1}{2}}^{p} $ depicts a limited version of the wave $w_{i\pm\frac{1}{2}}^{p} $, which is obtained after a comparision between $w_{i\pm\frac{1}{2}}^{p} $ and $w_{i\pm\frac{3}{2}}^{p} $ when $s^{p} >0$. 
 	
-	
-	\section{Shallow Water Equations (SWE)}
-	The SWE are a system of hyperbolic or parabolic (for viscous shear) PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-stokes equations and can be used to model a fluid in a channel of unit width, taking the vertical velocity negilible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
-	
-	\noindent Consider a small-amplitude waves in a fluid that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into two equations \eqref{p1} and \eqref{p2}.
-	
-	\begin{eqnarray}
-		h_{t} + (uh)_x &=& 0
-		\label{p1} \\
-		(hu)_t + \left(hu^{2} + \frac{1}{2}gh^{2} \right)_x &=& 0
-		\label{p2}
-	\end{eqnarray}
-	
-	\noindent where $hu$ measures the flow rate of water past a point,  $\rho$ ($kg/m^3$) is the constant density of the incompressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity.\\
-	
-	\noindent	Combining the equations \eqref{p1} and \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
+	\section{Quasi Linear form of SWE}
+
+		\noindent	Combining the equations \eqref{p1} and \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
 	
 	\begin{eqnarray}
 		\begin{bmatrix} h \\ hu \end{bmatrix}_t + \begin{bmatrix} uh \\ hu^{2} + \frac{1}{2} gh^{2} \end{bmatrix}_x  = 0 
@@ -342,45 +388,9 @@
 		\label{p8}
 	\end{eqnarray}
 	
-	\section{Reimann Problem for Wet/Dry States}
-	
-	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.7\linewidth]{images/dry-bed}
-		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state \cite{toro2001shock}.}
-		\label{fig:dry-bed}
-	\end{figure}
-	
-	\noindent There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
-	
-	\noindent The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:wet-dry}.(a).
-	
-	\begin{equation}
-		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
-		\label{wd0}
-	\end{equation}
-	
-	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd0}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:wet-dry}.(b).
-	
-	\begin{equation}
-		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(0)= U_{i} - 2\sqrt{gH_{i}}
-		\label{wd1}
-	\end{equation}
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=.95\linewidth]{images/wet-dry}
-		\caption{ The characteristic structure of  two dry initial state Riemann problem(dry bed) in the x-t plane \cite{ge:2008}.}
-		\label{fig:wet-dry}
-	\end{figure}
-	
-	
-	
-	
 	\section{Numerical Examples}
 	
-Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (witout limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver.
+	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (witout limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver.
 	\begin{figure}[H]
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering
@@ -397,6 +407,36 @@ Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and secon
 		\end{subfigure}
 		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction. }
 	\end{figure}
+	
+	\subsection{ Include Bathymetric source terms}
+	
+	\subsection{ Introduce fwaves to handle stationery states}
+	
+	\section{Reimann Problem for Wet/Dry States}
+	
+	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{images/dry-bed}
+		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state \cite{toro2001shock}.}
+		\label{fig:dry-bed}
+	\end{figure}
+	
+	\noindent There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	
+	\noindent The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field.
+	
+	\begin{equation}
+		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
+		\label{wd0}
+	\end{equation}
+	
+	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd0}, and the  rarefaction is in the second characteristic field .
+	
+\section{ Future research directions}
+	
+	
+	
 	
 	
 	\bibliographystyle{plain}
