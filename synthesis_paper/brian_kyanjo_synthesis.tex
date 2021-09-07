@@ -319,7 +319,7 @@
 	
 	\section{Numerical Examples}
 	
-	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver.
+	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide eventhough they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order corection in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibitted at the begining and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions.
 	
 	
 	\begin{figure}[H]
@@ -341,7 +341,24 @@
 	
 	\subsection{ Include Bathymetric source terms}
 	
+	\begin{eqnarray}
+		h_{t} + (uh)_x &=& 0 
+		\label{bst0}\\
+		(hu)_t + \left(hu^{2} + \frac{1}{2}gh^{2} \right)_x &=& -ghB^{\prime}(x)
+		\label{bst}
+	\end{eqnarray}
+	
+	
+	
 	\subsection{ Introduce fwaves to handle stationery states}
+	\begin{equation}
+	f(Q_{i}) - f(Q_{i-1})  - \Delta x \psi_{i-\frac{1}{2}} = \sum_{p=1}^{m} \beta_{i-\frac{1}{2}} ^{p} r_{i-\frac{1}{2}}^{p}  \equiv \sum_{p=1}^{m} \mathcal{Z}_{i-\frac{1}{2}}^{p} 
+	\end{equation}
+	where
+	
+	\begin{equation}
+		\beta_{i-\frac{1}{2}} = R_{i-\frac{1}{2}}^{-1} (f(Q_{i}) - f(Q_{i-1}))  - \Delta x \psi_{i-\frac{1}{2}}
+	\end{equation}
 	
 	\section{Reimann Problem for Wet/Dry States}
 	
