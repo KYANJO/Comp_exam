@@ -208,6 +208,7 @@
 
 
 	\section{Wave Propagation Algorithm (WPA)}
+	\label{section:my}
 	 \noindent Equation \eqref{rp0} can be expressed in form of a linear hyperbolic system of the form:
 	\begin{equation}
 		q_{t} + Aq_{x} = 0
@@ -253,7 +254,7 @@
 	\noindent where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determined by the waves and speeds in the Riemann problems after approximating the average flux along  $x = x_{i - \frac{1}{2}}$:
 	
 	\begin{equation}
-		\tilde{F}_{i\-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
+		\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
 		\label{wpa13}
 	\end{equation}
 	
@@ -316,10 +317,20 @@
 		\alpha_{i-\frac{1}{2}}^{2} &=& \frac{-(\hat{u} - \hat{c})\delta^{1} + \delta^2}{2\hat{c}}
 	\end{eqnarray}
 	
+	\section{Limiters}
+	Accuracy of smooth solutions are obatined by advancing first order methods to second order accurate, but these still fail at the neighbourhood of discontinuities, where oscillations (noise) are created as shown in fig.~\ref{fig:2nd}. Limiters use the characteristics of the solution at such regions to filter out the oscillations eliminating the phase error hence increasing accuracy as depicted in fig.~\ref{fig:2lim}. The second order correction terms are computed basing on several different families of waves produced by the Riemann solution, the superposition of such waves make limiting process very difficult \cite{ge:2011} .  Since in some regions, some waves may be discontinous while others are smooth, therefore different limiter types handle this process in a different way, making some limiters to perform better than others depending on the method they are applied too \cite{be-ge-le-ma:2011}.\\
 	
+	\noindent The Dispersive nature of some methods may produce oscillations even in smooth solutions. During the simulations we focused on using only  four high-resolution limiters: minmod, superbee, MC, and van Leer.
+	\begin{eqnarray}
+		\text{minmod} :~ \phi(\theta) &=& \text{minmod}(1,\theta)\\
+		\text{MC} : ~ \phi(\theta) &=& \text{max} \left(0,\frac{\text{min}(1 + \theta)}{2},2,2\theta \right)\\
+		\text{superbee}: ~ \phi(\theta) &=& \text{max}(0,\text{min}(1,2\theta),\text{min}(2,\theta))\\
+		\text{van Leer} : ~ \phi(\theta) &=& \frac{\theta + |\theta|}{1 + |\theta|}
+	\end{eqnarray}
+	\noindent where $\phi(\theta)$ is a limiter function. Each limiter behaved differently in phasing out oscillations, eventhough the simple limiter (minmod), performed better  in filtering out the noise near the 2-shock for the flux formulation method as shown in fig.~\ref*{fig:2lim}, since its a slope limiter that lies along the lower boundary of the Sweby region in the $\theta$-$\phi$  plane. Full second order accuracy is obatined for MC if the function $\phi$ is smooth near $\theta=1$. The van Leer is a smoother version of MC, and the superbee lies along the upper boundary of the Sweby region and it did not perform well because it gives much too compression  \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}.\\
 	\section{Numerical Examples}
 	
-	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide eventhough they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order corection in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibitted at the begining and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions.
+	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide eventhough they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order corection in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibitted at the begining and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions as shown in fig.~\ref{fig:2lim}. 
 	
 	
 	\begin{figure}[H]
@@ -336,11 +347,21 @@
 			\caption{}
 			\label{fig:2nd}
 		\end{subfigure}
-		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction. }
+		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction without limiters using 64 space points. }
 	\end{figure}
+
+\noindent Figure.~\ref{fig:2lim} depicts the filteration of oscillations around the 1-rarefaction fan and 2-shock discontinuity regions in fig.~\ref{fig:2nd} after application of limiters at the final time. It's seen that the hieght field solution exhibits a smooth through out the the entire simulation even at jumps in the solution compared to  fig.~\ref{fig:2nd}. This improved the accuracy of the second order method, simulating well the boundaries of several regions without noise.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\linewidth]{images/2lim}
+	\caption{Shows the height field at the final time step of second order correction with limiter uisng 64 space points.}
+	\label{fig:2lim}
+\end{figure}
+
+
 	
-	\subsection{ Include Bathymetric source terms}
-	
+	\subsection{ Bathymetric source terms}
+	Equations \eqref{p1} and \eqref{p2}, can be extended to balance equations by introducing a bathymetric source term as shown in equations \eqref{bst} and  \eqref{bst0}. This is done by discretising the source term to generate values $-gh_{i-\frac{1}{2}}B^{\prime}(x_{i-\frac{1}{2}})$ at  cell interfaces  $x = x_{i-\frac{1}{2}}$. This approach is very useful, because the discrepancy caused due to the failure of the flux gradient to counterbalance the source term in a near steady state solution is decomposed into propagating waves  making the approach more robust than the quasi-steady WPA \cite{ba-le-mi-ro:2003}.
 	\begin{eqnarray}
 		h_{t} + (uh)_x &=& 0 
 		\label{bst0}\\
@@ -348,25 +369,71 @@
 		\label{bst}
 	\end{eqnarray}
 	
+	\noindent where $B(x)$ represents bottom elevation. \\
 	
+	%\subsection{ Introduce fwaves to handle stationery states}
+	\noindent The fwaves are introduced to handle the stationery states and also solve accurately  the quasi-steady problems in which the objective is to obtain propagation due to small amplitude pertubations. The standard WPA (\ref{section:my}) is conservative if and only if equation \eqref{con} is satisfied, but the flux-based wave decomposition yields a more flexible algorithm that is conservative even when equation\eqref{con} is not satisfied. And works perfect even for problems in which the Roe average is not easily computed \cite{ba-le-mi-ro:2003}.
 	
-	\subsection{ Introduce fwaves to handle stationery states}
+	\begin{equation}
+		A_{i-\frac{1}{2}} (Q_{i} - Q_{i-1}) = f(Q_i) - f(Q_{i-1})
+		\label{con}
+	\end{equation}
+	
+	\noindent The flux difference $ f(Q_i) - f(Q_{i-1})$ is directly decomposed as  a linear combination of the eigen vectors $r_{i-\frac{1}{2}}$ as shown in equation \eqref{fw}
+	
 	\begin{equation}
 	f(Q_{i}) - f(Q_{i-1})  - \Delta x \psi_{i-\frac{1}{2}} = \sum_{p=1}^{m} \beta_{i-\frac{1}{2}} ^{p} r_{i-\frac{1}{2}}^{p}  \equiv \sum_{p=1}^{m} \mathcal{Z}_{i-\frac{1}{2}}^{p} 
+	\label{fw}
 	\end{equation}
 	where
 	
 	\begin{equation}
 		\beta_{i-\frac{1}{2}} = R_{i-\frac{1}{2}}^{-1} (f(Q_{i}) - f(Q_{i-1}))  - \Delta x \psi_{i-\frac{1}{2}}
+		\label{fw1}
 	\end{equation}
 	
+	\noindent The vectors $\mathcal{Z}^{p} = \beta^{p} r^p$ are called the fwaves, as they are similar to the waves $\mathcal{W}^p$ though they carry flux increments rather than $q$ increments. The standard WPA (\ref{section:my}) first and second order corrections have been advanced to capture the flux based wave decompostion by changing equations \eqref{wpa19} and  \eqref{wpa13}  to  \eqref{fw1} and \eqref{fw2} respectively.
+	
+		\begin{equation}
+		\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  \text{sgn}(s_{i- \frac{1}{2}}^{p}) \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{Z}}_{i-\frac{1}{2}}^{p} 
+		\label{fw2}
+	\end{equation}
+	
+	\noindent where $ \tilde{\mathcal{Z}}_{i-\frac{1}{2}}^{p} $ is also a limited version of the f-wave $ \mathcal{Z}_{i-\frac{1}{2}}^{p} $, obtained in the same way as $ \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p}$ was obtained from $ \mathcal{W}_{i-\frac{1}{2}}^{p}$. As seen in fig.\ref{fig:f2}, the second order correction term for the f-wave approach(wpa\textunderscore flux) phased out the oscillations near discontinouities without employing any limiter compared to the Roe-solver that employed the standard WPA. This means that the statinery waves near the discontinouities have been handled by the f-wave approach.\\
+	
+	\noindent Figures.~\ref{fig:f1} and \ref{fig:f2}, depicts the first and second order correction of the flux base wave decomposition(green), exact Riemann solution(red), and Roe-solver(blue) based on the standard WPA for the dambreak problem height field simulated at the final time without limiters. Fig.~\ref{fig:f1}  shows that both solutions concide, but the difference is exbited in the \ref{fig:f2} in which the Roe solver is highly affected by the oscillations near discontinouities in absence of limiters. This basically means that the f-wave approach together with the flux term filtered out the oscilliatory terms.
+
+	\begin{figure}[H]
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{images/f1}
+			\caption{}
+			\label{fig:f1}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.5\textwidth}
+			\centering
+			\includegraphics[width=1.0\linewidth]{images/f2}
+			\caption{}
+			\label{fig:f2}
+		\end{subfigure}
+		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction without limiters obtained after introducing the source term and the f-wave method. }
+	\end{figure}
+	
+	\noindent Figure.~\ref{fig:f2lim} represents Figure.~\ref{fig:f2}  with limiters used. THe limiters made the Roe solver solution non osillatory(smooth through out), and rectified the solution of the f-wave approach to replicate the jump at the 2-shock but no stationary wave was present in the solution.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\linewidth]{images/2lim}
+	\caption{Shows the height field at the final time step of second order correction with limiter obtained after introducing the source term and the f-wave method uisng 64 space points.}
+	\label{fig:f2lim}
+\end{figure}
 	\section{Reimann Problem for Wet/Dry States}
 	
 	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/dry-bed}
-		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state \cite{toro2001shock}.}
+		\includegraphics[width=0.7\linewidth]{images/db}
+		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state.}
 		\label{fig:dry-bed}
 	\end{figure}
 	
