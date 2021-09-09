@@ -23,6 +23,8 @@
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{url} 
 
+\usepackage{color}
+\newcommand{\donna}[1]{{\color{red}{#1}}}   
 
 %%%%%%%%%%%%%%%%%%%%% students data %%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\student}{Brian KYANJO }
@@ -68,6 +70,10 @@
 	\vspace{.2cm}
 	
 	\section{Introduction}
+
+	\donna{Why do we care about solving Riemann problems?   It is a fundamental problem in conservation laws and is useful in finite volume schemes ...}
+
+
 	A Riemann Problem is a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}. 
 	\begin{eqnarray}
 		q_{t} + A q_{x}& =& 0
@@ -79,9 +85,7 @@
 		\end{cases}  
 		\label{rp1}     
 	\end{eqnarray}
-	
-	
-	\noindent where $q_{R}$ and $q_{L}$ are two piece-wise constant states separated by a discontinuity. Applying method of characteristics to the initial value problem (IVP) gives  equation \eqref{rp2} of the trajectory characteristic curve.
+	where $q_{R}$ and $q_{L}$ are two piece-wise constant states separated by a discontinuity. Applying method of characteristics to the initial value problem (IVP) gives  equation \eqref{rp2} of the trajectory characteristic curve.
 	
 	\begin{equation}
 		x = x_{o} + at 
@@ -89,7 +93,7 @@
 	\end{equation}
 	
 	
-	\noindent Equation \eqref{rp2} is used to obtain the exact solution of the Riemann problem (equation \eqref{rp3})
+	Equation \eqref{rp2} is used to obtain the exact solution of the Riemann problem (equation \eqref{rp3})
 	\begin{equation}
 		q(x,t)  = \begin{cases}
 			q_{l}, & \text{if \, $x - at \le 0,$}\\
@@ -100,20 +104,23 @@
 	\end{equation}
 	
 	\section{Shallow Water Equations (SWE)}
-	The SWE are a system of hyperbolic or parabolic (for viscous shear) PDEs governing the flow below a pressure surface in a fluid. They arise from the Naiver-stokes equations and can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
+	The SWE are a system of hyperbolic \donna{remove: or parabolic (for viscous shear)} PDEs governing the flow below a pressure surface in a fluid. They arise from the Naiver-stokes \donna{Navier-Stokes} equations.  \donna{In one dimension}, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
 	
-	\noindent Consider a small-amplitude waves in a fluid that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into two equations \eqref{p1} and \eqref{p2}.
+	Consider a small-amplitude waves in a fluid in a one-dimensional channel that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into two equations \eqref{p1} and \eqref{p2}.
 	
-	\begin{eqnarray}
-		h_{t} + (uh)_x &=& 0
-		\label{p1} \\
-		(hu)_t + \left(hu^{2} + \frac{1}{2}gh^{2} \right)_x &=& 0
-		\label{p2}
-	\end{eqnarray}	
+	\begin{equation}
+	\begin{aligned}
+		h_{t} + (uh)_x &= 0 \\
+		(hu)_t + \left(hu^{2} + \frac{1}{2}\rho gh^{2} \right)_x & = 0 
+	\end{aligned}
+	\label{p2}
+	\end{equation}	
+	where $hu$ measures the flow rate of water past a point,  $\rho$ ($kg/m^3$) is the constant density of the incompressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity.  We will set $\rho = 1$ here.
 	
-	\noindent where $hu$ measures the flow rate of water past a point,  $\rho$ ($kg/m^3$) is the constant density of the in compressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity.\\
-	
-	\noindent The variation of $h$ and $hu$ at each interface in both space and time leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions).  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$)and right($q_{r}$) states are given by: 
+	A very simple set of initial conditions is a single discontinuity at the middle of the channel.  In this case, we set $h$ and $hu$ equal to constants on either side of the channel.  This problem is a classic Riemann Problem, and for the SWE, has an exact solution.  
+
+	We assume the discontinuity is at $x = 0$. 
+	The variation of $h$ and $hu$ on either side of the discontinuity leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions).  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$)and right($q_{r}$) states are given by: 
 	\begin{equation}
 		q_{l} = \begin{bmatrix}
 			h_{l} \\( hu)_{l}
@@ -121,8 +128,8 @@
 			h_{r} \\( hu)_{r}
 		\end{bmatrix} 
 	\end{equation}
-	
-	\noindent As $x$ and $t$ increases, a middle state called the intermediate state($q_{m}$), is generated, the determination of this state characterises the Riemann problem and how it connects to other states via waves in each respective characteristic family\cite{ba-le-mi-ro:2003}.  This can only hold if the connection wave speeds satisfy the Lax entropy condition. Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction  and shock wave from the first and second characteristic family respectively.
+	As $t$ increases, four distinct regions are created, separated by characteristics. 
+	The middle state called the intermediate state($q_{m}$), is generated.  The determination of this state characterizes the Riemann problem and how it connects to other states via waves in each respective characteristic family\cite{ba-le-mi-ro:2003}.  This can only hold if the connection wave speeds satisfy the Lax entropy condition. Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction  and shock wave from the first and second characteristic family respectively.
 	
 	\begin{figure}[H]
 		\centering
@@ -131,19 +138,29 @@
 		\label{fig:x-tplane}
 	\end{figure}
 	
-	\noindent The intermediate state is obtained by solving the Riemann problem using the exact or  approximate method. Although approximate methods are widely used due to their cheap computational cost compared to the exact solvers.
+	The intermediate state is obtained by solving the Riemann problem using the exact or  approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers.
 	
 	
-	\subsection{Exact Riemann Solver for SWE}
-	\noindent The non linear equation is solved at each cell interface for each time step. The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.
+	\subsection{Exact Riemann Solver for two-shock SWE}
+	The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if two states are connected by a shock.  We refer the reader to \cite{leveque2002finite} for other cases. 
+
+	We can obtain an exact solution to the Riemann Problem for the SWE as follows. 
+	The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the RK conditions will be satisfied. 
 	\begin{equation}
-		s(q_{r} - q_{l}) = f(q_{r}) - f(q_{l})
-		\label{e1}
+	\begin{aligned}
+		s_1(q_{m} - q_{l}) & = f(q_{m}) - f(q_{l}) \\
+		s_2(q_{r} - q_{m}) & = f(q_{r}) - f(q_{m})
+	\end{aligned}
+	\label{e1}
 	\end{equation}
-	
+	\donna{be sure to introduce flux function $f(q)$. }
+
 	\noindent where $f$ is the flux function. By applying this condition ( equation \eqref{e1}) to shallow water equations: \eqref{p1} and \eqref{p2}) creates a system of two equations that must be satisfied simultaneously. This system is used to derive expression for the Hugoniot Loci which we are used together with the integral curves (equation \eqref{e2}) to obtain the intermediate state $q_{m}$. \\
+
+	\donna{Include plot of h vs. hu to illustrate curves connected by a shock.  All states connected to ql and all states connected to qr.  Solve for qm}
 	
-	\noindent As an example, consider a known problem(dam break) with a 1-rarefaction and a 2-shock leading to a system of equations: \eqref{e2} and \eqref{e3} that are equated  to solve a resulting non linear equation for $u_m$ and $h_m$. These equations are obtained by finding  connecting states at the intersection of Rankine-Hugoniot locus  and an integral curve. In other words, to find the exact solution, an intermediate state$q_m$) connects $q_l$ to the 1-rarefaction wave and simultaneously connects $q_r$ to the 2-shock wave must lie on the integral curve (equation \eqref{e2}) passing through $q_l$. 
+	\donna{Modify to consider the two shock case. }
+	As an example, consider a known problem(dam break) with a 1-rarefaction and a 2-shock leading to a system of equations: \eqref{e2} and \eqref{e3} that are equated  to solve a resulting non linear equation for $u_m$ and $h_m$. These equations are obtained by finding  connecting states at the intersection of Rankine-Hugoniot locus  and an integral curve. In other words, to find the exact solution, an intermediate state$q_m$) connects $q_l$ to the 1-rarefaction wave and simultaneously connects $q_r$ to the 2-shock wave must lie on the integral curve (equation \eqref{e2}) passing through $q_l$. 
 	\begin{equation}
 		u_{m} = u_{l} + 2(\sqrt{gh_{l} }- \sqrt{gh_{m}})
 		\label{e2}
@@ -174,7 +191,7 @@
 	\end{equation}
 	
 	
-	\noindent The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells, using equation \eqref{cellupdate}.
+	The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells, using equation \eqref{cellupdate}.
 	
 	\begin{equation}
 		Q_{i}^{n+1} = Q_{i}^{n} - \frac{\Delta t}{\Delta x} (F_{i+\frac{1}{2}}^{n} - F_{i-\frac{1}{2}}^{n})
