@@ -1,0 +1,21 @@
+\documentclass[10pt]{article}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=1cm,y=1cm]
+\clip(-10.331518112946483,-5.070385172901479) rectangle (11.572585639562341,12.565333342664076);
+\draw [line width=2pt] (-7.567272727272727,5.984545454545455)-- (0.0072727272727268755,0);
+\draw [line width=2pt] (-6.712727272727273,6.766363636363637)-- (0.0072727272727268755,0);
+\draw [line width=2pt] (-8.112727272727273,5.53)-- (0.0072727272727268755,0);
+\draw [line width=2pt] (-6.130909090909092,7.111818181818182)-- (0.0072727272727268755,0);
+\draw [line width=2pt] (0.0072727272727268755,0)-- (5.796363636363635,6.384545454545455);
+\draw [line width=2pt,dash pattern=on 1pt off 1pt] (0.0072727272727268755,0)-- (0,7.275454545454545);
+\draw [line width=2pt] (-8.512727272727274,0)-- (9,0);
+\draw (0.4123198493106963,8.026270017524418) node[anchor=north west] {$q_m= \begin{bmatrix} h_m\\hu_m\end{bmatrix}$};
+\draw (5.659310482040947,5.444417483958739) node[anchor=north west] {$q_r= \begin{bmatrix} h_r\\hu_r\end{bmatrix}$};
+\draw (-8.395128712772225,4.320062348373686) node[anchor=north west] {$q_l= \begin{bmatrix} h_l\\hu_l\end{bmatrix}$};
+\end{tikzpicture}
+\end{document}
