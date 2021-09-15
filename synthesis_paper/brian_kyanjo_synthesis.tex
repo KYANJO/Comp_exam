@@ -25,6 +25,7 @@
 
 \usepackage{color}
 \newcommand{\donna}[1]{{\color{red}{#1}}}   
+\newcommand{\ignore}[1]{}
 
 %%%%%%%%%%%%%%%%%%%%% students data %%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\student}{Brian KYANJO }
@@ -75,7 +76,7 @@
 
 	A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}. 
 	\begin{eqnarray}
-		q_{t} + f(q,x)_{x}& =& 0
+		q_{t} + f(q)_{x}& =& 0
 		\label{rp0}\\
 		q(x,0)& =& \begin{cases}
 			q_{L}, & \text{if \, $x \le 0,$}\\
@@ -84,7 +85,7 @@
 		\end{cases}  
 		\label{rp1}     
 	\end{eqnarray}
-	where $f(q,x)_{x} \in \mathbb{R}^{m}$ is a vector of conserved quantities,  $q_{R}$ and $q_{L}$ are two piece-wise constant states separated by a discontinuity. 
+	where $f(q)_{x} \in \mathbb{R}^{m}$ is a vector of conserved quantities,  $q_{R}$ and $q_{L}$ are two piece-wise constant states separated by a discontinuity. 
 	
 	\section{Shallow Water Equations (SWE)}
 	The SWE are a system of hyperbolic PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
@@ -146,12 +147,12 @@
 	 	\end{aligned}
 	 	\label{ee2}
 	 \end{equation}
- Since the $(h_m,u_m)$ is fixed, we find all sates: $(h_l,u_l)$ and $(h_r,u_r)$ and their corresponding speeds: $s_1$ and $s_2$ that satisify system  \eqref{ee2}. We have four equations and four unknowns, which gives a two parameter family of solutions: one-shock and two-shock. Using $h_l$ and $h_r$ as parameters, corresponding $u_l,u_r,s_1, $and $s_2$ are detemined for each $h_l$ and $h_r$. And then a graph of $hu$ against $h$ is plotted that gives the curves in fig.~\ref{fig:hl}. The point of intersection between the {\em 1-shock (blue)} and  {\em2-shock (orange)} physical solutions is the intermediate state $q_m$. The dotted curves represent unphysical solution.
+ Since the $(h_l,u_l)$ and $(h_r,u_r)$ are fixed, we find all states: $(h_m,u_m)$  and their corresponding speeds: $s_1$ and $s_2$ that satisify system  \eqref{ee2}. We have four equations and four unknowns, which gives a two parameter family of solutions: one-shock and two-shock. Using $h_l$ and $h_r$ as parameters, corresponding $u_l,u_r,s_1, $and $s_2$ are detemined for each $h_l$ and $h_r$. And then a graph of $hu$ against $h$ is plotted that gives the curves in fig.~\ref{fig:hl}. The point of intersection between the {\em 1-shock (blue)} and  {\em2-shock (orange)} physical solutions is the intermediate state $q_m$. The dotted curves represent unphysical solution.
   
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.7\linewidth]{images/hl}
-		\caption{Shows curves that represent all states connected to $q_l$ and all states connected to $q_r$ via a {\em 2-shock} and {\em 1-shock} respectively.}
+		\caption{Shows curves that represent all states connected to $q_l$ and all states connected to $q_r$ via a {\em 2-shock} and {\em 1-shock} respectively.  \donna{Refer to equations that describe these curves.}}
 		\label{fig:hl}
 	\end{figure}
 
@@ -167,34 +168,41 @@
 		\label{e4}
 	\end{equation}
 	Equations \eqref{e3} and \eqref{e4} form a system of two equations with two unknowns ($h_m$ and $u_m$) that are equated since the left-hand sides of both equations are equal. A non linear equation that consist of only one unknown $h_m$ is formed and solved using an iterative method such as Newton method to obtain a desired intemediate state in the Riemann solution.\\
+
+	\donna{
+	\begin{itemize}
+	\item Describe the solution to the Riemann problem.  Show code for the two shock case  (10 lines?)  Use example from Figure 2.  
+	\item Give an example of a two shock problem;  show plot of solution
+	\item Entropy conditions?  Why do we know that the solution is connected with a shock?
+	\end{itemize}
+
+	}
 	
-	Computational difficulties arise  due to shocks or discontinuities in the solution, for instance, consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function.
+
+	\section{Finite volume discretization}
+	\ignore{Computational difficulties arise  due to shocks or discontinuities in the solution, for instance, }
+	Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function.
 	\begin{equation}
 		q_{t}(x,t) + f(q(x,t))_{x} = 0
 		\label{fvm0}
-	\end{equation}
-	
+	\end{equation}	
 	  In finite volume methods (FVM), the domain is broken down into grid cells. Consider $C_{i} = (x_{i-\frac{1}{2}},x_{i+\frac{1}{2}})$ to be the $i^{th}$ grid cell, the average value over the $i^{th}$ interval at time $t^{n}$ is numerically approximated by $Q_{i}^{n}$ in equation \eqref{wpa0}.
 	
 	\begin{equation}
 		Q_{i}^{n} \approx \dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx
 		\label{wpa0}
 	\end{equation}
-	
 	   where $\Delta t = (t^{n+1} - t^{n})$ and  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. A discontinuity in $q$ violates the PDE in the classical sense and only holds for the integral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuities where PDEs don't hold, all classical finite difference methods breakdown, resorting to FVM which are based on \eqref{fvm1}. 	
 	\begin{equation}
 		\frac{d}{dt} \int_{c_{i}} q(x,t)dx = f(q(x_{i-\frac{1}{2}},t)) -  f(q(x_{i+\frac{1}{2}},t))
 		\label{fvm1}
-	\end{equation}
-	
-	
+	\end{equation}	
 	The approximate  total integral of $q$ over each grid cell is evaluated and updated at every time step by the grid cell edge fluxes. The determined numerical flux functions evaluate the  cell averages over a certain volume, which are used to approximate the solutions within the cells, using equation \eqref{cellupdate}.
 	
 	\begin{equation}
 		Q_{i}^{n+1} = Q_{i}^{n} - \frac{\Delta t}{\Delta x} (F_{i+\frac{1}{2}}^{n} - F_{i-\frac{1}{2}}^{n})
 		\label{cellupdate}
-	\end{equation}
-	
+	\end{equation}	
 	  where $F_{i+\frac{1}{2}}^{n} $ is the average flux approximation along $x=x_{i-\frac{1}{2}}$.
 	The Riemann problem is a fundamental tool in the evolution of FVM. Taking two neighbouring grid cells: $Q_{i-1} = q_{L}$ and $Q_{i} = q_{R}$ to be cell averages, this information is used by the exact Riemann solver to compute numerical fluxes ( $F_{i-\frac{1}{2}}^{n} = \mathcal{F}(Q_{i-1} , Q_{i} )$), that are used to update the cell average at each time step \cite{ba-le-mi-ro:2003}. Then equation \eqref{cellupdate} becomes:
 	
@@ -204,6 +212,7 @@
 	\end{equation}
 	where $\mathcal{F}$ is some numerical flux function.\\
 	
+	\section{Wave Propagation Algorithm (WPA)}
 	  Equation \eqref{cellupdate}, can be reformulated as a first order wave propagation method by decomposing flux at the cell averages into fluctuations ($\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$) as shown in equations \eqref{ap} and \eqref{am}. 
 	
 	\begin{eqnarray}
@@ -211,8 +220,7 @@
 		\label{ap}\\
 		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = f(Q_{i+\frac{1}{2}}^{*}) - f(Q_{i}) 
 		\label{am}
-	\end{eqnarray}
-	
+	\end{eqnarray}	
 	  where  $\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$ are the net updating contributions from the rightward and leftward moving waves into the grid cell $C_{i}$  from the right and left interface respectively,  $Q_{i-\frac{1}{2}}^{*}$ is the intermediate cell average determined by the exact Riemann solver at $x_{i-\frac{1}{2}}$, and $ f(Q_{i-\frac{1}{2}}^{*})$ is numerical flux at $Q_{i-\frac{1}{2}}^{*}$. Combining equations \eqref{ap} and \eqref{am}, the  first order 1D  wave propagation method is given by equation \eqref{wpa0}.
 	
 	\begin{equation}
@@ -221,14 +229,14 @@
 	\end{equation}
 	
 	
-	\section{Wave Propagation Algorithm (WPA)}
 	\label{section:my}
-	  Equation \eqref{rp0} can be expressed in form of a linear hyperbolic system of the form:
+	The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
+	as
 	\begin{equation}
-		q_{t} + Aq_{x} = 0
+		q_{t} + f'(q)q_{x} = 0
 		\label{wpa3}
 	\end{equation}
-	where  $A \in \mathbb{R}^{m\times m}$  is a coefficient matrix of $q_{x}$.  Consider a Riemann problem for the system  \eqref{wpa3} with initial data 
+	where  $f'(q) \in \mathbb{R}^{m\times m}$  flux Jacobian matrix.  Consider a Riemann problem for the system  \eqref{wpa3} with initial data 
 	
 	\begin{equation}
 		q(x,t^n)  = \begin{cases}
@@ -238,7 +246,8 @@
 		\label{w4}   
 	\end{equation}
 	
-	  The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i$ is given by $w^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Note that Equation \eqref{w4}, must satisfy:
+	  The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-1/2$.  This decomposition takes the form
+	  \ignore{Note that Equation \eqref{w4}, must satisfy:}
 	\begin{equation}
 		Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}}
 		\label{wpa19}
@@ -258,6 +267,7 @@
 	\begin{equation}
 		\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n} = f(Q_{i}) - f(Q_{i-1})
 	\end{equation}
+	\donna{Be prepared to explain why this must be true.}
 	
 	  The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
 	
@@ -271,10 +281,9 @@
 		\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
 		\label{wpa13}
 	\end{equation}
-	
 	  Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$.\\
 	
-	%\subsection{Quasi Linear form of SWE}
+	\subsection{WPA for the Shallow Water Equations}
 	
 	 	The combination of equations in system \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
 	
@@ -292,13 +301,17 @@
 		\begin{bmatrix} 0 \\ 0 \end{bmatrix}
 		\label{p4}
 	\end{equation}
-	
+	where the flux Jacobian matrix $f'(q)$ is given by 
+	\begin{equation}
+	f'(q) = \begin{bmatrix} 0 &  1 \\ -u^{2} + gh & 2u \end{bmatrix} 
+	\end{equation}
+	\ignore{
 	  or more generally as:
 	\begin{equation}
 		q_t +  f(q)_x = 0
 		\label{n1}
 	\end{equation}
-	
+	}
 	  where $ q(x,t) = (h(x,t), hu(x,t))$. The non linear problem(equation \eqref{n1} ), can be replaced by a linearized problem defined locally at each cell interface,
 	\begin{equation}
 		\hat{q}_t + \hat{A}_{i-\frac{1}{2}}  \hat{q}_x  = 0
@@ -315,24 +328,23 @@
 		\label{eg}
 	\end{equation}
 	
-	\begin{equation}
-		\hat{r}^1 =  \begin{bmatrix} 1 \\ 	\hat{\lambda}^1 \end{bmatrix}, \qquad 	\hat{r}^2 =  \begin{bmatrix} 1 \\ 	\hat{\lambda}^2 \end{bmatrix}
-		\label{vec}
-	\end{equation}
+\begin{equation}
+\hat{r}^1 =  \begin{bmatrix} 1 \\ 	\hat{\lambda}^1 \end{bmatrix}, \qquad 	\hat{r}^2 =  
+\begin{bmatrix} 1 \\ 	\hat{\lambda}^2 \end{bmatrix}
+\label{vec}
+\end{equation}
+where $\hat{c} = \sqrt{gh}$, The approximate Riemann solver is used to decompose the vector  $ \delta \equiv Q_{i} - Q_{i-1}$ into two waves: $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^1$ and $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^2$ as 
+\begin{equation}
+Q_{i} - Q_{i-1} = \alpha_{i-\frac{1}{2}}^{1} \hat{r}^1 + \alpha_{i-\frac{1}{2}}^{1} \hat{r}^2 \equiv \mathcal{W}_{i-\frac{1}{2}}^{1} + \mathcal{W}_{i-\frac{1}{2}}^{2}
+\end{equation}
+where the coefficients $\alpha_{i-\frac{1}{2}}^{1}$ are given by:
+\begin{eqnarray}
+\alpha_{i-\frac{1}{2}}^{1} &=& \frac{(\hat{u} + \hat{c})\delta^{1} - \delta^2}{2\hat{c}}\\
+\alpha_{i-\frac{1}{2}}^{2} &=& \frac{-(\hat{u} - \hat{c})\delta^{1} + \delta^2}{2\hat{c}}
+\end{eqnarray}
 	
-	  where $\hat{c} = \sqrt{gh}$, The approximate Riemann solver is used to decompose the vector  $ \delta \equiv Q_{i} - Q_{i-1}$ into two waves: $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^1$ and $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^2$ as 
-	\begin{equation}
-		Q_{i} - Q_{i-1} = \alpha_{i-\frac{1}{2}}^{1} \hat{r}^1 + \alpha_{i-\frac{1}{2}}^{1} \hat{r}^2 \equiv \mathcal{W}_{i-\frac{1}{2}}^{1} + \mathcal{W}_{i-\frac{1}{2}}^{2}
-	\end{equation}
-	
-	  where the coefficients $\alpha_{i-\frac{1}{2}}^{1}$ are given by:
-	\begin{eqnarray}
-		\alpha_{i-\frac{1}{2}}^{1} &=& \frac{(\hat{u} + \hat{c})\delta^{1} - \delta^2}{2\hat{c}}\\
-		\alpha_{i-\frac{1}{2}}^{2} &=& \frac{-(\hat{u} - \hat{c})\delta^{1} + \delta^2}{2\hat{c}}
-	\end{eqnarray}
-	
-	\section{Limiters}
-	Accuracy of smooth solutions are obtained by advancing first order methods to second order accurate, but these still fail at the neighbourhood of discontinuities, where oscillations (noise) are created as shown in fig.~\ref{fig:2nd}. Limiters use the characteristics of the solution at such regions to filter out the oscillations eliminating the phase error hence increasing accuracy as depicted in fig.~\ref{fig:2lim}. The second order correction terms are computed basing on several different families of waves produced by the Riemann solution, the superposition of such waves make limiting process very difficult \cite{ge:2011} .  Since in some regions, some waves may be discontinuous while others are smooth, therefore different limiter types handle this process in a different way, making some limiters to perform better than others depending on the method they are applied too \cite{be-ge-le-ma:2011}.\\
+\section{Limiters}
+Accuracy of smooth solutions are obtained by advancing first order methods to second order accurate, but these still fail at the neighbourhood of discontinuities, where oscillations (noise) are created as shown in fig.~\ref{fig:2nd}. Limiters use the characteristics of the solution at such regions to filter out the oscillations eliminating the phase error hence increasing accuracy as depicted in fig.~\ref{fig:2lim}. The second order correction terms are computed basing on several different families of waves produced by the Riemann solution, the superposition of such waves make limiting process very difficult \cite{ge:2011} .  Since in some regions, some waves may be discontinuous while others are smooth, therefore different limiter types handle this process in a different way, making some limiters to perform better than others depending on the method they are applied too \cite{be-ge-le-ma:2011}.\\
 	
 	  The Dispersive nature of some methods may produce oscillations even in smooth solutions. During the simulations we focused on using only  four high-resolution limiters: minmod, superbee, MC, and van Leer.
 	\begin{eqnarray}
@@ -441,6 +453,8 @@
 	\end{figure}
 	\section{Riemann Problem for Wet/Dry States}
 	
+\donna{Discuss importance of robust methods for handling wet/dry states (reference tsunami papers).  Reference other approaches (Toro?). Here, we describe the approach taken by George in the JCP paper. Discuss "augmented solver".}
+
 	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
 	\begin{figure}[H]
 		\centering
