@@ -22,6 +22,34 @@
 \usepackage{booktabs}  
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{url} 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=2pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=1
+}
+
+\lstset{style=mystyle}
 
 \usepackage{color}
 \newcommand{\donna}[1]{{\color{red}{#1}}}   
@@ -116,7 +144,7 @@
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{images/geo1}
+		\includegraphics[width=0.5\linewidth]{images/geo1}
 		\caption{ x-t plane showing the connection of states, 1-rarefaction fan, and the 2-shock.}
 		\label{fig:x-tplane}
 	\end{figure}
@@ -147,16 +175,16 @@
 	 	\end{aligned}
 	 	\label{ee2}
 	 \end{equation}
- Since the $(h_l,u_l)$ and $(h_r,u_r)$ are fixed, we find all states: $(h_m,u_m)$  and their corresponding speeds: $s_1$ and $s_2$ that satisify system  \eqref{ee2}. We have four equations and four unknowns, which gives a two parameter family of solutions: one-shock and two-shock. Using $h_l$ and $h_r$ as parameters, corresponding $u_l,u_r,s_1, $and $s_2$ are detemined for each $h_l$ and $h_r$. And then a graph of $hu$ against $h$ is plotted that gives the curves in fig.~\ref{fig:hl}. The point of intersection between the {\em 1-shock (blue)} and  {\em2-shock (orange)} physical solutions is the intermediate state $q_m$. The dotted curves represent unphysical solution.
+ Since the $(h_l,u_l)$ and $(h_r,u_r)$ are fixed, we find all states: $(h_m,u_m)$  and their corresponding speeds: $s_1$ and $s_2$ that satisfy system  \eqref{ee2}. We have four equations and four unknowns, which gives a two parameter family of solutions: one-shock and two-shock. Using $h_l$ and $h_r$ as parameters, corresponding $u_l,u_r,s_1, $and $s_2$ are determined for each $h_l$ and $h_r$. And then a graph of $hu$ against $h$ is plotted that gives the curves in fig.~\ref{fig:hl}. The point of intersection between the {\em 1-shock (blue)} and  {\em2-shock (orange)} physical solutions is the intermediate state $q_m$. The dotted curves represent unphysical solution.
   
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/hl}
-		\caption{Shows curves that represent all states connected to $q_l$ and all states connected to $q_r$ via a {\em 2-shock} and {\em 1-shock} respectively.  \donna{Refer to equations that describe these curves.}}
+		\includegraphics[width=0.5\linewidth]{images/hl}
+		\caption{Shows curves that represent all states connected to $q_l$ and all states connected to $q_r$ via a {\em 2-shock} and {\em 1-shock} respectively.  Equations \eqref{e3} and \eqref{e4} are solved to produce the curves.}
 		\label{fig:hl}
 	\end{figure}
 
-	As an example, consider a general Riemann problem whose known solution consists of two shocks with initial data \eqref{ic}. This problem can be solved by finding the state $q_m$ that can be connected to $q_l$ by a {\em 1-shock} and simultaneously connects to $q_r$ by a {\em 2-shock}. The point $q_m$ lies on the  curve \eqref{e3} of points  through  point $q_r$  that connects to $q_r$ by a {\em 2-shock}.
+	Consider a general Riemann problem whose known solution consists of two shocks with initial data \eqref{ic}. This problem can be solved by finding the state $q_m$ that can be connected to $q_l$ by a {\em 1-shock} and simultaneously connects to $q_r$ by a {\em 2-shock}. The point $q_m$ lies on the  curve \eqref{e3} of points  through  point $q_r$  that connects to $q_r$ by a {\em 2-shock}.
 
 	\begin{equation}
 		u_{m} = u_{r} + (h_{m} - h_{r})\sqrt{\frac{g}{2}\left(\frac{1}{h_m} + \frac{1}{h_r} \right)}
@@ -169,18 +197,39 @@
 	\end{equation}
 	Equations \eqref{e3} and \eqref{e4} form a system of two equations with two unknowns ($h_m$ and $u_m$) that are equated since the left-hand sides of both equations are equal. A non linear equation that consist of only one unknown $h_m$ is formed and solved using an iterative method such as Newton method to obtain a desired intemediate state in the Riemann solution.\\
 
-	\donna{
-	\begin{itemize}
-	\item Describe the solution to the Riemann problem.  Show code for the two shock case  (10 lines?)  Use example from Figure 2.  
-	\item Give an example of a two shock problem;  show plot of solution
-	\item Entropy conditions?  Why do we know that the solution is connected with a shock?
-	\end{itemize}
+   As an example, consider athe SWE Riemann problem with $h_l = h_r = 1, u_l = 0.5, $ and $u_r = -0.5$. These initial values are used by the netwon solver to solve equations \eqref{e3} and \eqref{e4} to produce $h_{m} = 1.554$. The shock speeds ($s_l$ and $s_r$) in each region are different due to different wave characteristics, we use this concept to loop through all interfaces and determine $h$ and $hu$ in each region as shown in the code \ref{pp} . At each interface $h$ and $hu$ are stored into $q_1$ and $q_2$ as hieght and momentum solutions. According to Lax entropy conditions, a  {\em 1-shock} that physically connects $q_l$ to $q_m$ is obatined if $h_m>h_l$, and similarly a {\em 2-shock} wave that physically connects $q_m$ to $q_r$ requires $h_m>h_r$ \cite{le-ge-be:2011}.
+   
+\begin{small}
+	\begin{lstlisting}[language=Python, caption=Python code describing how the two shock case solution is obtained after the first time step.,label = pp]
+for i in range(len(x)):
+		if 0.5*(sl(hl,ql,g) + sl(hm,qm,g))*t > x[i] : # left to middle state
+				h = hl
+				u = ul
+				hu = h*u   	
+		elif sl(hm,qm,g)*t < x[i] and x[i]<t*sr(hm,qr,g): # middle state
+				h = hm
+				u = um
+				hu = h*u
+		else:     # middle to right state
+				h = hr
+				u = ur
+				hu = h*u
+		q1[i] = h
+		q2[i] = hu
+\end{lstlisting}
+\end{small}
 
-	}
+The height field solution $q_1$ obtained from the code \ref{pp} above is ploted in fig.~\ref{fig:2-shock}. The plot depicts the left region being connected to the middle region via a {\em 1-shock } wave and the middle  being connected to the right region via a a {\em 2-shock } wave.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\linewidth]{images/2-shock}
+		\caption{Shows all-shock Riemann exact solution }
+		\label{fig:2-shock}
+	\end{figure}
 	
 
 	\section{Finite volume discretization}
-	\ignore{Computational difficulties arise  due to shocks or discontinuities in the solution, for instance, }
 	Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function.
 	\begin{equation}
 		q_{t}(x,t) + f(q(x,t))_{x} = 0
@@ -208,7 +257,7 @@
 	
 	\begin{equation}
 		Q_{i}^{n+1} = Q_{i}^{n} - \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]
-		\label{cellupdate}
+		\label{cellupdat}
 	\end{equation}
 	where $\mathcal{F}$ is some numerical flux function.\\
 	
@@ -227,8 +276,6 @@
 		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n})
 		\label{wpa0}
 	\end{equation}
-	
-	
 	\label{section:my}
 	The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
 	as
@@ -245,14 +292,12 @@
 		\end{cases}    
 		\label{w4}   
 	\end{equation}
-	
-	  The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-1/2$.  This decomposition takes the form
-	  \ignore{Note that Equation \eqref{w4}, must satisfy:}
+	The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$.  This decomposition takes the form
+	 
 	\begin{equation}
 		Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}}
 		\label{wpa19}
 	\end{equation}
-	
 	  The wave speed $s_{i-\frac{1}{2}}^{p}$ associated with the vector $r_{i-\frac{1}{2}}^{p}$, are preselected basing on the characteristic structure of the initial Riemann data \cite{ge:2008}. Therefore the fluctuations $\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n}$  and $\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n} $ are defined by equations \eqref{f0} and \eqref{f1}:
 	
 	\begin{eqnarray}
@@ -261,15 +306,13 @@
 		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} =\sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}} s_{i-\frac{1}{2}}^{p} \mathcal{W}_{i-\frac{1}{2}}^{p}
 		\label{f1}
 	\end{eqnarray}
-	
 	  In a standard  conservative case (\eqref{fvm0}), the sum of the left-going and right-going fluctuations should satisfy:
 	
 	\begin{equation}
 		\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n} = f(Q_{i}) - f(Q_{i-1})
 	\end{equation}
-	\donna{Be prepared to explain why this must be true.}
-	
-	  The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
+	%\donna{Be prepared to explain why this must be true.}
+	The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
 	
 	\begin{equation}
 		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) -  \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )
@@ -291,8 +334,7 @@
 		\begin{bmatrix} h \\ hu \end{bmatrix}_t + \begin{bmatrix} uh \\ hu^{2} + \frac{1}{2} gh^{2} \end{bmatrix}_x  = 0 
 		\label{p3}
 	\end{eqnarray}
-	
-	  Equation \eqref{p3} can be written as a quasi-linear system as shown in equation \eqref{p4}:
+	Equation \eqref{p3} can be written as a quasi-linear system as shown in equation \eqref{p4}:
 	
 	\begin{equation}
 		\begin{bmatrix} h \\ hu \end{bmatrix}_t + 
@@ -305,14 +347,7 @@
 	\begin{equation}
 	f'(q) = \begin{bmatrix} 0 &  1 \\ -u^{2} + gh & 2u \end{bmatrix} 
 	\end{equation}
-	\ignore{
-	  or more generally as:
-	\begin{equation}
-		q_t +  f(q)_x = 0
-		\label{n1}
-	\end{equation}
-	}
-	  where $ q(x,t) = (h(x,t), hu(x,t))$. The non linear problem(equation \eqref{n1} ), can be replaced by a linearized problem defined locally at each cell interface,
+	The non linear problem (equation \eqref{fvm0}), can be replaced by a linearized problem defined locally at each cell interface \cite{le-ge-be:2011},
 	\begin{equation}
 		\hat{q}_t + \hat{A}_{i-\frac{1}{2}}  \hat{q}_x  = 0
 		\label{n2}
@@ -333,7 +368,7 @@
 \begin{bmatrix} 1 \\ 	\hat{\lambda}^2 \end{bmatrix}
 \label{vec}
 \end{equation}
-where $\hat{c} = \sqrt{gh}$, The approximate Riemann solver is used to decompose the vector  $ \delta \equiv Q_{i} - Q_{i-1}$ into two waves: $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^1$ and $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^2$ as 
+where $\hat{c} = \sqrt{gh}$, the approximate Riemann solver is used to decompose the vector  $ \delta \equiv Q_{i} - Q_{i-1}$ into two waves: $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^1$ and $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^2$ as 
 \begin{equation}
 Q_{i} - Q_{i-1} = \alpha_{i-\frac{1}{2}}^{1} \hat{r}^1 + \alpha_{i-\frac{1}{2}}^{1} \hat{r}^2 \equiv \mathcal{W}_{i-\frac{1}{2}}^{1} + \mathcal{W}_{i-\frac{1}{2}}^{2}
 \end{equation}
@@ -356,9 +391,9 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	  where $\phi(\theta)$ is a limiter function. Each limiter behaved differently in phasing out oscillations, even though the simple limiter (minmod), performed better  in filtering out the noise near the 2-shock for the flux formulation method as shown in fig.~\ref*{fig:2lim}, since its a slope limiter that lies along the lower boundary of the Sweby region in the $\theta$-$\phi$  plane. Full second order accuracy is obatined for MC if the function $\phi$ is smooth near $\theta=1$. The van Leer is a smoother version of MC, and the superbee lies along the upper boundary of the Sweby region and it did not perform well because it gives much too compression  \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}.\\
 	\section{Numerical Examples}
 	
-	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide even though they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order correction in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibited at the beginning and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions as shown in fig.~\ref{fig:2lim}. 
+	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide even though they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order correction in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibited at the beginning and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions as shown in fig.~\ref{fig:2lim}. \\
 	
-	
+	Figure.~\ref{fig:2lim} depicts the filtration of oscillations around the 1-rarefaction fan and 2-shock discontinuity regions in fig.~\ref{fig:2nd} after application of limiters at the final time. It's seen that the height field solution exhibits a smooth through out the the entire simulation even at jumps in the solution compared to  fig.~\ref{fig:2nd}. This improved the accuracy of the second order method, simulating well the boundaries of several regions without noise.
 	\begin{figure}[H]
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering
@@ -375,11 +410,9 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 		\end{subfigure}
 		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction without limiters using 64 space points. }
 	\end{figure}
-	
-	  Figure.~\ref{fig:2lim} depicts the filtration of oscillations around the 1-rarefaction fan and 2-shock discontinuity regions in fig.~\ref{fig:2nd} after application of limiters at the final time. It's seen that the height field solution exhibits a smooth through out the the entire simulation even at jumps in the solution compared to  fig.~\ref{fig:2nd}. This improved the accuracy of the second order method, simulating well the boundaries of several regions without noise.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\linewidth]{images/2lim}
+		\includegraphics[width=0.6\linewidth]{images/2lim}
 		\caption{Shows the height field at the final time step of second order correction with limiter using 64 space points.}
 		\label{fig:2lim}
 	\end{figure}
@@ -447,7 +480,7 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	  Figure.~\ref{fig:f2lim} represents Figure.~\ref{fig:f2}  with limiters used. The limiters made the Roe solver solution non oscillatory(smooth through out), and rectified the solution of the f-wave approach to replicate the jump at the 2-shock but no stationary wave was present in the solution.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.85\linewidth]{images/2lim}
+		\includegraphics[width=0.5\linewidth]{images/2lim}
 		\caption{Shows the height field at the final time step of second order correction with limiter obtained after introducing the source term and the f-wave method using 64 space points.}
 		\label{fig:f2lim}
 	\end{figure}
@@ -458,12 +491,20 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\linewidth]{images/dd1}
+		\includegraphics[width=0.5\linewidth]{images/dd1}
 		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state.}
 		\label{fig:dry-bed}
 	\end{figure}
 	
-	  There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	  There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case the single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	  
+	  \begin{figure}[H]
+	  	\centering
+	  	\includegraphics[width=0.7\linewidth]{images/dry-wet}
+	  	\caption{The dry state appears in three cases: (a) dry region is on the right, (b) dry region is on the left, and (c) dry region appears in the interaction of two wet bed states.}
+	  	\label{fig:dry-wet}
+	  \end{figure}
+	  
 	
 	  The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field.
 	
@@ -473,6 +514,30 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	\end{equation}
 	
 	  If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd0}, and the  rarefaction is in the second characteristic field .
+	  
+	  \begin{figure}[H]
+	  	\begin{subfigure}[b]{0.5\textwidth}
+	  		\centering
+	  		\includegraphics[width=1.0\linewidth]{images/right}
+	  		\caption{}
+	  		\label{fig:right}
+	  	\end{subfigure}
+	  	%
+	  	\begin{subfigure}[b]{0.5\textwidth}
+	  		\centering
+	  		\includegraphics[width=1.0\linewidth]{images/left}
+	  		\caption{}
+	  		\label{fig:left}
+	  	\end{subfigure}
+	  	\caption{(a) and (b) respectively Shows a typical solution profile for the Riemann solution in which the dry bed is at the right and left. }
+	  \end{figure}
+	  
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{images/middle}
+	\caption{ Shows a typical solution profile for the Riemann solution in which the dry bed appears in the interaction between the two wet bed regions.}
+	\label{fig:middle}
+\end{figure}
 	
 	\section{ Future research directions}
 	
