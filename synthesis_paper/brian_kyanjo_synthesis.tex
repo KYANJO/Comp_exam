@@ -410,6 +410,7 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 		\end{subfigure}
 		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction without limiters using 64 space points. }
 	\end{figure}
+
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\linewidth]{images/2lim}
@@ -486,17 +487,19 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	\end{figure}
 	\section{Riemann Problem for Wet/Dry States}
 	
-\donna{Discuss importance of robust methods for handling wet/dry states (reference tsunami papers).  Reference other approaches (Toro?). Here, we describe the approach taken by George in the JCP paper. Discuss "augmented solver".}
+%\donna{Discuss importance of robust methods for handling wet/dry states (reference tsunami papers).  Reference other approaches (Toro?). Here, we describe the approach taken by George in the JCP paper. Discuss "augmented solver".}
 
-	Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
+	In the previous section we discused how the exact slover solved the Riemann problem for cases in which the water height feild id strictly positive everywhere. Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\linewidth]{images/dd1}
 		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state.}
 		\label{fig:dry-bed}
 	\end{figure}
+	There are three possible cases to consider as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits {\em 1-rarefaction} wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits {\em 2-rarefaction} wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesnot exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
 	
-	  There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case the single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	
+	
 	  
 	  \begin{figure}[H]
 	  	\centering
@@ -506,15 +509,7 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	  \end{figure}
 	  
 	
-	  The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field.
-	
-	\begin{equation}
-		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
-		\label{wd0}
-	\end{equation}
-	
-	  If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd0}, and the  rarefaction is in the second characteristic field .
-	  
+	  Figure~\ref{fig:right} and \ref{fig:left} respectively show solution profiles for the height field at the final time step for a Riemann problem  solved exactly with initial data containing dry bed region appears on the right and left.
 	  \begin{figure}[H]
 	  	\begin{subfigure}[b]{0.5\textwidth}
 	  		\centering
@@ -531,7 +526,7 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	  	\end{subfigure}
 	  	\caption{(a) and (b) respectively Shows a typical solution profile for the Riemann solution in which the dry bed is at the right and left. }
 	  \end{figure}
-	  
+	  Figure~\ref{fig:middle} show solution profiles for the height field at the final time step for a Riemann problem  solved exactly for which a dry bed region appears due to the interaction of two wet bed states statisfying $S_{*L} \le S_{*R}$.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{images/middle}
@@ -539,6 +534,44 @@ Accuracy of smooth solutions are obtained by advancing first order methods to se
 	\label{fig:middle}
 \end{figure}
 	
+	
+Here, we describe the approach taken by George in the JCP paper\cite{ge:2008}. LeVeque and Pelanti in \cite{leveque2001class} proposed that equation \eqref{p3} can be decomposed into equation \eqref{p5}:
+	
+	\begin{equation}
+		\begin{bmatrix} 
+			H_{i} - H_{i-1}\\ 	HU_{i} - HU_{i-1} \\  \varphi(Q_{i}) - \varphi(Q_{i-1}) 
+		\end{bmatrix} = \sum_{p=1}^{3} \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
+		\label{p5}
+	\end{equation}
+	 where the momentum flux $\varphi(q) = (hu^{2} + \frac{1}{2} gh^{2})$, $Q_{i} = (H_{i},HU_{i})^{T}$ represents the numerical solution of $q = (h,hu)^{T}$ in $C_{i}$, and $w_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{3}$ ,$\forall ~ p \in [1,3] $ with $p$ a set of chosen independent vectors. \\
+	
+	 The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three components  in equation \eqref{p5}. Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
+	
+	\begin{equation}
+		z_{i-\frac{1}{2}}^{p} = [\mathbf{0}_{2\times1} \quad \mathbf{I}_{2\times2}] \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
+	\end{equation}
+	where $\mathbf{0}_{2\times1}$ is a two by one zeros matrix, $\mathbf{I}_{2\times2}$ is a two by two identity. Then updated fluctuations become:
+	\begin{eqnarray}
+		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}}  z_{i-\frac{1}{2}}^{p}
+		\label{p7}\\
+		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} z_{i+\frac{1}{2}}^{p}
+		\label{p8}
+	\end{eqnarray}
+	There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{ge:2008}.\\ 
+	
+	\noindent The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:dry-wet}.(a).
+	
+	\begin{equation}
+		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(0)= U_{i-1} - 2\sqrt{gH_{i-1}}
+		\label{wd0}
+	\end{equation}
+	
+	\noindent If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd1}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:dry-wet}.(b).
+	
+	\begin{equation}
+		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(0)= U_{i} - 2\sqrt{gH_{i}}
+		\label{wd1}
+	\end{equation}
 	\section{ Future research directions}
 	
 	
