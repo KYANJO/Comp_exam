@@ -100,8 +100,11 @@
 	
 	\section{Introduction}
 
+	\donna{Motivate five papers:   Dry and Wet states, possible methods, implementations. Applications to tsunamis, flooding, other natural hazards. How do we solve the Riemann problem for wet and dry states?}
 
+	A fundamental set of equations is the Riemann so
 
+	\section{Riemann solvers}
 	A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}. 
 	\begin{eqnarray}
 		q_{t} + f(q)_{x}& =& 0
@@ -195,18 +198,21 @@
 		u_{m} = u_{l} - (h_{m} - h_{l})\sqrt{\frac{g}{2}\left(\frac{1}{h_m} + \frac{1}{h_l} \right)}
 		\label{e4}
 	\end{equation}
-	Equations \eqref{e3} and \eqref{e4} form a system of two equations with two unknowns ($h_m$ and $u_m$) that are equated since the left-hand sides of both equations are equal. A non linear equation that consist of only one unknown $h_m$ is formed and solved using an iterative method such as Newton method to obtain a desired intemediate state in the Riemann solution.\\
+	Equations \eqref{e3} and \eqref{e4} form a system of two equations with two unknowns ($h_m$ and $u_m$) that are equated since the left-hand sides of both equations are equal. A non linear equation that consist of only one unknown $h_m$ is formed and solved using an iterative method such as Newton method to obtain a desired intermediate state in the Riemann solution.
 
-   As an example, consider athe SWE Riemann problem with $h_l = h_r = 1, u_l = 0.5, $ and $u_r = -0.5$. These initial values are used by the netwon solver to solve equations \eqref{e3} and \eqref{e4} to produce $h_{m} = 1.554$. The shock speeds ($s_l$ and $s_r$) in each region are different due to different wave characteristics, we use this concept to loop through all interfaces and determine $h$ and $hu$ in each region as shown in the code \ref{pp} . At each interface $h$ and $hu$ are stored into $q_1$ and $q_2$ as hieght and momentum solutions. According to Lax entropy conditions, a  {\em 1-shock} that physically connects $q_l$ to $q_m$ is obatined if $h_m>h_l$, and similarly a {\em 2-shock} wave that physically connects $q_m$ to $q_r$ requires $h_m>h_r$ \cite{le-ge-be:2011}.
+   As an example, consider a SWE Riemann problem with $h_l = h_r = 1, u_l = 0.5, $ and $u_r = -0.5$. These initial values are used by the Newton solver to solve equations \eqref{e3} and \eqref{e4} to produce $h_{m} = 1.554$. The shock speeds ($s_l$ and $s_r$) in each region are different due to different wave characteristics, we use this concept to loop through all interfaces and determine $h$ and $hu$ in each region as shown in the code \ref{pp} . At each interface $h$ and $hu$ are stored into $q_1$ and $q_2$ as height and momentum solutions. According to Lax entropy conditions, a  {\em 1-shock} that physically connects $q_l$ to $q_m$ is obtained if $h_m>h_l$, and similarly a {\em 2-shock} wave that physically connects $q_m$ to $q_r$ requires $h_m>h_r$ \cite{le-ge-be:2011}.
    
 \begin{small}
 	\begin{lstlisting}[language=Python, caption=Python code describing how the two shock case solution is obtained after the first time step.,label = pp]
-for i in range(len(x)):
-		if 0.5*(sl(hl,ql,g) + sl(hm,qm,g))*t > x[i] : # left to middle state
+	def Riemann_solution(ql,qr,xi,qm)    # xi = x/t
+    # for i in range(len(x)):
+        sl[0] = ql[1]/ql[0] - sqrt(..)
+        sr[0] = qr[1]/qr[0] - sqrt(..)
+		if 0.5*(sl(hl,ql,g) + sl(hm,qm,g)) > xi : # left to middle state
 				h = hl
 				u = ul
 				hu = h*u   	
-		elif sl(hm,qm,g)*t < x[i] and x[i]<t*sr(hm,qr,g): # middle state
+		elif sl(hm,qm,g) < xi and xi < sr(hm,qr,g): # middle state
 				h = hm
 				u = um
 				hu = h*u
@@ -214,8 +220,9 @@ for i in range(len(x)):
 				h = hr
 				u = ur
 				hu = h*u
-		q1[i] = h
-		q2[i] = hu
+		# q1[i] = h
+		# q2[i] = hu
+	return h, hu
 \end{lstlisting}
 \end{small}
 
@@ -262,6 +269,7 @@ The height field solution $q_1$ obtained from the code \ref{pp} above is ploted 
 	where $\mathcal{F}$ is some numerical flux function.\\
 	
 	\section{Wave Propagation Algorithm (WPA)}
+	  \donna{reference book and papers}
 	  Equation \eqref{cellupdate}, can be reformulated as a first order wave propagation method by decomposing flux at the cell averages into fluctuations ($\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$) as shown in equations \eqref{ap} and \eqref{am}. 
 	
 	\begin{eqnarray}
@@ -327,7 +335,7 @@ The height field solution $q_1$ obtained from the code \ref{pp} above is ploted 
 	  Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$.\\
 	
 	\subsection{WPA for the Shallow Water Equations}
-	
+	\donna{Reference papers}
 	 	The combination of equations in system \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
 	
 	\begin{eqnarray}
