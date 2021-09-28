@@ -226,7 +226,7 @@
 		\end{lstlisting}
 	\end{small}
 	
-	The height field solution $h$ obtained from the code \ref{pp} above is ploted in fig.~\ref{fig:2-shock}. The plot depicts the left region being connected to the middle region via a {\em 1-shock } wave and the middle  being connected to the right region via a a {\em 2-shock } wave.
+	The height field solution $h$ obtained from the code \ref{pp} above is plotted in fig.~\ref{fig:2-shock}. The plot depicts the left region being connected to the middle region via a {\em 1-shock } wave and the middle  being connected to the right region via a a {\em 2-shock } wave.
 	
 	\begin{figure}[H]
 		\centering
@@ -395,7 +395,7 @@
 		\text{superbee}: ~ \phi(\theta) &=& \text{max}(0,\text{min}(1,2\theta),\text{min}(2,\theta))\\
 		\text{van Leer} : ~ \phi(\theta) &=& \frac{\theta + |\theta|}{1 + |\theta|}
 	\end{eqnarray}
-	where $\phi(\theta)$ is a limiter function. Each limiter behaved differently in phasing out oscillations, even though the simple limiter (minmod), performed better  in filtering out the noise near the 2-shock for the flux formulation method as shown in fig.~\ref*{fig:2lim}, since its a slope limiter that lies along the lower boundary of the Sweby region in the $\theta$-$\phi$  plane. Full second order accuracy is obatined for MC if the function $\phi$ is smooth near $\theta=1$. The van Leer is a smoother version of MC, and the superbee lies along the upper boundary of the Sweby region and it did not perform well because it gives much too compression  \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}.\\
+	where $\phi(\theta)$ is a limiter function. Each limiter behaved differently in phasing out oscillations, even though the simple limiter (minmod), performed better  in filtering out the noise near the 2-shock for the flux formulation method as shown in fig.~\ref*{fig:2lim}, since its a slope limiter that lies along the lower boundary of the Sweby region in the $\theta$-$\phi$  plane. Full second order accuracy is obtained for MC if the function $\phi$ is smooth near $\theta=1$. The van Leer is a smoother version of MC, and the superbee lies along the upper boundary of the Sweby region and it did not perform well because it gives much too compression  \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}.\\
 	\section{Numerical Examples}
 	
 	Figures \ref{fig:1st} and  \ref{fig:2nd}, represents two plots: first  and second order correction (without limiters) obtained from simulation of WPA flux formulation and WPA using the Roe solver combined with the exact Riemann solver. The dam break problem is solved using both flux formulation and  Roe solver, and  solutions are validated against the exact Riemann solver solution as shown in the two figures. For the first order solution both methods coincide even though they tend to flatten at both edges of the 1-rarefaction fan and the 2-shock. On applying the second order correction in  \ref{fig:2nd}, the solutions at edges of each region tend to converge more to the exact solution, however more noise is exhibited at the beginning and end of the intermediate region, and this can be solved by applying limiters to the approximate solutions as shown in fig.~\ref{fig:2lim}. \\
@@ -564,43 +564,43 @@
 		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} z_{i+\frac{1}{2}}^{p}
 		\label{p8}
 	\end{eqnarray}
-	Equations \ref{p7} and \ref{p8} are determined by decomposing flux in a similar way as in the f-wave approach in \cite{ba-le-mi-ro:2003} and \cite{george2006finite}, however in  \cite{ge:2008}  its decomposed into three waves ($w^{p}_{i-\frac{1}{2}} ~\in ~\mathbb{R}^{3}$)  with three associated wave speeds ($s^{p}_{i-\frac{1}{2}} ~\text{for}~ p =1,2,3$)  rather than two  allowing a more accurate approximation to the Riemann problem with a large rarefaction and a natural entropy fix for transonic rarefactions. The first and third eigen pairs $\{w^{1,3}_{i-\frac{1}{2}},s^{1,3}_{i-\frac{1}{2}}\}  $    are related to the eigen pairs of \eqref{ep}, eventhough in  \cite{be-ge-le-ma:2011}, its the first and second pairs that relate to the original fields of SWE. \\
+	Equations \ref{p7} and \ref{p8} are determined by decomposing flux in a similar way as in the f-wave approach in \cite{ba-le-mi-ro:2003} and \cite{george2006finite}, however in  \cite{ge:2008}  its decomposed into three waves ($w^{p}_{i-\frac{1}{2}} ~\in ~\mathbb{R}^{3}$)  with three associated wave speeds ($s^{p}_{i-\frac{1}{2}} ~\text{for}~ p =1,2,3$)  rather than two  allowing a more accurate approximation to the Riemann problem with a large rarefaction and a natural entropy fix for transonic rarefactions. The first and third eigen pairs $\{w^{1,3}_{i-\frac{1}{2}},s^{1,3}_{i-\frac{1}{2}}\}  $    are related to the eigen pairs of \eqref{ep}, even though in  \cite{be-ge-le-ma:2011}, its the first and second pairs that relate to the original fields of SWE. \\
 	
 	Therefore from the three eigen pairs, we choose, 
 	\begin{equation}
 		\begin{aligned}
-		\{w^{1}_{i-\frac{1}{2}},s^{1}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{-} ,(\check{s}_{i-\frac{1}{2}}^{-} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{-} \} \\
-		\{w^{3}_{i-\frac{1}{2}},s^{3}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{+} ,(\check{s}_{i-\frac{1}{2}}^{+} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{+} \} 
+			\{w^{1}_{i-\frac{1}{2}},s^{1}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{-} ,(\check{s}_{i-\frac{1}{2}}^{-} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{-} \} \\
+			\{w^{3}_{i-\frac{1}{2}},s^{3}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{+} ,(\check{s}_{i-\frac{1}{2}}^{+} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{+} \} 
 		\end{aligned}
 	\end{equation}
 	where $\check{s}_{i-\frac{1}{2}}^{\pm}$ are the Einfeldt speeds defined by:
 	\begin{equation}
 		\begin{aligned}
-		\check{s}_{i-\frac{1}{2}}^{-} &= \text{min}(\lambda^{-}(Q^n_{i-1}),\hat{\lambda}_{i-\frac{1}{2}}^{-}) \\
-		\check{s}_{i-\frac{1}{2}}^{+} &= \text{max}(\lambda^{+}(Q^n_{i}),\hat{\lambda}_{i-\frac{1}{2}}^{+})
+			\check{s}_{i-\frac{1}{2}}^{-} &= \text{min}(\lambda^{-}(Q^n_{i-1}),\hat{\lambda}_{i-\frac{1}{2}}^{-}) \\
+			\check{s}_{i-\frac{1}{2}}^{+} &= \text{max}(\lambda^{+}(Q^n_{i}),\hat{\lambda}_{i-\frac{1}{2}}^{+})
 		\end{aligned}
-	\label{EE}
+		\label{EE}
 	\end{equation}
-where $\lambda^{\pm} = u\pm \sqrt{gh}$ are eigen values of equation \eqref{ep} and $\check{\lambda}_{i-\frac{1}{2}}^{\pm}$ are eigen values of the Roe averaged Jacobian matrix $\hat{A}_{i-\frac{1}{2}}$ in equation \eqref{n3}. The second pair $	\{w^{2}_{i-\frac{1}{2}},s^{2}_{i-\frac{1}{2}}\}$  that result into the second wave named corrector wave and speed is arbitrary chosen in various ways. The corrector wave correscts inacurate, non-conservative and entropy violating approximate Riemann solutions with only two waves\cite{be-ge-le-ma:2011}.
-                                                                                                                                                                                                                                                                                                                                                                     
+	where $\lambda^{\pm} = u\pm \sqrt{gh}$ are eigen values of equation \eqref{ep} and $\check{\lambda}_{i-\frac{1}{2}}^{\pm}$ are eigen values of the Roe averaged Jacobian matrix $\hat{A}_{i-\frac{1}{2}}$ in equation \eqref{n3}. The second pair $	\{w^{2}_{i-\frac{1}{2}},s^{2}_{i-\frac{1}{2}}\}$  that result into the second wave named corrector wave and speed is arbitrary chosen in various ways. The corrector wave corrects inaccurate, non-conservative and entropy violating approximate Riemann solutions with only two waves\cite{be-ge-le-ma:2011}.
+	
 	
 	There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants\cite{le-ge-be:2011}. In \citealp{george2006finite} and \cite{ge:2008}, Einfeldt speeds (\eqref{EE})  define two propagating discontinuities, the  middle state between them is determined to maintain conservation and its depth at interface $x_{i-\frac{1}{2}}$ is given by:
 	\begin{equation}
 		\check{H}^{*}_{i-\frac{1}{2}} = \frac{HU_{i-1} -HU_{i} + \check{s}_{i-\frac{1}{2}}^{+}H_{i} -\check{s}_{i-\frac{1}{2}}^{-} H_{i-1}  }{\check{s}_{i-\frac{1}{2}}^{+} - \check{s}_{i-\frac{1}{2}}^{-}  }
 	\end{equation}
 	The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:dry-wet}.(a) \cite{ge:2008}.
-	 
+	
 	\begin{equation}
 		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(H^{*}_{i-\frac{1}{2}}=0)= U_{i-1} - 2\sqrt{gH_{i-1}}
 		\label{wd0}
 	\end{equation}
-    If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd1}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:dry-wet}.(b) \cite{ge:2008}.
+	If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd1}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:dry-wet}.(b) \cite{ge:2008}.
 	
 	\begin{equation}
 		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(H^{*}_{i-\frac{1}{2}}=0)= U_{i} - 2\sqrt{gH_{i}}
 		\label{wd1}
 	\end{equation}
-Note that the middle state depth $H^{*}_{i-\frac{1}{2}}=0$ since it corresponds to the initial dry state
+	Note that the middle state depth $H^{*}_{i-\frac{1}{2}}=0$ since it corresponds to the initial dry state
 	\section{ Future research directions}
 	
 	
