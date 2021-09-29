@@ -107,7 +107,7 @@
 	A fundamental set of equations is the Riemann so
 	
 	\section{Riemann solvers}
-	A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}\cite{ge:2011}. 
+	Riemann solvers are the numerical method in which time-averaged fluxes of all conserved quantities are calculated to solve Riemann problems.  A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}\cite{ge:2011}. 
 	\begin{eqnarray}
 		q_{t} + f(q)_{x}& =& 0
 		\label{rp0}\\
@@ -123,7 +123,7 @@
 	\section{Shallow Water Equations (SWE)}
 	The SWE are a system of hyperbolic PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible, and horizontal velocity roughly constant throughout any cross section of the channel \cite{ge:2008}.  \\
 	
-	Consider a small-amplitude waves in a one-dimensional fluid channel that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into system \eqref{p2}.
+	Consider small-amplitude waves in a one-dimensional fluid channel that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into system \eqref{p2}.
 	
 	\begin{equation}
 		\begin{aligned}
