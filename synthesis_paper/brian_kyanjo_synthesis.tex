@@ -87,7 +87,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%% title page %%%%%%%%%%%%%%%%%%%%%%%%%%
 	\thispagestyle{empty}
 	\begin{center}
-		\textbf{A Riemann Solver for Wet/Dry Interfaces in Geoclaw \\[0.5cm]
+		\textbf{A Riemann Solver for Wet/Dry Interfaces in finite volume schemes\\[0.5cm]
 			Synthesis Paper}
 		\vspace{.2cm}
 	\end{center}
@@ -102,14 +102,15 @@
 	
 	\section{Introduction}
 	
-	\donna{Motivate five papers:   Dry and Wet states, possible methods, implementations. Applications to tsunamis, flooding, other natural hazards. How do we solve the Riemann problem for wet and dry states?}
-	
-	A fundamental set of equations is the Riemann so
+
+	\donna{Motivate paper with general tsunami papers (George, LeVeque, Popinet; ...) 
+	Dry and Wet states, possible methods, implementations. Applications to tsunamis, flooding, other natural hazards. All of these numerical tsunami models rely on solving Riemann problems which can robustly track a wetting and drying interfaces to model runup on beaches and inunudation into harbors and communities along the affected coastlines.  Various approaches have been taken to model handle these wetting and drying states.  These include approaches taken by George \cite{ge:2008,ge:2011}, Popinet}
+
 	
 	\section{Riemann solvers}
-	Riemann solvers are the numerical method in which time-averaged fluxes of all conserved quantities are calculated to solve Riemann problems.  A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equation\eqref{rp1}\cite{ge:2011}. 
+	Riemann solvers are the numerical method in which time-averaged fluxes of all conserved quantitie{}s{} are calculated to solve Riemann problems.  A Riemann Problem is a fundamental problem in conservation laws and is useful in finite volume schemes. It can be defined as a specific initial value problem  (Cauchy) of a partial differential equation (PDE) that consists of conservation equations \eqref{rp0}  combined with piece-wise constant initial data which has a single discontinuity in the domain of interest as shown in equatio{}n\eqref{rp1}\cite{ge:2011}. 
 	\begin{eqnarray}
-		q_{t} + f(q)_{x}& =& 0
+		{}q_{t} + f(q)_{x}& =& 0
 		\label{rp0}\\
 		q(x,0)& =& \begin{cases}
 			q_{L}, & \text{if \, $x \le 0,$}\\
@@ -494,7 +495,9 @@
 	\end{figure}
 	\section{Riemann Problem for Wet/Dry States}
 	
-	%\donna{Discuss importance of robust methods for handling wet/dry states (reference tsunami papers).  Reference other approaches (Toro?). Here, we describe the approach taken by George in the JCP paper. Discuss "augmented solver".}
+	\donna{Discuss importance of robust methods for handling wet/dry states (reference tsunami papers).  Reference other approaches (Toro?). Here, we describe the approach taken by George in the JCP paper. Discuss "augmented solver".}
+
+	\donna{More discussion of what others have done.  Popinet paper;  }
 	
 	In the previous section we discussed how the exact solver solved the Riemann problem for cases in which the water height field id strictly positive everywhere. Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \citep{toro2001shock}.
 	\begin{figure}[H]
@@ -608,7 +611,7 @@
 	
 	
 	\bibliographystyle{plain}
-	\bibliography{geoclaw}
+	\bibliography{geoclaw,literature}
 	
 \end{document}
 
