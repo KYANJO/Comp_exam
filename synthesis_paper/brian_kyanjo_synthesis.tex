@@ -85,6 +85,8 @@
 	
 
 %	\donna{	
+				A tsunami is a series of energetic water waves generated due to the displacement of large volumes of water by different mechanisms such as earthquakes, volcanic eruptions, underwater landslides, and local landslides along the coast. According to the recent tragic events in December 2004 in Indonesia and  South Africa, tsunamis may be extremely catastrophic: they can lead to the loss of human lives and destroy buildings and roads. Typically, they cause devastative damages to infrastructures. Deep knowledge of tsunamis is required to provide early warning messages to the regions that may be affected, carry out necessary evacuations, and also anticipate the highest run-ups and run-downs \cite{sanchez2016uncertainty}.
+				
 				Most numerical tsunami models rely on solving Riemann problems which can robustly track wetting and drying interfaces to model run-up on beaches and inundation into harbors and communities along the affected coastlines.  Various approaches have been taken to handle these wetting and drying states. For instance, \citet{ge:2011} used Godunov-type finite volume methods to model inundation by allowing cells to shift from dry to wet near refinement boundaries dynamically. 
 				
 				Similarly, \citet{li-ta-wa-ca-ba-ch-li:2021} used the same approach to process dry and wet/dry front cells to predict flood elevation by modifying the dry cell's center elevation to correspond to the averaged peak of the two surrounding intercell heights. However, in \cite{ge:2008}, George used an approximate Riemann solver for the shallow water equations (SWE) to decompose an augmented solution vector into four propagating waves. This maintained excellent features in the approximate solution, such as preserving depth non-negativity, shockwave solutions capturing, e.t.c., making the solver appropriate for modeling SWE when steady states and dry cells exist.
@@ -98,7 +100,7 @@
 
 	\section{Shallow water equations for tsunami modeling}
 	%\donna{	
-	Shallow water models have been frequently used to handle the propagation of tsunami waves in the ocean see for instance \citet{dutykh2007water,le-ge-be:2011,dias2007dynamics}. The SWE assumption is applicable as the average ocean depth is very shallow than the tsunami's wavelength. In addition, the amplitude of tsunami is minimal offshore, typically less than 1m, to justify the smallness assumption. 
+	Shallow water models have been frequently used to handle the propagation of tsunami waves in the ocean see for instance \citet{dutykh2007water,le-ge-be:2011,dias2007dynamics}. The SWE assumption is applicable as the average ocean depth is very shallow compared to the tsunami's wavelength. In addition, the amplitude of tsunami is minimal offshore, typically less than 1m, to justify the smallness assumption. 
 	
 		The shallow water wave equations (SWE) are a system of hyperbolic PDEs governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible and horizontal velocity roughly constant throughout any cross-section of the channel \cite{ge:2008}.  
 		
@@ -122,6 +124,7 @@
 		\label{rp1}     
 	\end{eqnarray}
 where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a discontinuity \cite{ba-le-mi-ro:2003}. 
+
 	The variation of $h$ and $hu$ on either side of the discontinuity leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions)\cite{leveque2002finite}.  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$) and right($q_{r}$) states are given by: 
 	\begin{equation}
 		q_{l} = \begin{bmatrix}
@@ -131,8 +134,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		\end{bmatrix} 
 		\label{ic}
 	\end{equation}
-	As $t$ increases, four distinct regions are created, separated by characteristics. 
-	The middle state called the intermediate state($q_{m}$), is generated.  The determination of this state characterizes the Riemann problem and how it connects to other states via waves in each respective characteristic family\cite{ba-le-mi-ro:2003}.  This can only hold if the connection wave speeds satisfy the Lax entropy condition. Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction  and shock wave from the first and second characteristic family respectively.
+	As $t$ increases, four distinct regions are created, separated by characteristics. The middle state called the intermediate state($q_{m}$) is generated.  The determination of this state characterizes the Riemann problem and how it connects to other states via waves in each respective characteristic family\cite{ba-le-mi-ro:2003}.  This can only hold if the connection wave speeds satisfy the Lax entropy condition. Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction and shock wave from the first and second characteristic family, respectively.
 	
 	\begin{figure}[H]
 		\centering
@@ -141,14 +143,14 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		\label{fig:x-tplane}
 	\end{figure}
 	
-	The intermediate state is obtained by solving the Riemann problem using the exact or  approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers\cite{bu-ku-we-da:2009}.
+	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers\cite{bu-ku-we-da:2009}.
 	
 	
 	\subsection{Exact Riemann Solver for two-shock SWE}
-	The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if two states are connected by a shock.  We refer the reader to \cite{leveque2002finite} for other cases. 
-	
-	We can obtain an exact solution to the Riemann Problem for the SWE as follows. 
-	The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the Rankine Hugoniot conditions will be satisfied\cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}. 
+The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \cite{leveque2002finite} for other cases. 
+
+We can achieve an exact solution to the Riemann Problem for the SWE as follows. 
+The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the Rankine Hugoniot conditions will be satisfied\cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}. 
 	\begin{equation}
 		\begin{aligned}
 			s_1(q_{m} - q_{l}) & = f(q_{m}) - f(q_{l}) \\
@@ -156,17 +158,36 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		\end{aligned}
 		\label{e1}
 	\end{equation}
-	By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates a system of four equations \eqref{ee2} that must be satisfied simultaneously. 
-		
-
-\donna{Not all left and right states can be connected by a shock wave.  In this case, we connect states by a rarefaction wave. See Figure (...) for illustration of evolution of a Riemann problem for the two shock case and for a case in which the left going wave is a rarefaction, and the right going wave is a shock.}
-
-\donna{Include your exact solver solution.  One that shows just the exact solution for a few cases (two shock solution;   one shock and one rarefaction)}	
+	By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates a system of four equations that must be satisfied simultaneously. 
 	
-	\subsection{Finite volume discretization}
-	\donna{Finite volume discretizations are widely used in tsunami modeling (explain why...).   Reference papers that use finite volume discretizations. The finite volume schemes rely on exact or approximate solutions to the Riemann problem described above.}
+	Not all left and right states can be connected by a shock wave.  In this case, we connect states by a rarefaction wave. See Figure (\ref{hor1})  for illustration of the evolution of a Riemann problem for the all shock case \ref{allshock} and for a case in which the right going wave is a shock \ref{2shock}, all rarefaction case \ref{allrare}, and the left going wave is a rarefaction \ref{1rare}.
+	
+\begin{figure}[H]%
+	\centering
+	\subfloat[]{%
+		\label{allshock}  %
+		\includegraphics[width=0.4\textwidth, height=5cm]{images/allshock}}
+	\quad
+	\subfloat[]{%
+		\label{2shock}  %
+		\includegraphics[width=0.4\textwidth, height=5cm]{images/2shock}}%
+	
+	\subfloat[]{%
+		\label{allrare}  %
+		\includegraphics[width=0.4\textwidth, height=5cm]{images/allrare}}
+	\quad
+	\subfloat[]{%
+		\label{1rare} %
+		\includegraphics[width=0.4\textwidth, height=5cm]{images/1rare}}%
+	\caption{Spatial evolution of the height field for the {\em all-shock case},  {\em 2-shock case}, {\em all-rarefaction case},  and {\em 1-rarefaction case} simulated  at its final time step ($t=2~seconds$) are depicted by (a), (b), (c), and (d) respectively.}
+	\label{hor1}
+\end{figure}
 
-	Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function\cite{ge:2011}.
+	\subsection{Finite volume discretization}
+Finite volume discretizations are widely used in tsunami modeling since they are: well suited for inundation regimes, robust in the presence of drying regions, well-balanced, and can capture the inundating shoreline and run-up features, see for instance \citet{ge:2008,ge:2011,george2006finite,be-ge-le-ma:2011,bi2014finite,leveque2002finite,ba-le-mi-ro:2003}. The finite volume schemes rely on exact or approximate solutions to the Riemann problem described above.
+
+Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function\cite{ge:2011}.
+
 	\begin{equation}
 		q_{t}(x,t) + f(q(x,t))_{x} = 0
 		\label{fvm0}
@@ -195,36 +216,71 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		Q_{i}^{n+1} = Q_{i}^{n} - \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]
 		\label{cellupdat}
 	\end{equation}
-	where $\mathcal{F}$ is some numerical flux function.  \donna{Can you connect the numerical flux function to the Riemann problem?}
-
-	\donna{This section will have to be modified so you can mention the exact solver and approximate solver....}
-	Figures.~\ref{fig:f1} and \ref{fig:f2}, depicts the first and second order correction of the flux base wave decomposition(green), exact Riemann solution(red), and Roe-solver(blue) based on the standard wave propagation algorithm \cite{le:2002} for the dam break problem height field simulated at the final time without limiters. Fig.~\ref{fig:f1}  shows that both solutions coincide, but the difference is exhibited in the \ref{fig:f2} in which the Roe solver is highly affected by the oscillations near discontinuities in absence of limiters. This basically means that the f-wave approach together with the flux term filtered out the oscillatory terms.
+	where $\mathcal{F}$ is equivalent to the  numerical flux function $F_{i-\frac{1}{2}}^{n}$ at $q_l = Q_{i-1}$  and $q_r = Q_{i}$.
 	
+
+Figures.~\ref{fig:exap} and \ref{fig:exapp}, depicts the first and second-order correction of the approximate solution (flux base wave decomposition (blue)) \cite{ba-le-mi-ro:2003} and the exact Riemann solution(red) for the dam break problem height field simulated at the final time with limiters. Fig.~\ref{fig:exap}  shows that the first-order approximate solution does not coincide with the exact solution at region edges. However, the second order approximate solution \ref{fig:exapp}  fits the exact solution accurately; hence this validates the exact and numerical solutions.
 	\begin{figure}[H]
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{images/f1}
+			\includegraphics[width=1.0\linewidth]{images/exap}
 			\caption{}
-			\label{fig:f1}
+			\label{fig:exap}
 		\end{subfigure}
 		%
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering
-			\includegraphics[width=1.0\linewidth]{images/f2}
+			\includegraphics[width=1.0\linewidth]{images/exapp}
 			\caption{}
-			\label{fig:f2}
+			\label{fig:exapp}
 		\end{subfigure}
-		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction without limiters obtained after introducing the source term and the f-wave method. }
+		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction with limiters for the exact and approximate solutions. }
 	\end{figure}
+	The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
+as
+\begin{equation}
+	q_{t} + f'(q)q_{x} = 0
+	\label{wpa3}
+\end{equation}
+where  $f'(q) \in \mathbb{R}^{m\times m}$  flux Jacobian matrix\cite{be-ge-le-ma:2011}.  Consider a Riemann problem for the system  \eqref{wpa3} with initial data 
+
+\begin{equation}
+	q(x,t^n)  = \begin{cases}
+		Q_{i-1}^{n}  & \text{if} \quad  x < x_{i-\frac{1}{2}}\\
+		Q_{i}^{n} & \text{if} \quad x > x_{i-\frac{1}{2}}\\
+	\end{cases}    
+	\label{w4}   
+\end{equation}
+The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$ \cite{leveque2002finite}. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$.  This decomposition takes the form
+
+\begin{equation}
+	Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}} \equiv \sum_{p=1}^{m} \mathcal{W}_{i-\frac{1}{2}}^{p}
+	\label{wpa19}
+\end{equation}
+The wave speed $s_{i-\frac{1}{2}}^{p}$ associated with the vector $r_{i-\frac{1}{2}}^{p}$, are preselected basing on the characteristic structure of the initial Riemann data  \cite{ge:2008}. Therefore the fluctuations $\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n}$  and $\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n} $ are defined by equations \eqref{f0} and \eqref{f1}:
+
+\begin{eqnarray}
+	\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}<0\}} s_{i-\frac{1}{2}}^{p} \mathcal{W}_{i-\frac{1}{2}}^{p}
+	\label{f0}\\
+	\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} =\sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}} s_{i-\frac{1}{2}}^{p} \mathcal{W}_{i-\frac{1}{2}}^{p}
+	\label{f1}
+\end{eqnarray}
+
+	The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2} \cite{barzgaran2019numerical}
+
+\begin{equation}
+	Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) -  \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )
+	\label{wpa2}
+\end{equation}
+where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determined by the waves and speeds in the Riemann problems after approximating the average flux along  $x = x_{i - \frac{1}{2}}$:
+
+\begin{equation}
+	\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
+	\label{wpa13}
+\end{equation}
+Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$ \cite{ba-le-mi-ro:2003}.\\
 	
-	Figure.~\ref{fig:f2lim} represents Figure.~\ref{fig:f2}  with limiters used. The limiters made the Roe solver solution non oscillatory(smooth through out), and rectified the solution of the f-wave approach to replicate the jump at the 2-shock but no stationary wave was present in the solution.
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.5\linewidth]{images/2lim}
-		\caption{Shows the height field at the final time step of second order correction with limiter obtained after introducing the source term and the f-wave method using 64 space points.}
-		\label{fig:f2lim}
-	\end{figure}
-	\donna{Briefly mention higher order corrections ( but don't go into much detail).  You can mention a variety of solvers (e.g. MUSCL, Runge-Kutta (see Bunya paper)) and say they all have some way of extending to get higher order.}
+	\donna{ You can mention a variety of solvers (e.g. MUSCL, Runge-Kutta (see Bunya paper)) and say they all have some way of extending to get higher order.}
 
 	\subsection{Bathymetry}
 	Equation \eqref{p2}, can be extended to balance equations by introducing a bathymetric source term as shown in equation \eqref{bst}. This is done by discretising the source term to generate values $-gh_{i-\frac{1}{2}}B^{\prime}(x_{i-\frac{1}{2}})$ at  cell interfaces  $x = x_{i-\frac{1}{2}}$. This approach is very useful, because the discrepancy caused due to the failure of the flux gradient to counterbalance the source term in a near steady state solution is decomposed into propagating waves  making the approach more robust than the quasi-steady WPA \cite{ba-le-mi-ro:2003}.
@@ -237,7 +293,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	\end{equation}
 	where $B(x)$ represents bottom elevation. \\
 	
-	%\subsection{ Introduce fwaves to handle stationery states}
+
 	\donna{Emphasize importance of "well-balanced schemes";  Reference paper by Bale et al.;}
 
 
@@ -255,7 +311,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\linewidth]{images/dd1}
-		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state. \donna{Replace this figure with your own figure}}
+		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state. }
 		\label{fig:dry-bed}
 	\end{figure}
 	There are three possible cases to consider as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits {\em 1-rarefaction} wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits {\em 2-rarefaction} wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$ \cite{toro2001shock}.
@@ -270,74 +326,6 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 
 	\subsection{Augmented Riemann solver (George)}
 
-	% \subsubsection{Wave Propagation Algorithm (WPA)}
-	% \donna{This will probably need to be shortened a bit. }
-\ignore{
-	Equation \eqref{cellupdate}, can be reformulated as a first order wave propagation method by decomposing flux at the cell averages into fluctuations ($\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$) as shown in equations \eqref{ap} and \eqref{am} \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}. 
-	
-	\begin{eqnarray}
-		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} = f(Q_{i}) - f(Q_{i-\frac{1}{2}}^{*})
-		\label{ap}\\
-		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = f(Q_{i+\frac{1}{2}}^{*}) - f(Q_{i}) 
-		\label{am}
-	\end{eqnarray}	
-	where  $\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n}$ and  $\mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}$ are the net updating contributions from the rightward and leftward moving waves into the grid cell $C_{i}$  from the right and left interface respectively,  $Q_{i-\frac{1}{2}}^{*}$ is the intermediate cell average determined by the exact Riemann solver at $x_{i-\frac{1}{2}}$, and $ f(Q_{i-\frac{1}{2}}^{*})$ is numerical flux at $Q_{i-\frac{1}{2}}^{*}$ \cite{ge:2008}. Combining equations \eqref{ap} and \eqref{am}, the  first order 1D  wave propagation method is given by equation \eqref{wpa1}.
-	
-	\begin{equation}
-		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n})
-		\label{wpa1}
-	\end{equation}
-	\label{section:my}
-	The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
-	as
-	\begin{equation}
-		q_{t} + f'(q)q_{x} = 0
-		\label{wpa3}
-	\end{equation}
-	where  $f'(q) \in \mathbb{R}^{m\times m}$  flux Jacobian matrix.  Consider a Riemann problem for the system  \eqref{wpa3} with initial data 
-	
-	\begin{equation}
-		q(x,t^n)  = \begin{cases}
-			Q_{i-1}^{n}  & \text{if} \quad  x < x_{i-\frac{1}{2}}\\
-			Q_{i}^{n} & \text{if} \quad x > x_{i-\frac{1}{2}}\\
-		\end{cases}    
-		\label{w4}   
-	\end{equation}
-	The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$\cite{leveque2002finite}. where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$.  This decomposition takes the form
-	
-	\begin{equation}
-		Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}}
-		\label{wpa19}
-	\end{equation}
-	The wave speed $s_{i-\frac{1}{2}}^{p}$ associated with the vector $r_{i-\frac{1}{2}}^{p}$, are preselected basing on the characteristic structure of the initial Riemann data \cite{ge:2008}. Therefore the fluctuations $\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n}$  and $\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n} $ are defined by equations \eqref{f0} and \eqref{f1}:
-	
-	\begin{eqnarray}
-		\mathcal{A^{-}}\Delta Q_{i-\frac{1}{2}}^{n} = \sum_{\{ p:s_{i-\frac{1}{2}}^{p}<0\}} s_{i-\frac{1}{2}}^{p} \mathcal{W}_{i-\frac{1}{2}}^{p}
-		\label{f0}\\
-		\mathcal{A^{+}}\Delta Q_{i-\frac{1}{2}}^{n} =\sum_{\{ p:s_{i-\frac{1}{2}}^{p}>0\}} s_{i-\frac{1}{2}}^{p} \mathcal{W}_{i-\frac{1}{2}}^{p}
-		\label{f1}
-	\end{eqnarray}
-	In a standard  conservative case (\eqref{fvm0}), the sum of the left-going and right-going fluctuations should satisfy:
-	
-	\begin{equation}
-		\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n} = f(Q_{i}) - f(Q_{i-1})
-	\end{equation}
-	%\donna{Be prepared to explain why this must be true.}
-	The second order accuracy is obtained by taking the correction terms into account as shown described in equation \eqref{wpa2}
-	
-	\begin{equation}
-		Q_{i}^{n+1} =  Q_{i}^{n} - \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) -  \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )
-		\label{wpa2}
-	\end{equation}
-	where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determined by the waves and speeds in the Riemann problems after approximating the average flux along  $x = x_{i - \frac{1}{2}}$:
-	
-	\begin{equation}
-		\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
-		\label{wpa13}
-	\end{equation}
-	Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$\cite{ba-le-mi-ro:2003}.\\
-} % End fwaves
-	
 	\subsubsection{WPA for the Shallow Water Equations}
 	The combination of equations in system \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
 	
@@ -422,7 +410,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	
 	%\nocite{*}
 	
-	%\bibliographystyle{abbrvnat}
+%	\bibliographystyle{abbrvnat}
 	\bibliographystyle{plain}
 	\bibliography{geoclaw,literature}
 	
