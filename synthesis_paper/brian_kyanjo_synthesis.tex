@@ -280,8 +280,10 @@ where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determi
 \end{equation}
 Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$ \cite{ba-le-mi-ro:2003}.\\
 	
-	\donna{ You can mention a variety of solvers (e.g. MUSCL, Runge-Kutta (see Bunya paper)) and say they all have some way of extending to get higher order.}
-
+	MUSCL approach
+	
+	The wetting and drying can also be handled by the linear piecewise  Runge-Kutta discontinuous Galerkin approximation (RKDG)  to SWE solutions; this method is based on the thin water layer approach to optimize both computational cost and accuracy on fixed meshes. The water depth of each dry or partially wet element is tracked and controlled by updating water surface elevations at every end of each Runge-Kutta time step. This maintains the depth positivity of the water column through redistributing mass within each element, which brings about a stable solution over the entire domain for the SWE \cite{bu-ku-we-da:2009}. In addition, local mass is conserved since the sum of mass inside an element remains constant. The update is independent of the neighboring elements states because it highly depends on the element's velocity and surface elevation. The technique's special treatment of numerical fluxes enables the water mass positivity in each element \cite{bu-ku-we-da:2009,kubatko2007semi}. According to \citet{bokhove2005flooding,bu-ku-we-da:2009}, the locality minimizes the communication between subdomains which improves parallel efficiency. However, RKDG and MUSCL approaches all have  the same way as the FVM of extending to get higher order. 
+	
 	\subsection{Bathymetry}
 	Equation \eqref{p2}, can be extended to balance equations by introducing a bathymetric source term as shown in equation \eqref{bst}. This is done by discretising the source term to generate values $-gh_{i-\frac{1}{2}}B^{\prime}(x_{i-\frac{1}{2}})$ at  cell interfaces  $x = x_{i-\frac{1}{2}}$. This approach is very useful, because the discrepancy caused due to the failure of the flux gradient to counterbalance the source term in a near steady state solution is decomposed into propagating waves  making the approach more robust than the quasi-steady WPA \cite{ba-le-mi-ro:2003}.
 	\begin{equation}
@@ -410,7 +412,7 @@ Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the
 	
 	%\nocite{*}
 	
-%	\bibliographystyle{abbrvnat}
+	%\bibliographystyle{abbrvnat}
 	\bibliographystyle{plain}
 	\bibliography{geoclaw,literature}
 	
