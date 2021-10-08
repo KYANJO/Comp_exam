@@ -5,14 +5,11 @@ Created on Wed Jul 14 14:08:44 2021
 
 @author: Brian KYANJO
 """
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun 16 16:09:45 2021
-@author: Brian KYANJO
-"""
-
+#-------------------------------------------------------
+#Exact Riemann solver for Shallow water equations script
+# see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
+# behind the method. 
+#-------------------------------------------------------
 '''
 Parameters used:
 ----------------
@@ -114,7 +111,7 @@ def f(hm,um,g,hl,hr,ul,ur):
     return array([f1,f2])
 
 #shock wave solution
-def newto(ql,qr,g):
+def Newton(ql,qr,g):
     '''
     Description: Newton solver used to generate all shock Riemann solution
     -----------
@@ -166,68 +163,6 @@ def newto(ql,qr,g):
     
     return hm,um
 
-#-------------------------------------------
-#Another Newtow solver
-def phi(hs,hlr,g):
-    #lax-entropy condition
-    if hs>hlr:
-        #shock
-        return (sqrt(0.5*g*(hs +hlr)/(hs*hlr))*(hs-hlr))
-    else:
-        #rarefaction
-        return (2*sqrt(g)*(sqrt(hs) - sqrt(hlr)))
-
-#find h*
-def func(hs,hl,hr,ul,ur,g):
-    return (phi(hs,hl,g) + phi(hs,hr,g) + ur - ul)
-
-#derivative of func
-def dfunc(hs,hl,hr,ul,ur,g):
-    eps = 1e-7
-    return (func(hs+eps,hl,hr,ul,ur,g) - func(hs-eps,hl,hr,ul,ur,g))/(2*eps)
-
-#Newton solver
-def newton(ql,qr,g):
-    #left state intial height and momentum field 
-    hl = ql[0]
-    hul = ql[1]
-    
-    #right state intial height and momentum field
-    hr = qr[0]
-    hur = qr[1]
-    
-    #left and right intial states velocities
-    ul = hul/pospart(hl)
-    ur = hur/pospart(hr)
-
-    #intial value
-    hs = ((sqrt(hl) + sqrt(hr) - (ur-ul)/2/sqrt(g))**2)/4
-    
-    tol = 1e-12
-    max_iter = 100
-    for i in range(max_iter):
-        gk = func(hs,hl,hr,ul,ur,g) #fuction to be reset
-        res = abs(gk)
-        if res<tol:
-            break
-        else:
-            continue
-        
-        dg = dfunc(hs,hl,hr,ul,ur,g)
-        dh = -gk/dg  #Newton's step
-        delta = 1 #scale factor 0<delta<1
-        
-        for j in range(1,20):
-            if abs(func(hs+dh*delta,hl,hr,ul,ur,g)) >= res:
-                delta = 0.5*delta #if the residue increases, reduce the Newton's step by one
-            else:
-                break #exit if the residue doesnt increase
-        hs = hs + delta*dh
-    
-    us = ul - phi(hs,hl,g)
-     
-    return hs,us
-#---------------------------------------------
 #All Rarefaction Riemann solution
 def rare(ql,qr,g):
     '''
@@ -319,78 +254,7 @@ def lam2(h,u,g):
     '''
     return (u + sqrt(g*h))
 
-#shock connection
-def con_shock(ql,qr,g):
-    '''
-    Description: determines whether these two states can be connected by either a 1-shock or a 2-shock.
-    Input: states ql and qr
-    Output: determined shock and its corresponding speed
-    '''
-    #initial height fields(left and right)
-    hl = ql[0]
-    hr = qr[0]
-    
-    #initial momentum fields(left and right)
-    hul = ql[1]
-    hur = qr[1]
-    
-    #initial momentum fields(left and right)
-    ul = hul/pospart(hl)
-    ur = hur/pospart(hr)
-    
-    #Intermediate state
-    hm,um = newton(ql,qr,g)
-    hum = hm*um
-    
-    if hm>hl and hm>hr:
-        return 'all-shock'
-    
-    elif hm>hl:
-        sl = (hul - hum)/(hl-hm)
-        return '1-shock'
-    
-    elif hm>hr:
-        sr = (hur - hum)/(hr-hm)
-        return '2-shock'
-
-#Rarefaction connection
-def con_rare(ql,qr,g):
-    '''
-    Description: determines whether these two states can be connected by either a 1-shock or a 2-shock.
-    -----------
-    Input: states ql and qr
-    -----
-    Output: determined rarefaction and its corresponding speed
-    ------
-    '''
-    #initial height fields(left and right)
-    hl = ql[0]
-    hr = qr[0]
-    
-    #initial momentum fields(left and right)
-    hul = ql[1]
-    hur = qr[1]
-    
-    #initial momentum fields(left and right)
-    ul = hul/pospart(hl)
-    ur = hur/pospart(hr)
-    
-    #intermediate state
-    hm,um = newton(ql,qr,g)
-    hum = hm*um
-    
-    if hm<hl and hm<hr:
-        return 'all-rarefaction'
-    
-    elif hm<hl:
-        sl = (hul - hum)/(hl-hm) #shock speed
-        return '1-rare'
-    
-    elif hm<hr:
-        sr = (hur - hum)/(hr-hm) #shock speed
-        return '2-rare'
-
-#Dry velocity
+#Dry state velocity
 def dry_velocity(ql,qr,g):
     '''
     Description:
@@ -419,7 +283,13 @@ def dry_velocity(ql,qr,g):
     
     return d_vl,d_vr
 
-#exact solution
+#-------------------------------------------------------------
+# Exact Riemann solver that returns an array of values for the
+# entire simulation. 
+# see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
+# behind the method. 
+#-------------------------------------------------------------
+
 def qexact(x,t,mq,ql,qr,g):
     '''
     Description:
@@ -567,7 +437,7 @@ def qexact(x,t,mq,ql,qr,g):
         else:
         
             #for shock soln
-            hms,ums = newto(ql,qr,g)
+            hms,ums = Newton(ql,qr,g)
             hums = hms*ums
             qms = array([hms,hums])
             
@@ -599,16 +469,14 @@ def qexact(x,t,mq,ql,qr,g):
                             u = umr
                             hu = h*u
                         else:
+                            #inside the rarefaction
                             A = ul + 2*sqrt(g*hl)
                             h = (1/(9*g))*(A-(x[i]/t))**2
                             u = (x[i]/t) + sqrt(g*h)
                             hu = h*u
-    
-                    #q1[i] = h
-                    #q2[i] = hu
-                    
-                else:
-                    if hms>hr:
+                   
+                else:    
+                    if hms>hr: #check if states are connected by shock wave
                         if x[i]<=t*sr(hms,qr,g):
                             h = hms
                             u = ums
@@ -617,19 +485,20 @@ def qexact(x,t,mq,ql,qr,g):
                             h = hr
                             u =ur
                             hu = h*u
-                    else:
-                        head = ur + sqrt(g*hr)
-                        
-                        tail = umr + sqrt(g*hmr)
-                        if x[i] >= head*t:
+                    else: #rarefaction wave connection
+                        head = ur + sqrt(g*hr)   #right eigen value
+                        tail = umr + sqrt(g*hmr) #middle state eigen value
+                        #check the region
+                        if x[i] >= head*t: 
                             h = hr
                             u = ur
                             hu = h*u
-                        elif x[i] <= tail*t:
+                        elif x[i] <= tail*t: 
                             h = hmr
                             u = umr
                             hu = h*u
                         else:
+                            #inside the rarefaction
                             A = ur - 2*sqrt(g*hr)
                             h = (1/(9*g))*(A-(x[i]/t))**2 
                             u = (x[i]/t) - sqrt(g*h)
@@ -641,3 +510,196 @@ def qexact(x,t,mq,ql,qr,g):
         return q1 #hieght field
     elif mq==1:
         return q2 #momentum field
+#end qexact solver
+
+#-------------------------------------------------------------------
+# Exact Riemann solver that returns a single value at each interface 
+# as it loops through all regions. 
+# It is used by the approximate solvers to determine the intermediate
+# state at each interface as the solution evolves.
+# see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
+# behind the method. 
+#-------------------------------------------------------------------
+def exact(ql,qr,xi,mq,g):
+    '''
+    Description:
+    -----------
+    Uses the Initial Riemann problem to find an intemediate state (qm) which either 
+    the intial left or right state connects to it via any combination of shocks and
+    rarefactions in the two families.
+    
+    For Riemann problems with an initial dry state on one side, the exact Riemann 
+    solution contains only a single rarefaction connecting the wet to dry state.
+
+    The evolving wet dry interface is therefore simply one edge of the rarefaction. 
+    The propagation speed of this interface can be exactly determined using the 
+    Riemann invariants of the corresponding characteristics field.
+    
+    Input:
+    -----
+    x  - array of spacial points 
+    t  - array of temporal points
+    mq - specifies the output (0 and 1 corresponds to h and hu respectively) 
+    ql - left initial state
+    qr - right initial state
+    Returns:
+    h  - array of hieght field values
+    hu - array of momentum field values
+
+    '''
+    
+    #initial height fields(left and right)
+    hl = ql[0]
+    hr = qr[0]
+    
+    #initial momentum fields(left and right)
+    hul = ql[1]
+    hur = qr[1]
+    
+    #initial momentum fields(left and right)
+    ul = hul/pospart(hl)
+    ur = hur/pospart(hr)
+    
+    #dry velocity
+    d_vl,d_vr = dry_velocity(ql, qr,g)
+    
+    #dry middle state
+    if d_vl < d_vr:
+        hmr = 0
+        umr = 0.5*(d_vl + d_vr) #wet-dry interface speed (arbitrary)
+        humr = hmr*umr
+        
+        #for i in range(len(x)):
+        if xi<=lam1(hl,ul,g):
+            h = hl
+            u = ul
+            hu = h*u
+        elif lam1(hl,ul,g) <= xi and xi<=lam1(hmr,umr,g): 
+            #inside the rarefaction
+            A = ul + 2*sqrt(g*hl)
+            h = (1/(9*g))*(A-(xi))**2
+            u = (xi) + sqrt(g*h)
+            hu = h*u
+               
+        elif lam1(hmr,umr,g)<=xi and xi<=lam2(hmr, umr,g):
+            h = hmr
+            hu = hmr*umr
+            
+        elif xi>=lam2(hmr, umr,g) and xi<=lam2(hr, ur,g):
+            #inside the rarefaction
+            A = ur - 2*sqrt(g*hr)
+            h = (1/(9*g))*(A-(xi))**2                    
+            u = (xi) - sqrt(g*h)
+            hu = h*u
+            
+        else:
+            h = hr
+            hu = hr*ur
+            
+        #q1[i] = h
+        #q2[i] = hu
+            
+    #dry left state (2-rarefaction only)
+    elif hl == 0:
+        hmr = 0
+        umr = d_vr              #wet-dry interface speed
+        humr = hmr*umr
+    
+        #for i in range(len(x)):
+        if xi <= lam2(hmr, umr,g) :
+            h = hl
+            u = ul
+            hu = h*u   
+            
+        elif xi>=lam2(hmr, umr,g) and xi<=lam2(hr, ur,g):
+            #inside rarefaction
+            A = ur - 2*sqrt(g*hr)
+            h = (1/(9*g))*(A-(xi))**2
+            u = (xi) - sqrt(g*h)
+            hu = h*u
+            
+        else:
+            h = hr
+            u = ur
+            hu = h*u
+            
+    #dry right state (1-rarefaction only)
+    elif hr == 0:
+        hmr = 0
+        umr = d_vl              #wet-dry interface speed
+        humr = hmr*umr
+       
+        #for i in range(len(x)):
+        if xi<=lam1(hl,ul,g):
+            h = hl
+            u = ul
+            hu = h*u
+            
+        elif lam1(hl,ul,g) <= xi and xi<=lam1(hmr,umr,g):
+            #inside the rarefaction
+            A = ul + 2*sqrt(g*hl)
+            h = (1/(9*g))*(A-(xi))**2                   
+            u = (xi) + sqrt(g*h)
+            hu = h*u
+            
+        else:
+            h = hr
+            u = ur
+            hu = h*u
+
+    else:
+
+        hs,us = Newton(ql,qr,g)
+        
+        if xi<=us:
+            
+            if hs>hl:
+                s = ul - sqrt(0.5*g*hs/hl*(hl+hs))
+                if xi<=s:
+                    h = hl
+                    hu = hl*ul
+                else:
+                    h = hs
+                    hu = hs*us
+            else:
+                head = ul - sqrt(g*hl)
+                tail = us - sqrt(g*hs)
+                if xi <= head:
+                    h = hl
+                    hu = hl*ul
+                elif xi>=tail:
+                    h = hs
+                    hu = hs*us
+                else:
+                    h = (((ul + 2*sqrt(g*hl) - xi)/3)**2)/g
+                    u = xi + sqrt(g*h)
+                    hu = h*u
+        else:
+            
+            if hs>hr:
+                s = ur + sqrt(0.5*g*hs/hr*(hs+hr))
+                if xi<=s:
+                    h = hs
+                    hu = hs*us
+                else:
+                    h = hr
+                    hu = hr*ur
+            else:
+                head = ur + sqrt(g*hr)
+                tail = us + sqrt(g*hs)
+                if (xi>=head):
+                    h = hr
+                    hu = hr*ur
+                elif xi<=tail:
+                    h = hs
+                    hu = hs*us
+                else:
+                    h = (((xi-ur+2*sqrt(g*hr))/3)**2)/g
+                    u = xi - sqrt(g*h)
+                    hu = h*u
+    if mq == 0:
+        return h
+    else:
+        return hu
+
+#end exact solver
