@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Riemann solvers}{}% 2
+\BOOKMARK [1][-]{section.3}{Shallow Water Equations \(SWE\)}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Exact Riemann Solver for two-shock SWE}{section.3}% 4
+\BOOKMARK [1][-]{section.4}{Finite volume discretization}{}% 5
+\BOOKMARK [1][-]{section.5}{Wave Propagation Algorithm \(WPA\)}{}% 6
+\BOOKMARK [2][-]{subsection.5.1}{WPA for the Shallow Water Equations}{section.5}% 7
+\BOOKMARK [1][-]{section.6}{Numerical Examples}{}% 8
+\BOOKMARK [2][-]{subsection.6.1}{ Bathymetric source terms}{section.6}% 9
+\BOOKMARK [1][-]{section.7}{Riemann Problem for Wet/Dry States}{}% 10
+\BOOKMARK [1][-]{section.8}{ Future research directions}{}% 11

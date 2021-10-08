@@ -1,0 +1,66 @@
+This is BibTeX, Version 0.99d (TeX Live 2020/MacPorts 2020.54632_3)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: brian_kyanjo_synthesis_duplicate.aux
+The style file: plain.bst
+Database file #1: geoclaw.bib
+Warning--string name "peerjcs" is undefined
+--line 17 of file geoclaw.bib
+Warning--string name "jcp" is undefined
+--line 36 of file geoclaw.bib
+Warning--string name "advwatres" is undefined
+--line 53 of file geoclaw.bib
+Warning--string name "sisc" is undefined
+--line 71 of file geoclaw.bib
+Warning--string name "actnum" is undefined
+--line 87 of file geoclaw.bib
+Warning--string name "ijnmf" is undefined
+--line 103 of file geoclaw.bib
+Warning--empty journal in ba-le-mi-ro:2003
+Warning--empty journal in be-ge-le-ma:2011
+Warning--empty journal in ge:2011
+Warning--empty journal in ge:2008
+Warning--empty journal in le-ge-be:2011
+Warning--empty journal in ma-ah-be-ca-ge-ha-ke-le-le:2016
+Warning--can't use both volume and number fields in pelanti2008relaxation
+You've used 32 entries,
+            2118 wiz_defined-function locations,
+            695 strings with 10705 characters,
+and the built_in function-call counts, 11844 in all, are:
+= -- 1155
+> -- 620
+< -- 5
++ -- 256
+- -- 212
+* -- 948
+:= -- 1986
+add.period$ -- 99
+call.type$ -- 32
+change.case$ -- 198
+chr.to.int$ -- 0
+cite$ -- 39
+duplicate$ -- 389
+empty$ -- 866
+format.name$ -- 212
+if$ -- 2398
+int.to.chr$ -- 0
+int.to.str$ -- 32
+missing$ -- 35
+newline$ -- 164
+num.names$ -- 64
+pop$ -- 178
+preamble$ -- 1
+purify$ -- 169
+quote$ -- 0
+skip$ -- 264
+stack$ -- 0
+substring$ -- 833
+swap$ -- 55
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 122
+warning$ -- 7
+while$ -- 115
+width$ -- 34
+write$ -- 351
+(There were 13 warnings)
