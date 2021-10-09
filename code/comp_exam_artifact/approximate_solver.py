@@ -19,16 +19,16 @@ def flux(q):
     '''
     input:
     -----
-    q - state at the interface
+    q - state at the interface [h,u]
     return:
     -------
     f - flux at the interface
     '''
-    q1 = q[0]
-    q2 = q[1]
+    h = q[0]
+    u = q[1]
     f = zeros(2)
-    f[0] = q2
-    f[1] = (((q2)**2)/q1) + (0.5*g*(q1)**2)
+    f[0] = h*u
+    f[1] = h*(u**2) + 0.5*g*(h**2)
     return f
 
 #limiters
@@ -76,7 +76,7 @@ def psi(x,g,hm,dBdx):
 # see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
 # behind the method. 
 #------------------------------------------------------------------
-def rp0_swe(Q_ext):
+def rp0_swe(Q_ext,meqn):
     """  Input : 
             Q_ext : Array of N+4 Q values.   Boundary conditions are included.
             
@@ -85,7 +85,7 @@ def rp0_swe(Q_ext):
             speeds : Array of speeds (N+3 values)
             apdq   : Positive fluctuations (N+3 values)
             amdq   : Negative fluctuations (N+3 values)
-        """    
+    """    
         
     # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
@@ -162,6 +162,7 @@ def rp0_swe(Q_ext):
 # behind the method. 
 #--------------------------------------------------------------
 
+
 def rp1_swe(Q_ext,exact):
     """  Input : 
             Q_ext : Array of N+4 Q values.   Boundary conditions are included.
@@ -200,9 +201,6 @@ def rp1_swe(Q_ext,exact):
         ql = array([qold1[i],qold2[i]])
         qr = array([qold1[i+1],qold2[i+1]]) #at edges
             
-        #at the intefaces
-        #hms,ums = Newton(ql,qr,g)
-        #hums = hms*ums
         #at each inteface
         hms = exact(ql,qr,0,0,g)
         hums = exact(ql,qr,0,1,g)
@@ -212,8 +210,8 @@ def rp1_swe(Q_ext,exact):
         qm = array([hms,ums])
         
         #fluctuations
-        amdq[i] = flux(qm) - flu(ql)
-        apdq[i] = flu(qr) - flux(qm)
+        amdq[i] = flux(qm) - flux(ql)
+        apdq[i] = flux(qr) - flux(qm)
         
         l1 = ums - sqrt(g*hms) #1st wave speed
         l2 = ums + sqrt(g*hms) #2nd wave speed
@@ -245,6 +243,7 @@ def rp1_swe(Q_ext,exact):
     speeds = (s1,s2)      
      
     return waves,speeds,amdq,apdq
+    
 #End of the flux decompositon solver
 
 #-------------------------------------------------------------
@@ -264,7 +263,7 @@ def rp2_swe(Q_ext,exact,x,dx):
             speeds : Array of speeds (N+3 values)
             apdq   : Positive fluctuations (N+3 values)
             amdq   : Negative fluctuations (N+3 values)
-        """    
+    """    
         
      # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
@@ -346,15 +345,27 @@ def rp2_swe(Q_ext,exact,x,dx):
 # Adapted from the Clawpack package (www.clawpack.org)
 # -----------------------------------------------------
 
-def claw(ax, bx, mx, Tfinal, nout, 
+def claw(ax, bx, mx, Tfinal, nout,ql,qr, 
           meqn=1, \
           exact=None,\
-          rp=None,\
+          solver=None,\
           qinit=None, \
           bc=None, \
           limiter_choice='MC',    
           second_order=True):
 
+    #initial height fields(left and right)
+    hl = ql[0]
+    hr = qr[0]
+    
+    #initial momentum fields(left and right)
+    hul = ql[1]
+    hur = qr[1]
+    
+    #initial momentum fields(left and right)
+    ul = hul/(hl)
+    ur = hur/(hr)
+    
     dx = (bx-ax)/mx
     xe = linspace(ax,bx,mx+1)  # Edge locations
     xc = xe[:-1] + dx/2       # Cell-center locations
@@ -367,12 +378,12 @@ def claw(ax, bx, mx, Tfinal, nout,
     tvec = linspace(t0,Tfinal,nout+1)
     dt = Tfinal/nout
     
-    assert rp is not None,    'No user supplied Riemann solver'
+    assert solver is not None,    'No user supplied Riemann solver'
     assert qinit is not None, 'No user supplied initialization routine'
     assert bc is not None,    'No user supplied boundary conditions'
 
     # Initial the solution
-    q0 = qinit(xc,meqn)    # Should be [size(xc), meqn]
+    q0 = qinit(xc,meqn,ql,qr)    # Should be [size(xc), meqn]
     
     # Store time stolutions
     Q = empty((mx,meqn,nout+1))    # Doesn't include ghost cells
@@ -382,65 +393,158 @@ def claw(ax, bx, mx, Tfinal, nout,
     
     dtdx = dt/dx
     t = t0
+    
     for n in range(0,nout):
         t = tvec[n]
-        
-        # Add 2 ghost cells at each end of the domain;  
-        q_ext = bc(q)
 
-        # Get waves, speeds and fluctuations from the solvers 
         # solver: 0 - Roe solver
         # solver: 1 - flux formulation solver
         # solver: 2 - f-wave approach(with source term) solver
         if solver == 0:
-            waves, speeds, amdq, apdq = rp0_swe(q_ext)
-            print('Solver: Roe solver\n')
-        elif solver == 1:
-            waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)
-            print('Solver: flux-based solver\n')
-        elif solver == 2:
-            fwaves, speeds, amdq, apdq = rp2_swe(q_ext,exact,xc,dx)
-            print('Solver: f-wave solver\n')
-                
-        # First order update
-        q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
-        
-        # Second order corrections (with possible limiter)
-        if second_order:    
-            cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
-            for p in range(mwaves):
-                sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
-                wavep = fwaves[p]
-                
-                if limiter_choice is not None:
-                    wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
-                    wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
-                    w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
-                
-                    # Create mask to avoid dividing by 0. 
-                    m = w2 > 0
-                    r = ones(w2.shape)
-                    
-                    r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
+            # Add 2 ghost cells at each end of the domain;  
+            q_ext = bc(q)
+            # Get waves, speeds and fluctuations from the solver 
+            waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
 
-                    wlimiter = limiter(r,lim_choice=limiter_choice)
-                    wlimiter.shape = sp.shape
+            # First order update
+            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
+            
+            # Second order corrections (with possible limiter)
+            if second_order:    
+                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
+                for p in range(mwaves):
+                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
+                    wavep = waves[p]
+                    if limiter_choice is not None:
+                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
+                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
+                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
                     
-                else:
-                    wlimiter = 1
+                        # Create mask to avoid dividing by 0. 
+                        m = w2 > 0
+                        r = ones(w2.shape)
+                        
+                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
+
+                        wlimiter = limiter(r,lim_choice=limiter_choice)
+                        wlimiter.shape = sp.shape
+                        
+                    else:
+                        wlimiter = 1
+                        
+                    cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
                     
-                cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                Fp = cxx  # Second order derivatives
+                Fm = cxx
+            
+                # update with second order corrections
+                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
+    
+        elif solver == 1:
+
+             # Add 2 ghost cells at each end of the domain;  
+            q_ext = bc(q)
+
+            # Get waves, speeds and fluctuations
+            waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)
+                    
+            # First order update
+            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
+            
+            # Second order corrections (with possible limiter)
+            if second_order:    
+                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
+                for p in range(mwaves):
+                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
+                    wavep = waves[p]
+                    
+                    if limiter_choice is not None:
+                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
+                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
+                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
+                    
+                        # Create mask to avoid dividing by 0. 
+                        m = w2 > 0
+                        r = ones(w2.shape)
+                        
+                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
+
+                        wlimiter = limiter(r,lim_choice=limiter_choice)
+                        wlimiter.shape = sp.shape
+                        
+                    else:
+                        wlimiter = 1
+                        
+                    cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                    
+                    #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
+                    
+                Fp = cxx  # Second order derivatives
+                Fm = cxx
+            
+                # update with second order corrections
+                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
+
+        elif solver == 2:
+            # Add 2 ghost cells at each end of the domain;  
+            q_ext = bc(q)
+
+            # Get waves, speeds and fluctuations from the solver 
+            fwaves, speeds, amdq, apdq = rp2_swe(q_ext,exact,xc,dx)
                 
-                #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
-                
-            Fp = cxx  # Second order derivatives
-            Fm = cxx
-        
-            # update with second order corrections
-            q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
+            # First order update
+            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
+            
+            # Second order corrections (with possible limiter)
+            if second_order:    
+                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
+                for p in range(mwaves):
+                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
+                    fwavep = waves[p]
+                    
+                    if limiter_choice is not None:
+                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
+                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
+                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
+                    
+                        # Create mask to avoid dividing by 0. 
+                        m = w2 > 0
+                        r = ones(w2.shape)
+                        
+                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
+
+                        wlimiter = limiter(r,lim_choice=limiter_choice)
+                        wlimiter.shape = sp.shape
+                        
+                    else:
+                        wlimiter = 1
+                        
+                    cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                    
+                    #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
+
+                Fp = cxx  # Second order derivatives
+                Fm = cxx
+            
+                # update with second order corrections
+                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
         
         Q[:,:,n+1] = q
-        
+
+    if solver == 0:
+        print('solver used is: Roe-solver')
+        print("dt = {:.4e}".format(dt))
+        print("Number of time steps = {}".format(nout))
+            
+    elif solver == 1:
+        print('solver used is: flux-based')
+        print("dt = {:.4e}".format(dt))
+        print("Number of time steps = {}".format(nout))
+    elif solver == 2:
+        print('solver used is: f-wave')
+        print("dt = {:.4e}".format(dt))
+        print("Number of time steps = {}".format(nout))
+
     return Q, xc, tvec
 
 
