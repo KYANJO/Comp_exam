@@ -129,16 +129,15 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\linewidth]{images/geo1}
-		\caption{ x-t plane showing the connection of states, 1-rarefaction fan, and the 2-shock.}
+		\includegraphics[width=1\linewidth]{images/geo1}
+		\caption{ x-t plane showing the connection of states, 1-rarefaction fan, and the 2-shock is depicted by: (a). Structure of the characteristic curves for the  Riemann solution profile and (b). Actual representation of the states in the Riemann solution }
 		\label{fig:x-tplane}
 	\end{figure}
-
-	\donna{Add x-axis and y-axis labels to figure.}
-	
 	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers\cite{bu-ku-we-da:2009}.
 	
-	\donna{Include a three or four plots showing initial conditions, and the evolution of a shock and rarefaction. }
+	
+	Figure.~\ref{hor2} represents four plots showing initial conditions \ref{t0}, and the temporal evolution of a left going  rarefaction and a right going shock. This solutions are produced by the exact Riemann solver after applying $h_l = 2$, $h_r = 1$, and $u_l = u_r = 0$ as inital conditions in  the Riemann problem.
+	
 \begin{figure}[H]%
 	\centering
 	\subfloat[]{%
@@ -157,7 +156,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		\label{t2} %
 		\includegraphics[width=0.4\textwidth, height=5cm]{images/t2}}%
 	\caption{Temporal evolution of the height field solution for the dam break problem with {\em left-going rarefaction} and a {\em right-going shock}  are depicted by (a),(b),(c) and (d) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$,  $t = 1.0~s$, and $t = 2.0~s$, respectively.  }
-	\label{hor1}
+	\label{hor2}
 \end{figure}
 	\subsection{Exact Riemann Solver for two-shock SWE}
 The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \cite{leveque2002finite} for other cases. 
@@ -331,7 +330,7 @@ Appearance of negative hieght values in equation \eqref{cellupdat} after a few u
 	In the previous section we discussed how the exact solver solved the Riemann problem for cases in which the water height field id strictly positive everywhere. Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \cite{toro2001shock,ge:2008}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\linewidth]{images/dd1}
+		\includegraphics[width=0.5\linewidth]{images/dv}
 		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state. }
 		\label{fig:dry-bed}
 	\end{figure}
