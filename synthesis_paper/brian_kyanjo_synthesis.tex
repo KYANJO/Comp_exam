@@ -1,4 +1,4 @@
-\documentclass[9pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 %%%%%%%%%%%%%%%%%%%%%%%%% packages %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -98,7 +98,7 @@
 		Consider small-amplitude waves in a one-dimensional fluid channel that is shallow relative to its wavelength. The conservation of momentum equation is written in terms of pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, and the height field $h(x,t)$ ($m$), which breaks down into system \eqref{p2}.
 	\begin{equation}
 		\begin{aligned}
-			h_{t} + (uh)_x &= 0 \\
+			h_{t} + (hu)_x &= 0 \\
 			(hu)_t + \left(hu^{2} + \frac{1}{2}\rho gh^{2} \right)_x & = 0 
 		\end{aligned}
 		\label{p2}
@@ -321,14 +321,10 @@ Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the
 
 
 \section{Beach run-up and inundation}
+The wetting and drying processes have significant physical and biological impacts on shallow water systems and coastal environments. They can arise due to inundation effects on coastal mudflats and wave-driven run-up on beaches and dunes on periodic time scales, i.e., several hours for the rise and fall of the tide, several days for storm surge, and infragravity wave motions on the shoreface.  These effects can cause extreme devastating damages and coastal erosion.
+	With a basic understanding of the role that a Riemann solver plays in solving the shallow water wave equations, and the basic finite volume discretization approach, we will describe several approaches of handling wetting and drying processes.  
 
-	With a basic understanding of the role that a Riemann solver plays in solving the shallow water wave equations, and the basic finite volume discretization approach, we will describe several approaches to handling wetting and drying.  
-
-	\donna{Describe why we want to modeling the wetting and drying front (beach runup; inundation).   explain what can go wrong (negative height values from \ref{cellupdat}}
-
-	\donna{.Can we just set $h = \epsilon$ whenever $h < 0$?}
-
-The wet/dry Riemann solution for the right, middle and left dry state is depicted in figures~\ref{fig:right}, \ref{fig:middle}, and \ref{fig:left}.
+Appearance of negative hieght values in equation \eqref{cellupdat} after a few updates makes  the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ larger than $Q_{i}^{n}$. This makes the  input height values in the exact solver  to obtain $\mathcal{F}(Q_{i} , Q_{i+1} )$ and $ \mathcal{F}(Q_{i-1} , Q_{i} )$ to become negative, which breaks the solver, hence failing  to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbituary whenever $h<0$, but this may affect accuracy of the results.
 
 	\subsection{Riemann Problem for Wet/Dry States}
 	
@@ -508,6 +504,10 @@ The wet/dry Riemann solution for the right, middle and left dry state is depicte
 	
 
 	\section{ Future research directions}
+	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix (\eqref{n3}) change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
+	
+	Another interesting question is  how to solve the issue of depth negativity in the approximate solver for presence of wet and dry states, when the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ in equation \eqref{cellupdat} becomes larger than $Q_{i}^{n}$  after a few time step. This makes the input height values in the exact solver negative, which breaks the solver, hence we fail to obtain the intermediate state. 
+	
 	
 	
 	
