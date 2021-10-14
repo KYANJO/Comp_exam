@@ -19,16 +19,16 @@ def flux(q):
     '''
     input:
     -----
-    q - state at the interface [h,u]
+    q - state at the interface
     return:
     -------
     f - flux at the interface
     '''
-    h = q[0]
-    u = q[1]
+    q1 = q[0]
+    q2 = q[1]
     f = zeros(2)
-    f[0] = h*u
-    f[1] = h*(u**2) + 0.5*g*(h**2)
+    f[0] = q2
+    f[1] = (((q2)**2)/q1) + (0.5*g*(q1)**2)
     return f
 
 #limiters
@@ -207,7 +207,7 @@ def rp1_swe(Q_ext,exact):
         ums = hums/hms
         
         #state at the interface
-        qm = array([hms,ums])
+        qm = array([hms,hums])
         
         #fluctuations
         amdq[i] = flux(qm) - flux(ql)
@@ -263,7 +263,7 @@ def rp2_swe(Q_ext,exact,x,dx):
             speeds : Array of speeds (N+3 values)
             apdq   : Positive fluctuations (N+3 values)
             amdq   : Negative fluctuations (N+3 values)
-    """    
+        """    
         
      # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
@@ -292,7 +292,9 @@ def rp2_swe(Q_ext,exact,x,dx):
         ql = array([qold1[i],qold2[i]])
         qr = array([qold1[i+1],qold2[i+1]]) #at edges
             
-        #at each inteface
+        #at the intefaces
+        #hms,ums = newton(hl,hr,ul,ur,g)
+        #hms,ums = newton(ql,qr,g)
         hms = exact(ql,qr,0,0,g)
         hums = exact(ql,qr,0,1,g)
         ums = hums/hms
@@ -486,12 +488,13 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
                 q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
 
         elif solver == 2:
+ 
             # Add 2 ghost cells at each end of the domain;  
             q_ext = bc(q)
 
-            # Get waves, speeds and fluctuations from the solver 
+            # Get waves, speeds and fluctuations
             fwaves, speeds, amdq, apdq = rp2_swe(q_ext,exact,xc,dx)
-                
+                    
             # First order update
             q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
             
@@ -500,7 +503,7 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
                 cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
                 for p in range(mwaves):
                     sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
-                    fwavep = waves[p]
+                    wavep = fwaves[p]
                     
                     if limiter_choice is not None:
                         wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
@@ -522,7 +525,7 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
                     cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
                     
                     #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
-
+                    
                 Fp = cxx  # Second order derivatives
                 Fm = cxx
             
