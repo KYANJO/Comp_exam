@@ -9,6 +9,16 @@ Created on Mon Sep  6 07:18:43 2021
 #-------------------------------------------------------------
 #Approximate Riemann solver for Shallow water equations script
 #-------------------------------------------------------------
+'''
+Parameters used:
+----------------
+ql  - Is an array containing height(hl) and momentum(hul) left states ([hl,hul])
+qr  - Is an array containing height(hr) and momentum(hur) right states ([hr,hur])
+qm  - Is an array containing height(hm) and momentum(hum) intermidiate states ([hm,hum])
+qms - Is an array containing height(hms) and momentum(hums) intermidiate shock states ([hms,hums])
+qmr - Is an array containing height(hmr) and momentum(humr) intermidiate rarefaction states ([hmr,humr])
+g   - gravity
+'''
 
 g = 1
 
