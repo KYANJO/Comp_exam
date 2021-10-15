@@ -302,24 +302,29 @@ def rp2_swe(Q_ext,exact,x,dx):
         ql = array([qold1[i],qold2[i]])
         qr = array([qold1[i+1],qold2[i+1]]) #at edges
             
-        #at the intefaces
-        #hms,ums = newton(hl,hr,ul,ur,g)
-        #hms,ums = newton(ql,qr,g)
-        hms = exact(ql,qr,0,0,g)
-        hums = exact(ql,qr,0,1,g)
-        ums = hums/hms
-        #hums = hms*ums
+#         #at the intefaces
+#         #hms,ums = newton(hl,hr,ul,ur,g)
+#         #hms,ums = newton(ql,qr,g)
+#         hms = exact(ql,qr,0,0,g)
+#         hums = exact(ql,qr,0,1,g)
+#         ums = hums/hms
+#         #hums = hms*ums
         
-        #state at the interface
-        qm = array([hms,hums])
+#         #state at the interface
+#         qm = array([hms,hums])
         
-        #fluctuations
-        amdq[i] = flux(qm) - flux(ql)
-        apdq[i] = flux(qr) - flux(qm)
+#         #fluctuations
+#         amdq[i] = flux(qm) - flux(ql)
+#         apdq[i] = flux(qr) - flux(qm)
         
-        l1 = ums - sqrt(g*hms) #1st wave speed
-        l2 = ums + sqrt(g*hms) #2nd wave speed
+#         l1 = ums - sqrt(g*hms) #1st wave speed
+#         l2 = ums + sqrt(g*hms) #2nd wave speed
+
+        # use roe averages for middle state or just simply arithmetic averages e.g. hm = (hl + hr)/2
+        # hum = (hul + hur)/2
         
+        # Compute R and speeds based on these averages.
+
         # Eigenvectors
         r1 = array([1, l1])       
         r2 = array([1, l2])  
@@ -343,10 +348,22 @@ def rp2_swe(Q_ext,exact,x,dx):
         # f-wave and speed 2
         z2[i] = b2*R[:,[1]].T
         s2[i] = evals[1]
+        
     
     fwaves = (z1,z2)             # P^th wave at each interface
     speeds = (s1,s2)      
-     
+
+# Fluctuations
+    amdq = zeros(delta.shape)
+    apdq = zeros(delta.shape)
+    for mw in range(mwaves):
+        sm = where(speeds[mw] < 0, speeds[mw], 0)
+        amdq += fwaves[mw]
+
+        sp = where(speeds[mw] > 0, speeds[mw], 0)
+        apdq += fwaves[mw]        
+    
+    
     return fwaves,speeds,amdq,apdq
 #End of Riemans solvers
 
