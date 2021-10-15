@@ -185,6 +185,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
     ql,qr = problem_test(case,itype)
 
     #sample graphics
+    #only exact solver ploted due to presence of dry states
     if itype == 0:
         fig = figure(1)
         clf()
@@ -219,6 +220,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
             fig.canvas.draw()        
 
+    # Selected approximate solver is compared with the exact solver
     elif itype == 1:
         Q,xc,tvec = approximate_solver.claw(ax,bx, mx,  Tfinal, nout,ql,qr, \
                   meqn=meqn, \
@@ -269,6 +271,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
             fig.canvas.draw()  
 
+    #All approximate solvers compared with the exact solver
     elif itype == 2:
         fig = figure(1)
         clf()
