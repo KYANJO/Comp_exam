@@ -62,59 +62,64 @@ def problem_test(case,itype):
             hr = 1.5513875245483204
             ul = 0.5
             ur = 0
+            print('Problem: left going shock\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
 
         elif(case == 1):  #right going shock
             hl = 1.5513875245483204
             hr = 1
             ul = 0.0
             ur = -0.5
-        
+            print('Problem: right going shock\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif(case == 2):  #right going rarefaction
             hl = 0.5625
             hr = 1
             ul = 0
             ur = 0.5
-        
+            print('Problem: right going rarefaction\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif(case == 3):  #left going rarefaction
             hl = 2
             hr = 1.4571067811865475
             ul = 0
             ur = 0.41421356237309537
-        
+            print('Problem: left going rarefaction')
+
         elif(case == 4): #dam break
             hl = 2
             hr = 1
             ul = 0
             ur = 0
-        
+            print('Problem: dam break problem \n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif (case == 5): #All rarefaction 
             hl = 1
             hr = 1
             ul = -0.5
             ur = 0.5
-        
+            print('Problem test: All rarefaction\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif (case == 6): #All shock 
             hl = 1
             hr = 1
             ul = 0.5
             ur = -0.5
-        
+            print('Problem: All shock\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
     elif itype == 1: #presence of dry states 
         if case == 7: #left dry state
             hl = 0
             ul = 0
             hr = 1
             ur = 0
+            print('Problem: Left dry state\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif case == 8: #middle dry state
             hl = .1
             ul = -.7
             hr = .1
             ur = 0.7
+            print('Problem: middle dry state\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
         elif case == 9: #right dry state
             hl = 1
             ul = 0
             hr = 0
             ur = 0
+            print('Problem: right dry state\n','\t hl = ', hl,'\n','\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
     ql = array([hl,hl*ul])
     qr = array([hr,hr*ur])
     return ql,qr
