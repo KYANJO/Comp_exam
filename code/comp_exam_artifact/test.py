@@ -273,9 +273,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
     #All approximate solvers compared with the exact solver
     elif itype == 2:
-        fig = figure(1)
-        clf()
-       
+        
         #Roe-solver
         Qr,xc,tvec = approximate_solver.claw(ax,bx, mx,  Tfinal, nout,ql,qr, \
                 meqn=meqn, \
@@ -305,7 +303,10 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
                 bc=bc_extrap, \
                 limiter_choice=limiter_choice,
                 second_order=second_order)
-
+       
+        fig = figure(1)
+        clf()
+       
         #initialise the approximate soln with Roe-solver
         qroe = Qr[:,mq,0]
         hdr, = plot(xc,qroe,'.',markersize=5,label='$Roe_{solver}$')
