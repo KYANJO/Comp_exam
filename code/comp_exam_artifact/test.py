@@ -73,11 +73,10 @@ def problem_test(case,itype):
     output: outputs left (ql) and right states (qr)
     '''
     if itype == 1 and case > 7:
-        print('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
-        exit()
+        exit('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
+
     elif itype == 2 and case > 7:
-        print('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
-        exit()
+        exit('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
 
     elif case == 0:     #left going shock
         hl = 1
