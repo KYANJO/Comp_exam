@@ -432,33 +432,30 @@ The appearance of negative height values in equation \eqref{wpa2} after a few up
 	\label{right}
 \end{figure}
 
-	\subsection{Approach 1 - Liu et al.}
-	\donna{Please modify the titles : "XXX Approach (Liu)" }
-					\citet{li-ta-wa-ca-ba-ch-li:2021} also used the Godunov-type finite volume methods to process dry and wet/dry front cells to predict flood elevation by modifying the dry cell's center elevation to correspond to the averaged peak of the two surrounding intercell heights. 
-					\donna{Don't mention George here;  you do that below.}
-					\ignore{However, in \cite{ge:2008}, George used an approximate Riemann solver for the shallow water equations (SWE) to decompose an augmented solution vector into four propagating waves. This maintained excellent features in the approximate solution, such as preserving depth non-negativity, shockwave solutions capturing, e.t.c., making the solver appropriate for modeling SWE when steady states and dry cells exist.}
-
-
+	\subsection{Four elevation modification  method (Liu et al.)}
+		\citet{li-ta-wa-ca-ba-ch-li:2021} also used the Godunov-type finite volume methods to process dry and wet/dry front cells to predict flood elevation. This was done by taking four elevation modifications: (1).  Identifying four types of intercell through estimating their properties based on the depth of the flow and surface elevation difference; (2). Updating interface elevation depends on their properties to achieve gravity balance and prevent non-physical flux predictions;  (3).  Calculating dry cell's center elevations by taking the average of the two surrounding intercell elevations; (4). Modifying the first term of the slope limiter based on the elevation difference between intercell elevations dividing two times the mesh size. Furthermore, the first term of the slope limiter function in the dry cell is used to finalize matrix simulation of the entire area and solve the wet/dry problem; this enables SWE application to areas with complex geometry, preventing more elevation modifications.
+	
 	\subsection{Relaxation method (Pelanti et al.)}
 
  \citet{pelanti2011riemann} formulated a Rieman solver based on the relaxation approach for both single-phase and double-phase shallow flow equations explaining a mixture of granular material and fluid. This approach is implemented by employing auxiliary variables to replace momenta in the spatial gradients of the original system. The eigenvalues of the relaxation model are determined from the coefficients of the linear equations governing the new auxiliary variables.  The Riemann solution for the height of the flow and relaxation variables are calculated as Roe's Riemann solution; this makes the resulting solver similar to the Roe solver. However, it has the advantage of certain freedom to specify wave speeds by choosing relaxation parameters. This added advantage makes the new solver more robust in handling wet/dry interfaces \cite{pelanti2008relaxation,pelanti2011riemann}.
 
-	\subsection{YYY Method (Toro)}
-	According to \citet{toro2001shock}, there are three possible cases to consider as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits {\em 1-rarefaction} wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits {\em 2-rarefaction} wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
+	\subsection{Contact discontinuity  Method (Toro)}
+	\citet{toro2001shock} solved a Riemann problem with cases in which the dry regions are either present at the initial time or appear as a result of the interaction of two wet bed states. According to his approach, there are three possible cases to consider, as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits a left-going rarefaction ({\em 1-rarefaction}) wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits right-going rarefaction ({\em 2-rarefaction}) wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
 		\begin{figure}[H]
 		\centering
 		\includegraphics[width=.9\linewidth]{images/dry-wet}
-		\caption{The dry state appears in three cases: (a) dry region is on the right, (b) dry region is on the left, and (c) dry region appears in the interaction of two wet bed states.}
+		\caption{The dry state appears in three cases: (a) dry region is on the right, (b) dry region is on the left, and (c) dry region appears in the interaction of two wet bed states. The dashed lines in all figures: (a), (b), and (c) depict the contact discontinuity of speed $S_{*R}$ or $S_{*L}$ that coincides with the tail of the rarefaction in all dry regions. This contact discontinuity is also known as the wet/dry front.}
 		\label{fig:dry-wet}
 	\end{figure}
 	
 
 
-	\subsection{Galerkin approach (Bunya et al.}  
+	\subsection{Galerkin approach (Bunya et al.)}  
 		The wetting and drying can also be handled by the linear piecewise  Runge-Kutta discontinuous Galerkin approximation (RKDG)  to SWE solutions;  according to \citet{bu-ku-we-da:2009}, this method is based on the thin water layer approach to optimize both computational cost and accuracy on fixed meshes. The water depth of each dry or partially wet element is tracked and controlled by updating water surface elevations at every end of each Runge-Kutta time step. This maintains the depth positivity of the water column through redistributing mass within each element, which brings about a stable solution over the entire domain for the SWE. In addition, local mass is conserved since the sum of mass inside an element remains constant. The update is independent of the neighboring elements states because it highly depends on the element's velocity and surface elevation. The technique's special treatment of numerical fluxes enables the water mass positivity in each element \cite{bu-ku-we-da:2009,kubatko2007semi}. According to \citet{bokhove2005flooding,bu-ku-we-da:2009}, the locality minimizes the communication between subdomains which improves parallel efficiency. 
 
 	\subsection{Adaptive approach (Popinet)}
 	\donna{Maybe a short section on quadtree adaptivity and the wet/dry approach + }
+\citet{audusse2004fast}, the well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying were generalized by \cite{popinet2011quadtree} to an adaptive quadtree spatial discretization.  In addition, dynamic reconstruction of multiscale bathymetry by an efficient system is also discussed. Adaptive modeling is obtained after combining the methods. The exponent of the power-law describing the computational cost as the function of spatial resolution is significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami.
 
 	\subsection{Augmented Riemann solver (George)}
 
