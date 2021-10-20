@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 
 %%%%%%%%%%%%%%%%%%%%%%%%% packages %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -21,7 +21,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{verbatim}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2.3cm,bottom=2.5cm]{geometry}
 \usepackage{hyperref}
 \hypersetup{
 	colorlinks=false,
@@ -84,13 +84,13 @@
 	
 	\section{Introduction}
 	
-				A tsunami is a series of energetic water waves generated due to the displacement of large volumes of water by different mechanisms such as earthquakes, volcanic eruptions, underwater landslides, and local landslides along the coast. According to the recent tragic events in December 2004 in Indonesia and  South Africa, tsunamis may be extremely catastrophic: they can lead to the loss of human lives and destroy buildings and roads. Typically, they cause devastative damages to infrastructures. Deep knowledge of tsunamis is required to provide early warning messages to the regions that may be affected, carry out necessary evacuations, and also anticipate the highest run-ups and run-downs \cite{sanchez2016uncertainty,dutykh2007water,dias2007dynamics}.
+				A tsunami is a series of energetic water waves generated due to the displacement of large volumes of water by different mechanisms such as earthquakes, volcanic eruptions, underwater landslides, and local landslides along the coast. According to the recent tragic events in December 2004 in Indonesia and  South Africa, tsunamis may be extremely catastrophic: they can lead to the loss of human lives and destroy buildings and roads. Typically, they cause devastative damages to infrastructures. Deep knowledge of tsunamis is required to provide early warning messages to the regions that may be affected, carry out necessary evacuations, and also anticipate the highest run-ups and run-downs    \cite{sanchez2016uncertainty,dutykh2007water,dias2007dynamics}.
 				
 				Most numerical tsunami models rely on solving Riemann problems which can robustly track wetting and drying interfaces to model run-up on beaches and inundation into harbors and communities along the affected coastlines.  Various approaches have been taken to handle these wetting and drying states. For instance, \citet{ge:2011,li-ta-wa-ca-ba-ch-li:2021,fivser2016mass} used Godunov-type finite volume methods to model inundation by allowing cells to shift from dry to wet near refinement boundaries dynamically. Furthermore, \citet{barzgaran2019numerical}  used an augumented Riemann solver coupled with a second-order finite volume method to simulate bedload sediment transport. Results proved that this efficient method is capable of modeling wet/dry interfaces and investigated flow regimes. In addition, the technique employed wave decomposition and the flux-wave formula, which made bed variations vary as four waves propagated from each cell interface. Many more other techniques to manage dry/wet interfaces have been proposed by various researchers in unique ways, for instance, see \citet{po:2015, po:2018, pe-bo-ma:2011, toro2001shock, chaabelasri1849simple,nikolos2009unstructured,huang2013well, bi2014finite,song2011unstructured,buttinger2019fast}.
 		
 
 	\section{Shallow water equations for tsunami modeling}
-	%\donna{	
+	\label{sec2}
 	Shallow water models have been frequently used to handle the propagation of tsunami waves in the ocean see for instance \citet{dutykh2007water,le-ge-be:2011,dias2007dynamics}. The SWE assumption is applicable as the average ocean depth is very shallow compared to the tsunami's wavelength. In addition, the amplitude of tsunami is minimal offshore, typically less than 1m, to justify the shallowness assumption. 
 	
 		The shallow water wave equations (SWE) are a system of hyperbolic partial differential equations (PDEs) governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible and horizontal velocity roughly constant throughout any cross-section of the channel \cite{ge:2008}.  
@@ -114,7 +114,7 @@
 		\end{cases}  
 		\label{rp1}     
 	\end{eqnarray}
-where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a discontinuity \cite{ba-le-mi-ro:2003}. 
+where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a discontinuity. 
 
 	The variation of $h$ and $hu$ on either side of the discontinuity leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions) \cite{leveque2002finite}.  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$) and right($q_{r}$) states are given by: 
 	\begin{equation}
@@ -125,39 +125,49 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 		\end{bmatrix} 
 		\label{ic}
 	\end{equation}
-	As $t$ increases, four distinct regions are created, separated by characteristics. The middle state called the intermediate state($q_{m}$) is generated.  The determination of this state characterizes the Riemann problem and how it connects to other states via waves in each respective characteristic family \donna{no citation needed here} \cite{ba-le-mi-ro:2003}.  \donna{The selection of rarefaction or shock is based on the well-known Lax entropy condition.   For the the SWEs, this condition reduces to hm > hl (??). }.  \ignore{This can only hold if the connection wave speeds satisfy the Lax entropy condition.} Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction and shock wave from the first and second characteristic family, respectively.
+	As $t$ increases, four distinct regions are created, separated by characteristics. The middle state called the intermediate state($q_{m}$) is generated.  The determination of this state characterizes the Riemann problem and how it connects to other states via waves in each respective characteristic family.  The selection of rarefaction or shock is based on the well-known Lax entropy condition.   For the SWEs, this condition reduces to $h_m > h_l$ for a left going shock; otherwise, a left going rarefaction and $h_m>h_r$ for a right going shock otherwise a right going rarefaction.    Figure \ref{fig:x-tplane} shows a wave combination of a centered rarefaction and shock wave from the first and second characteristic family, respectively.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=1\linewidth]{images/geo1}
-		\caption{ x-t plane showing the connection of states, 1-rarefaction fan, and the 2-shock is depicted by: (a). Structure of the characteristic curves for the  Riemann solution profile and (b). Actual representation of the states in the Riemann solution.}
+		\includegraphics[width=.8\linewidth]{images/geo11}
+		\caption{ x-t plane showing the connection of states, {\em left-going rarefaction}, and the {\em right-going shock} are depicted by: (a). Structure of the characteristic curves for the  Riemann solution profile and (b). Actual representation of the states in the Riemann solution.}
 		\label{fig:x-tplane}
 	\end{figure}
-	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers \donna{cite Roe's original paper on approximate Riemann solvers.} \ignore{\cite{bu-ku-we-da:2009}}.
+	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers \cite{roe1981approximate}.
 	
 	
-	Figure \ref{hor2} represents four plots showing initial conditions \ref{t0}, and the temporal evolution of a left going  rarefaction and a right going shock. This solutions are produced by the exact Riemann solver after applying $h_l = 2$, $h_r = 1$, and $u_l = u_r = 0$ as initial conditions in  the Riemann problem.
+	Figure \ref{hor2} represents four plots showing initial conditions \ref{fig:t0}, and the temporal evolution of a left going  rarefaction and a right going shock. This solutions are produced by the exact Riemann solver after applying $h_l = 2$, $h_r = 1$, and $u_l = u_r = 0$ as initial conditions in  the Riemann problem.
 	
-\begin{figure}[H]%
-	\centering
-	\subfloat[]{%
-		\label{t0}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/t0}}
-	\quad
-	\subfloat[]{%
-		\label{t3}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/t3}}%
+	\begin{figure}[H]
+		\subfloat[]{
+			\begin{minipage}[c][1\width]{
+					0.32\textwidth}
+				\centering
+				%\caption{}
+				\includegraphics[width=\linewidth, height=5cm]{images/t0}
+				\label{fig:t0}
+		\end{minipage}}
+		\subfloat[]{
+			\begin{minipage}[c][1\width]{
+					0.32\textwidth}
+				\centering
+				\includegraphics[width=\linewidth, height=5cm]{images/t3}
+				\label{fig:t3}
+		\end{minipage}}
+		\hfill
+		\subfloat[]{
+			\begin{minipage}[c][1\width]{
+					0.32\textwidth}
+				\centering
+				\includegraphics[width=\linewidth,height=5cm]{images/t1}
+				\label{fig:t1}
+		\end{minipage}}
+			\caption{Temporal evolution of the height field solution for the dam break problem with {\em left-going rarefaction} and a {\em right-going shock}  are depicted by (a), (b) and (c) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$ respectively.  }
+		\label{hor2}
+	\end{figure}
 	
-	\subfloat[]{%
-		\label{t1}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/t1}}
-	\quad
-	\subfloat[]{%
-		\label{t2} %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/t2}}%
-	\caption{Temporal evolution of the height field solution for the dam break problem with {\em left-going rarefaction} and a {\em right-going shock}  are depicted by (a),(b),(c) and (d) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$,  $t = 1.0~s$, and $t = 2.0~s$, respectively.  }
-	\label{hor2}
-\end{figure}
+	
+
 	\subsection{Exact Riemann Solver for two-shock SWE}
 The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \cite{leveque2002finite} for other cases. 
 
@@ -170,33 +180,80 @@ The shock speed, $s(t)$,  from the shock wave as the solution emerges is determi
 		\end{aligned}
 		\label{e1}
 	\end{equation}
-	By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates a system of four equations that must be satisfied simultaneously. 
+where $f$ is the numerical flux function. \\
+
+By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates a system of four equations that must be satisfied simultaneously. The temporal evolution of the height and velocity fields solution at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$ are  depicted in figure \ref{fig:allshock}. The figures: \ref{fig:allshock0}, \ref{fig:allshock3}, \ref{fig:allshock1} in the first row exhibit the evolution of the hight field solution profile from the intial condition to the exact Riemann solution at time $t = 1.0~s$. Similarly figures: \ref{fig:allshockv0}, \ref{fig:allshockv3}, \ref{fig:allshockv1} in the second row show the evolution of the velocity field solution profile from the intial condition to the exact Riemann solution at time $t = 1.0~s$. This solutions are produced by the exact Riemann solver after applying $h_l = h_r = 1$, $u_l  =  0.5$, and $u_r = -0.5$ as initial conditions in  the Riemann problem.
 	
-	\donna{Since this section is on the all-shock case, it would be good to just show the evolution of that example. (Maybe two plots of the height and two plots of the velocity?).  Or three smaller plots of evolution of height and velocity. (three per row?).}
-	
+	\begin{figure}[htb]
+		\centering % <-- added
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshock0}
+			\caption{  }
+			\label{fig:allshock0}
+		\end{subfigure}\hfil % <-- added
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshock3}
+			\caption{}
+			\label{fig:allshock3}
+		\end{subfigure}\hfil % <-- added
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshock1}
+			\caption{}
+			\label{fig:allshock1}
+		\end{subfigure}
+		
+		\medskip
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshockv0}
+			\caption{}
+			\label{fig:allshockv0}
+		\end{subfigure}\hfil % <-- added
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshockv3}
+			\caption{}
+			\label{fig:allshockv3}
+		\end{subfigure}\hfil % <-- added
+		\begin{subfigure}{0.25\textwidth}
+			\includegraphics[width=\linewidth]{images/allshockv1}
+			\caption{}
+			\label{fig:allshockv1}
+		\end{subfigure}
+		\caption{Temporal evolution of the height and velocity field solution for the all-shock case with {\em left-going shock} and a {\em right-going shock}  are depicted by (a), (b), (c), (d), (e), and (f) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$. }
+		\label{fig:allshock}
+	\end{figure}
 
 	\subsection{General case}
-	\donna{The Lax entropy condition requiring that $h_m > h_r$ may not be satisfied in all cases}.   \ignore{Not all left and right states can be connected by a shock wave.  In this case,} We can also connect states by a rarefaction wave. See Figure (\ref{hor1})  for illustration of the evolution of a Riemann problem for for a case in which the right going wave is a shock \ref{2shock}, all rarefaction case \ref{allrare}, and the left going wave is a rarefaction \ref{1rare}.
+The Lax entropy condition requiring that $h_m > h_l, h_r$ may not be satisfied in all cases.  We can also connect states by a rarefaction wave. See Figure (\ref{allrare})  for illustration of the evolution of a Riemann problem  for a case in which both the left and  the right states are connected to the intemediate state by a left going rarefaction and a right going rarefaction wave  respectively.   We refer the reader to \cite{leveque2002finite} for more information about rarefactions.  Figure \ref{fig:allrare0} depicts the intial condition (Riemann problem) solution at  $t=0~s$  and figures \ref{fig:allrare3} and \ref{fig:allrare1} represents the evolution of the height field solution at $t = 0.3~s$, and $t = 1.0~s$.  This solutions are produced by the exact Riemann solver after applying $h_l = h_r = 1$, $u_l  =  -0.5$, and $u_r = 0.5$ as initial conditions in  the Riemann problem.
 
-\begin{figure}[H]%
-	\centering
-	\subfloat[]{%
-		\label{allshock}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/allshock}}
-	\quad
-	\subfloat[]{%
-		\label{2shock}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/2shock}}%
-	
-	\subfloat[]{%
-		\label{allrare}  %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/allrare}}
-	\quad
-	\subfloat[]{%
-		\label{1rare} %
-		\includegraphics[width=0.4\textwidth, height=5cm]{images/1rare}}%
-	\caption{Spatial evolution of the height field for the {\em all-shock case},  {\em right-going shock case}, {\em all-rarefaction case},  and {\em left-going rarefaction case} simulated  at its final time step ($t=2~seconds$) are depicted by (a), (b), (c), and (d) respectively.}
-	\label{hor1}
+
+ 
+
+\begin{figure}[H]
+	\subfloat[]{
+		\begin{minipage}[c][1\width]{
+				0.32\textwidth}
+			\centering
+			%\caption{}
+			\includegraphics[width=\linewidth, height=5cm]{images/allrare0}
+			\label{fig:allrare0}
+	\end{minipage}}
+	\subfloat[]{
+		\begin{minipage}[c][1\width]{
+				0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth, height=5cm]{images/allrare3}
+			\label{fig:allrare3}
+	\end{minipage}}
+	\hfill
+	\subfloat[]{
+		\begin{minipage}[c][1\width]{
+				0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth,height=5cm]{images/allrare1}
+			\label{fig:allrare1}
+	\end{minipage}}
+	\caption{Temporal evolution of the height field solution for the all-rarefaction case with {\em left-going rarefaction} and a {\em right-going rarefaction}  are depicted by (a), (b) and (c) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$ respectively.  }
+	\label{allrare}
 \end{figure}
 
 	\subsection{Finite volume discretization}
@@ -234,9 +291,7 @@ Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  wher
 	\end{equation}
 	where $\mathcal{F}$ is the  numerical flux function $F_{i-\frac{1}{2}}^{n}$ at $q_l = Q_{i-1}$  and $q_r = Q_{i}$.
 	
-\donna{The above  scheme is essentially the original Godunov scheme (cite Godunov) and is only first order accurate.  Different finite volume schemes will include higher order time stepping and or spatial terms to increase accuracy}
-
-Figures \ref{fig:exap} and \ref{fig:exapp}, depicts the first and second-order finite volume solutions and compares them to the true solution described in Section (Riemann problem) for the dam break problem height field simulated at the final time with limiters. Figure \ref{fig:exap}  shows that the first-order approximate solution does not coincide with the exact solution at region edges. However, the second order approximate solution \ref{fig:exapp}  fits the exact solution accurately; hence this validates the exact and numerical solutions.
+The above  scheme is essentially the original Godunov scheme \cite{godunov1959difference} and is only first order accurate.  Different finite volume schemes will include higher order time stepping and or spatial terms to increase accuracy for instance, figures \ref{fig:exap} and \ref{fig:exapp}, depicts the first and second-order finite volume solutions and compares them to the true solution described in Section \ref{sec2} for the dam break problem height field simulated at the final time with limiters. Figure \ref{fig:exap}  shows that the first-order approximate solution does not coincide with the exact solution at region edges. However, the second order approximate solution \ref{fig:exapp}  fits the exact solution accurately; hence this validates the exact and numerical solutions.
 	\begin{figure}[H]
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering
@@ -251,13 +306,12 @@ Figures \ref{fig:exap} and \ref{fig:exapp}, depicts the first and second-order f
 			\caption{}
 			\label{fig:exapp}
 		\end{subfigure}
-		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction with limiters for the exact and approximate solutions. \donna{Check titles;  What is the resolution here?  Might be good to lower the resolution just to show the difference between first and second order more dramatically.  Also, clarify whether you used an exact Riemann solver in a FVM or you are plotting the exact solution.   By "Approximate", do you mean a Roe solver?  Maybe replace "Approximated" in legend with "Finite volume method"?}}
+		\caption{(a) and (b) respectively show height field at the final time step for both first and second order correction with limiters for the exact and approximate solutions.}
 	\end{figure}
 
 
 	\subsection{Finite schemes in quasi-linear form}
-	\donna{Another approach to solving conservation laws is to write  them in  {\em quasilinear form} and develop numerical methods based on an eigen-decomposition of the Jacobian matrix.}
-	The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
+	Another approach to solving conservation laws is to write  them in  {\em quasilinear form} and develop numerical methods based on an eigen-decomposition of the Jacobian matrix. The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
 as
 \begin{equation}
 	q_{t} + f'(q)q_{x} = 0
@@ -272,9 +326,8 @@ where  $f'(q) \in \mathbb{R}^{m\times m}$  flux Jacobian matrix.  Consider a Rie
 	\end{cases}    
 	\label{w4}   
 \end{equation}
-\subsubsection{Wave Propagation algorithm}
-\donna{If you plan to talk about waves, speeds, etc, probably should say this is the formalism of the "wave propagation algorithm".  }
-The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$, where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$ \cite{leveque2002finite,toro2001shock,ge:2008}.  This decomposition takes the form
+\subsubsection{Wave Propagation algorithm (WPA)}
+ Here the formalism of the WPA is presented.   The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$, where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$ \cite{leveque2002finite,toro2001shock}.  This decomposition takes the form
 
 \begin{equation}
 	Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}} \equiv \sum_{p=1}^{m} \mathcal{W}_{i-\frac{1}{2}}^{p}
@@ -304,8 +357,9 @@ where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determi
 Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$ \cite{le:1997}.
 
 	\subsubsection{MUSCL approach}
-\donna{This is a type of FV method; keep at same level as Wave Propagation Algorithm as above.}
-\citet{van1979towards} developed the Monotone upstream-centered scheme for conservation laws (MUSCL) method to build high-resolution total variation diminishing schemes  for hyperbolic PDEs using FVM. MUSCL schemes have been widely used by many researchers to solve two-dimensional SWEs due to their monotonicity, stability preservation, and more significant order of accuracy by data reconstruction (e.g., \cite{song2011robust,zhao2019improved,marche2007evaluation,liang2009adaptive}).  These methods are extensions of the original Godunov scheme. According to \citet{hou20132d}, cell-based and edge-based methods  also termed monoslope, and multi-slope MUSCL methods are the two methods used for implementing MUSCL methods on unstructured grids. The numerical instabilities produced by the second-order scheme are eliminated by extrapolating the cell edges from their centers after applying a uniform limited slope to the cell. The Riemann flux across the boundaries is now computed from the reconstructed values stored at the edges.   In addition, physical solutions without oscillations are obtained if and only if the solution is monotonic, and this is determined by monitoring the overtime reducing summation of each adjacent cell differences \cite{hou2014multislope}.
+
+Monotone upstream-centered scheme for conservation laws (MUSCL) is a FVM that was developed by  \citet{van1979towards} to build the first high-order and high-resolution total variation diminishing techniques for hyperbolic PDEs. Many researchers have widely used MUSCL schemes to solve two-dimensional SWEs due to their monotonicity, stability preservation, and more significant order of accuracy by data reconstruction (e.g., \cite{song2011robust,zhao2019improved,marche2007evaluation,liang2009adaptive}).  These methods are extensions of the original Godunov scheme.     According to \citet{hou20132d}, cell-based and edge-based methods, also termed monoslope, and multi-slope MUSCL methods, are the two methods used for implementing MUSCL methods on unstructured grids. The numerical instabilities produced by the second-order scheme are eliminated by extrapolating the cell edges from their centers after applying a uniform limited slope to the cell. The Riemann fluxes across the boundaries are now computed from the reconstructed values stored at the edges.  These fluxes are used as input to the Riemann solver, and the resulting solutions are averaged and used to update the solution in time.  In addition, physical solutions without oscillations are obtained if and only if the solution is monotonic, and this is determined by monitoring the overtime reducing summation of each adjacent cell differences \cite{hou2014multislope}.
+
 
 
 
@@ -332,80 +386,76 @@ Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the
 The wetting and drying processes have significant physical and biological impacts on shallow water systems and coastal environments. They can arise due to inundation effects on coastal mudflats and wave-driven run-up on beaches and dunes on periodic time scales, i.e., several hours for the rise and fall of the tide, several days for storm surge, and infragravity wave motions on the shoreface.  These effects can cause extreme devastating damages and coastal erosion.
 	With a basic understanding of the role that a Riemann solver plays in solving the shallow water wave equations, and the basic finite volume discretization approach, we will describe several approaches of handling wetting and drying processes.  
 
-\donna{I think you can actually show an equation here.  show how you get negative heights from non-negative heights.   You have the right idea here.}
+The appearance of negative height values in equation \eqref{wpa2} after a few updates, even though non-negative heights are supplied as inputs, is caused due by numerical instabilities in the second-order correction term, making the update term on the right-hand side in \eqref{wpa22} being greater than the left-hand side term. This makes the left-hand side ($  Q_{i}^{n+1}  $) in equation \eqref{wpa2} be negative, causing negative height values on the following input values to the exact solver which breaks the solver, hence failing to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbitrary whenever $h<0$, but this may affect the accuracy of the results.
+\begin{equation}
+	Q_{i}^{n} < \left(- \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) - \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )\right)
+	\label{wpa22}
+\end{equation}
 
-\
-Appearance of negative height values in equation \eqref{cellupdat} after a few updates makes  the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ larger than $Q_{i}^{n}$. This makes the  input height values in the exact solver  to obtain $\mathcal{F}(Q_{i} , Q_{i+1} )$ and $ \mathcal{F}(Q_{i-1} , Q_{i} )$ to become negative, which breaks the solver, hence failing  to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbituary whenever $h<0$, but this may affect accuracy of the results.
 
 	\subsection{Riemann Problem for Wet/Dry States}
 	
 	In the previous section we discussed how the exact solver solved the Riemann problem for cases in which the water height field is strictly positive everywhere. Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \cite{toro2001shock,ge:2008}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\linewidth]{images/dv}
+		\includegraphics[width=0.4\linewidth]{images/dd1}
 		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state. }
 		\label{fig:dry-bed}
 	\end{figure}
 	
-	\donna{Include a few plots of an evolution of a wet/dry state.  These were solved using Toro's method, described  below.}
-
-	\subsection{Approach 1 - Liu et al.}
-	\donna{Please modify the titles : "XXX Approach (Liu)" }
-					\citet{li-ta-wa-ca-ba-ch-li:2021} also used the Godunov-type finite volume methods to process dry and wet/dry front cells to predict flood elevation by modifying the dry cell's center elevation to correspond to the averaged peak of the two surrounding intercell heights. 
-					\donna{Don't mention George here;  you do that below.}
-					\ignore{However, in \cite{ge:2008}, George used an approximate Riemann solver for the shallow water equations (SWE) to decompose an augmented solution vector into four propagating waves. This maintained excellent features in the approximate solution, such as preserving depth non-negativity, shockwave solutions capturing, e.t.c., making the solver appropriate for modeling SWE when steady states and dry cells exist.}
-
-
-	\subsection{Relaxation method (Pelanti et al.)}
-
- \citet{pelanti2011riemann} formulated a Rieman solver based on the relaxation approach for both single-phase and double-phase shallow flow equations explaining a mixture of granular material and fluid. This approach is implemented by employing auxiliary variables to replace momenta in the spatial gradients of the original system. The eigenvalues of the relaxation model are determined from the coefficients of the linear equations governing the new auxiliary variables.  The Riemann solution for the height of the flow and relaxation variables are calculated as Roe's Riemann solution; this makes the resulting solver similar to the Roe solver. However, it has the advantage of certain freedom to specify wave speeds by choosing relaxation parameters. This added advantage makes the new solver more robust in handling wet/dry interfaces \cite{pelanti2008relaxation,pelanti2011riemann}.
-
-	\subsection{YYY Method (Toro)}
-	According to \citet{toro2001shock}, there are three possible cases to consider as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits {\em 1-rarefaction} wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits {\em 2-rarefaction} wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
-		\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.5\linewidth]{images/dry-wet}
-		\caption{The dry state appears in three cases: (a) dry region is on the right, (b) dry region is on the left, and (c) dry region appears in the interaction of two wet bed states.}
-		\label{fig:dry-wet}
-	\end{figure}
-	
-	\donna{make figures larger;   put three on single line}
-	Figure \ref{fig:right} and \ref{fig:left} respectively show solution profiles for the height field for cases (a) and (b) at the final time step for a Riemann problem  solved exactly with initial data containing dry bed regions appearing on the right and left. Figure~\ref{fig:middle} represents the  solution profiles for the height field  for case (c) at the final time step for a Riemann problem  solved exactly for which a dry bed region appears due to the interaction of two wet bed states satisfying $S_{*L} \le S_{*R}$.
-	
+	Figure \ref{right}  shows the temporal evolution of the true solution  for the height field for case of a Riemann problem with a right dry state (see Figure \ref{fig:dry-bed}). The solution was obtained using Toro's method implemented in the exact Riemann solver with intial coditions: $h_l  = 1$, $h_r = 0$, and  $u_l = u_r = 0$ described  below.
 \begin{figure}[H]
 	\subfloat[]{
 		\begin{minipage}[c][1\width]{
-				0.32\textwidth}
+				0.34\textwidth}
 			\centering
 			%\caption{}
-			\includegraphics[width=\linewidth, height=5cm]{images/right}
-			\label{fig:right}
+			\includegraphics[width=\linewidth, height=5cm]{images/right0}
+			\label{fig:right0}
 	\end{minipage}}
 	\subfloat[]{
 		\begin{minipage}[c][1\width]{
-				0.32\textwidth}
+				0.34\textwidth}
 			\centering
-			\includegraphics[width=\linewidth, height=5cm]{images/middle}
-			\label{fig:middle}
+			\includegraphics[width=\linewidth, height=5cm]{images/right5}
+			\label{fig:right5}
 	\end{minipage}}
 	\hfill
 	\subfloat[]{
 		\begin{minipage}[c][1\width]{
-				0.32\textwidth}
+				0.34\textwidth}
 			\centering
-			\includegraphics[width=\linewidth,height=5cm]{images/left}
-			\label{fig:left}
+			\includegraphics[width=\linewidth,height=5cm]{images/right15}
+			\label{fig:right2}
 	\end{minipage}}
-	\caption{Typical solution profile for the Riemann solution in which the dry bed is at the right, apperars in the middle and left is depicted by (a), (b), and (c) repectively. }
-	\label{fig:4.8}
+	\caption{Temporal evolution of the height field solution for the right dry state case  are depicted by (a), (b), and (c) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$ respectively. }
+	\label{right}
 \end{figure}
-\donna{remove grid lines in plots;  show evolution from wet/dry state to }
 
-	\subsection{Galerkin approach (Bunya et al.}  
+	\subsection{Four elevation modification  method (Liu et al.)}
+		\citet{li-ta-wa-ca-ba-ch-li:2021} also used the Godunov-type finite volume methods to process dry and wet/dry front cells to predict flood elevation. This was done by taking four elevation modifications: (1).  Identifying four types of intercell through estimating their properties based on the depth of the flow and surface elevation difference; (2). Updating interface elevation depends on their properties to achieve gravity balance and prevent non-physical flux predictions;  (3).  Calculating dry cell's center elevations by taking the average of the two surrounding intercell elevations; (4). Modifying the first term of the slope limiter based on the elevation difference between intercell elevations dividing two times the mesh size. Furthermore, the first term of the slope limiter function in the dry cell is used to finalize matrix simulation of the entire area and solve the wet/dry problem; this enables SWE application to areas with complex geometry, preventing more elevation modifications.
+	
+	\subsection{Relaxation method (Pelanti et al.)}
+
+ \citet{pelanti2011riemann} formulated a Rieman solver based on the relaxation approach for both single-phase and double-phase shallow flow equations explaining a mixture of granular material and fluid. This approach is implemented by employing auxiliary variables to replace momenta in the spatial gradients of the original system. The eigenvalues of the relaxation model are determined from the coefficients of the linear equations governing the new auxiliary variables.  The Riemann solution for the height of the flow and relaxation variables are calculated as Roe's Riemann solution; this makes the resulting solver similar to the Roe solver. However, it has the advantage of certain freedom to specify wave speeds by choosing relaxation parameters. This added advantage makes the new solver more robust in handling wet/dry interfaces \cite{pelanti2008relaxation,pelanti2011riemann}.
+
+	\subsection{Contact discontinuity  Method (Toro)}
+	\citet{toro2001shock} solved a Riemann problem with cases in which the dry regions are either present at the initial time or appear as a result of the interaction of two wet bed states. According to his approach, there are three possible cases to consider, as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits a left-going rarefaction ({\em 1-rarefaction}) wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits right-going rarefaction ({\em 2-rarefaction}) wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=.9\linewidth]{images/dry-wet}
+		\caption{The dry state appears in three cases: (a) dry region is on the right, (b) dry region is on the left, and (c) dry region appears in the interaction of two wet bed states. The dashed lines in all figures: (a), (b), and (c) depict the contact discontinuity of speed $S_{*R}$ or $S_{*L}$ that coincides with the tail of the rarefaction in all dry regions. This contact discontinuity is also known as the wet/dry front.}
+		\label{fig:dry-wet}
+	\end{figure}
+	
+
+
+	\subsection{Galerkin approach (Bunya et al.)}  
 		The wetting and drying can also be handled by the linear piecewise  Runge-Kutta discontinuous Galerkin approximation (RKDG)  to SWE solutions;  according to \citet{bu-ku-we-da:2009}, this method is based on the thin water layer approach to optimize both computational cost and accuracy on fixed meshes. The water depth of each dry or partially wet element is tracked and controlled by updating water surface elevations at every end of each Runge-Kutta time step. This maintains the depth positivity of the water column through redistributing mass within each element, which brings about a stable solution over the entire domain for the SWE. In addition, local mass is conserved since the sum of mass inside an element remains constant. The update is independent of the neighboring elements states because it highly depends on the element's velocity and surface elevation. The technique's special treatment of numerical fluxes enables the water mass positivity in each element \cite{bu-ku-we-da:2009,kubatko2007semi}. According to \citet{bokhove2005flooding,bu-ku-we-da:2009}, the locality minimizes the communication between subdomains which improves parallel efficiency. 
 
 	\subsection{Adaptive approach (Popinet)}
-	\donna{Maybe a short section on quadtree adaptivity and the wet/dry approach + }
+Furthermore, an efficient method (database) that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed. \cite{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization. On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
+
 
 	\subsection{Augmented Riemann solver (George)}
 

@@ -66,18 +66,18 @@ def bc_extrap(Q):
     return Q_ext
 
 # Problem test
-def problem_test(case,itype):
+def problem_test(case,itype,a=2,b=0,c=1,d=0):
     '''
     Description: Contains all test cases used in this simulation including wet dry state cases.
     input: case, itype
     output: outputs left (ql) and right states (qr)
     '''
     if itype == 1 and case > 7:
-        exit('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
+        exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
 
     elif itype == 2 and case > 7:
-        exit('The approximate solves can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
-
+        exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry states.')
+    
     elif case == 0:     #left going shock
         hl = 1
         hr = 1.5513875245483204
@@ -132,7 +132,7 @@ def problem_test(case,itype):
         print('Problem: All shock\n','\t hl = ', hl,'\n',\
             '\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
     #elif itype == 1: #presence of dry states 
-    elif case == 7: #left dry state
+    elif case == 8: #left dry state
         hl = 0
         ul = 0
         hr = 1
@@ -140,7 +140,7 @@ def problem_test(case,itype):
         print('Problem: Left dry state\n','\t hl = ', hl,'\n',\
             '\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
 
-    elif case == 8: #middle dry state
+    elif case == 9: #middle dry state
         hl = .1
         ul = -.7
         hr = .1
@@ -148,7 +148,7 @@ def problem_test(case,itype):
         print('Problem: middle dry state\n','\t hl = ', hl,'\n',\
             '\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
 
-    elif case == 9: #right dry state
+    elif case == 10: #right dry state
         hl = 1
         ul = 0
         hr = 0
@@ -156,6 +156,27 @@ def problem_test(case,itype):
         print('Problem: right dry state\n','\t hl = ', hl,'\n',\
             '\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
 
+    elif case == 7: #user defined
+        if itype == 2 and a <= 0:
+            exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry states or select hl > 0 for user defined values.')
+
+        elif itype == 2 and c <= 0:
+            exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry states or select hr > 0 for user defined values.')
+
+        elif itype == 1 and a <= 0:
+            exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry states or select hl > 0 for user defined values.')
+
+        elif itype == 1 and c <= 0:
+            exit('The approximate solver can\'t handle dry states yet, please choose itype = 0 for presence of dry statesor select hr > 0 for user defined values.')
+        else:
+            hl = a
+            ul = b
+            hr = c
+            ur = d
+            print('Problem: user defined\n','\t hl = ', hl,'\n',\
+                '\t hr = ', hr,'\n','\t ul = ', ul,'\n','\t ur = ', ur)
+
+    #return values
     ql = array([hl,hl*ul])
     qr = array([hr,hr*ur])
 
@@ -163,7 +184,7 @@ def problem_test(case,itype):
 
 #plot function
 def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
-    limiter_choice,second_order,meqn,solver,cfl):
+    limiter_choice,second_order,meqn,solver,cfl,hl=2,ul=0,hr=1,ur=0):
     '''
     Description: calls the exact and approximate solvers and then returns 
                  plots of Riemann solutions for both standard cases and 
@@ -181,7 +202,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
     tvec = linspace(to,Tfinal,nout+1)
 
     #sample problem test
-    ql,qr = problem_test(case,itype)
+    ql,qr = problem_test(case,itype,hl,ul,hr,ur)
 
     #sample graphics
     #only exact solver ploted due to presence of dry states
@@ -191,11 +212,14 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
         #initialise the exact soln
         qeo = exact_solver.qexact(xc,to,mq,ql,qr,g)
         hde, = plot(xc,qeo,'r-',markersize=5,label='dry_wet')
+        #hde, = plot(xc,qeo,'r-',markersize=5,label='all-rarefaction')
 
         if mq == 0:
             tstr = 'Height : t = {:.4f}'
-        else:
+        elif mq == 1:
             tstr = 'Momentum : t = {:.4f}'
+        else:
+            tstr = 'Velocity : t = {:.4f}'
 
         htitle = title(tstr.format(0),fontsize=18)
         #grid()
@@ -215,7 +239,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
             ylim([ay,by])
 
             pause(0.1)
-            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/rr')
+            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/allrare11')
 
             fig.canvas.draw()        
 
@@ -235,13 +259,13 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
         #initialise the exact soln
         qeo = exact_solver.qexact(xc,to,mq,ql,qr,g)
-        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact')
+        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact Riemann Solver')
 
         q0 = Q[:,mq,0]
-        hdl, = plot(xc,q0,'b.',markersize=5,label='Approximated')
+        hdl, = plot(xc,q0,'b.',markersize=5,label='Finite Volume Scheme')
 
         if mq == 0:
-            tstr = 'Height : t = {:.4f}'
+            tstr = 'Height : t = {:.4f} 2nd order'
         else:
             tstr = 'Momentum : t = {:.4f}'
 
@@ -266,7 +290,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
             ylim([ay,by])
 
             pause(0.1)
-            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/rr')
+            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/exapp0')
 
             fig.canvas.draw()  
 
