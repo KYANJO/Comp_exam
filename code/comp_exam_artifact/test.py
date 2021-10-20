@@ -183,7 +183,7 @@ def problem_test(case,itype,a=2,b=0,c=1,d=0):
     return ql,qr
 
 #plot function
-def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
+def Riemannsoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
     limiter_choice,second_order,meqn,solver,cfl,hl=2,ul=0,hr=1,ur=0):
     '''
     Description: calls the exact and approximate solvers and then returns 
@@ -259,7 +259,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
         #initialise the exact soln
         qeo = exact_solver.qexact(xc,to,mq,ql,qr,g)
-        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact Riemann Solver')
+        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact Solution to Riemann problem')
 
         q0 = Q[:,mq,0]
         hdl, = plot(xc,q0,'b.',markersize=5,label='Finite Volume Scheme')

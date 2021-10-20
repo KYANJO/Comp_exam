@@ -76,7 +76,7 @@ def dBdx(x):
 def psi(x,g,hm,dBdx):
     for i in x:
         a  = -g*hm*dBdx(i)
-        return array([0,a])
+        return 0*array([0,a])
 
 
 #Riemann Solvers:
@@ -182,6 +182,7 @@ def rp1_swe(Q_ext,exact):
             amdq   : Negative fluctuations (N+3 values)
         """    
         
+        
      # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
 
@@ -258,7 +259,9 @@ def rp1_swe(Q_ext,exact):
 # see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
 # behind the method. 
 #--------------------------------------------------------------
-def rp2_swe(Q_ext,exact,x,dx):
+
+from scipy.linalg import solve
+def rp2_swe(Q_ext,x,dx):
     """  Input : 
             Q_ext : Array of N+4 Q values.   Boundary conditions are included.
             
@@ -351,9 +354,24 @@ def rp2_swe(Q_ext,exact,x,dx):
 
         #flux-based wave decomposition
         #beta_i+1/2
-        beta = linalg. inv(R)*(flux(qr)-flux(ql) - dx*psi(x,g,h_bar,dBdx))
-        b1 = beta[0]
-        b2 = beta[1]
+        
+        # This should work (:-))
+        # delta = (flux(qr)-flux(ql)
+        # b1 = ((u_hat+c_hat)*d0[i-1]-d1[i-1])/(2*c_hat)
+        # b2 = (-(u_hat-c_hat)*d0[i-1]+d1[i-1])/(2*c_hat)
+
+        fr = reshape(flux(qr),(2,1))
+        fl = reshape(flux(ql),(2,1))
+        dlt = fr - fl
+        d0t = dlt[0]
+        d1t = dlt[1]
+        b1 = ((u_hat+c_hat)*d0t-d1t)/(2*c_hat)
+        b2 = (-(u_hat-c_hat)*d0t+d1t)/(2*c_hat)
+        
+        # beta = linalg.inv(R)@(fr-fl)   # - dx*psi(x,g,h_bar,dBdx))
+        #beta = solve(R,fr-fl)
+#         b1 = beta[0]
+#         b2 = beta[1]
         
         # f-wave and speed 1
         z1[i] = b1*R[:,[0]].T
@@ -366,24 +384,35 @@ def rp2_swe(Q_ext,exact,x,dx):
     fwaves = (z1,z2)             # P^th wave at each interface
     speeds = (s1,s2)      
    
+
     # Fluctuations
     amdq = zeros(delta.shape)
     apdq = zeros(delta.shape)
-    for m in range(mwaves):
-        for mw in range(mwaves):
-            sm = where(speeds[mw] < 0, speeds[mw], 0)
-            sp = where(speeds[mw] > 0, speeds[mw], 0)
-            #if speeds[mw].all() < 0:
-            amdq += sm*fwaves[mw]
-            #elif speeds[mw].all() > 0:
-            apdq += sp*fwaves[mw]
-            #else:
-              #  amdq += fwaves[mw]*0.5
-               # apdq += fwaves[mw]*0.5
-            #amdq += (speeds[mw]==0)*fwaves[mw]*0.5
-            #apdq += (speeds[mw]==0)*fwaves[mw]*0.5
-            #sp = where(speeds[mw] > 0, speeds[mw], 0)
-            #apdq += sign(sp)*fwaves[mw]
+    for mw in range(mwaves):
+        sm = where(speeds[mw] <= 0, 1, 0)
+        amdq += sm*fwaves[mw]
+        
+        sp = where(speeds[mw] > 0, 1, 0)
+        apdq += sp*fwaves[mw]
+
+#     # Fluctuations
+#     amdq = zeros(delta.shape)
+#     apdq = zeros(delta.shape)
+#     for m in range(mwaves):
+#         for mw in range(mwaves):
+#             sm = where(speeds[mw] <= 0, 1, 0)
+#             sp = where(speeds[mw] > 0, 1, 0)
+#             #if speeds[mw].all() < 0:
+#             amdq += sm*fwaves[mw]
+#             #elif speeds[mw].all() > 0:
+#             apdq += sp*fwaves[mw]
+#             #else:
+#               #  amdq += fwaves[mw]*0.5
+#                # apdq += fwaves[mw]*0.5
+#             #amdq += (speeds[mw]==0)*fwaves[mw]*0.5
+#             #apdq += (speeds[mw]==0)*fwaves[mw]*0.5
+#             #sp = where(speeds[mw] > 0, speeds[mw], 0)
+#             #apdq += sign(sp)*fwaves[mw]
                 
      
     return fwaves,speeds,amdq,apdq
@@ -396,13 +425,13 @@ def rp2_swe(Q_ext,exact,x,dx):
 # Adapted from the Clawpack package (www.clawpack.org)
 # -----------------------------------------------------
 
-def claw(ax, bx, mx, Tfinal, nout,ql,qr, 
+def claw(ax, bx, mx, Tfinal, nout,ql,qr, \
           meqn=1, \
           exact=None,\
           solver=None,\
           qinit=None, \
           bc=None, \
-          limiter_choice='MC',    
+          limiter_choice='MC',\
           second_order=True):
 
     #initial height fields(left and right)
@@ -445,17 +474,29 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
     dtdx = dt/dx
     t = t0
     
+       
     for n in range(0,nout):
         t = tvec[n]
 
         # solver: 0 - Roe solver
         # solver: 1 - flux formulation solver
         # solver: 2 - f-wave approach(with source term) solver
-        if solver == 0:
+        if True:    #solver == 0:
             # Add 2 ghost cells at each end of the domain;  
             q_ext = bc(q)
             # Get waves, speeds and fluctuations from the solver 
-            waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
+            #waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
+            
+            use_fwaves = False
+            if solver == 0:
+                waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
+            elif solver == 1:
+                waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)                
+            elif solver == 2:
+                # fwaves
+                use_fwaves = True
+                waves, speeds, amdq, apdq = rp2_swe(q_ext,xc,dx)
+
 
             # First order update
             q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
@@ -483,7 +524,12 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
                     else:
                         wlimiter = 1
                         
-                    cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                    if not use_fwaves:
+                        cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                    else:
+                        cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                        
+                        
                     
                 Fp = cxx  # Second order derivatives
                 Fm = cxx
@@ -571,6 +617,7 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr,
                     else:
                         wlimiter = 1
                         
+                    
                     cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
                     
                     #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
