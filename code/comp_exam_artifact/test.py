@@ -183,7 +183,7 @@ def problem_test(case,itype,a=2,b=0,c=1,d=0):
     return ql,qr
 
 #plot function
-def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
+def Riemannsoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
     limiter_choice,second_order,meqn,solver,cfl,hl=2,ul=0,hr=1,ur=0):
     '''
     Description: calls the exact and approximate solvers and then returns 
@@ -211,7 +211,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
         clf()
         #initialise the exact soln
         qeo = exact_solver.qexact(xc,to,mq,ql,qr,g)
-        hde, = plot(xc,qeo,'r-',markersize=5,label='dry_wet')
+        hde, = plot(xc,qeo,'r-',markersize=5,label='right dry state')
         #hde, = plot(xc,qeo,'r-',markersize=5,label='all-rarefaction')
 
         if mq == 0:
@@ -239,7 +239,7 @@ def Riemansoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
             ylim([ay,by])
 
             pause(0.1)
-            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/allrare11')
+            #savefig('/Users/mathadmin/Documents/phd-research/comprehensive_exam/synthesis_paper/images/right0')
 
             fig.canvas.draw()        
 
