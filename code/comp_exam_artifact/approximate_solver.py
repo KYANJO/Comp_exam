@@ -76,7 +76,7 @@ def dBdx(x):
 def psi(x,g,hm,dBdx):
     for i in x:
         a  = -g*hm*dBdx(i)
-        return 0*array([0,a])
+        return array([0,a])
 
 
 #Riemann Solvers:
@@ -259,8 +259,6 @@ def rp1_swe(Q_ext,exact):
 # see brian_kyanjo_synthesis_duplicate.pdf for the mathematics
 # behind the method. 
 #--------------------------------------------------------------
-
-from scipy.linalg import solve
 def rp2_swe(Q_ext,x,dx):
     """  Input : 
             Q_ext : Array of N+4 Q values.   Boundary conditions are included.
@@ -274,19 +272,13 @@ def rp2_swe(Q_ext,x,dx):
     # For most problems, the number of waves is equal to the number of equations
     mwaves = 2
     
-     # jump in Q at each interface
+    # jump in Q at each interface
     delta = Q_ext[1:,:]-Q_ext[:-1,:]
 
-    d0 = delta[:,[0]]
-    d1 = delta[:,[1]]
-    
     h = Q_ext[:,0]
     u = Q_ext[:,1]/Q_ext[:,0]
     
-    qold1 = Q_ext[:,0]
-    qold2 = Q_ext[:,1]
-
-    mx = delta.shape[0]
+    mx = Q_ext.shape[0]
     
     # Array of wave 1 and 2
     z1 = zeros(delta.shape)
@@ -295,40 +287,9 @@ def rp2_swe(Q_ext,x,dx):
     # Array of speed 1 and 2
     s1 = zeros((delta.shape[0],1))
     s2 = zeros((delta.shape[0],1))
-    
-    #amdq = zeros(delta.shape)
-    #apdq = zeros(delta.shape)
-    
+  
     for i in range(1,mx):
-        
-        #ql = array([qold1[i],qold2[i]])
-        #qr = array([qold1[i+1],qold2[i+1]]) #at edges
-            
-         #at the intefaces
-         #hms,ums = newton(hl,hr,ul,ur,g)
-        #hms,ums = newton(ql,qr,g)
-        #hms = exact(ql,qr,0,0,g)
-        #hums = exact(ql,qr,0,1,g)
-        #ums = hums/hms
-        #hums = hms*ums
-        
-#         #state at the interface
-        #qm = array([hms,hums])
-        
-#         #fluctuations
-        #amdq[i] = flux(qm) - flux(ql)
-        #apdq[i] = flux(qr) - flux(qm)
-        
-#         l1 = ums - sqrt(g*hms) #1st wave speed
-#         l2 = ums + sqrt(g*hms) #2nd wave speed
-
-        # use roe averages for middle state or just simply arithmetic averages e.g. hm = (hl + hr)/2
-        #hm = (ql[0] + qr[0])/2
-        #hum = (ql[1] + qr[1])/2
-        #um = hum/hm
-        
-        #l1 = um - sqrt(g*hm) #1st wave speed
-        #l2 = um + sqrt(g*hm) #2nd wave speed
+        #Roe-averaged values
         u_hat = (sqrt(h[i-1])*u[i-1]+sqrt(h[i])*u[i])/(sqrt(h[i-1])+sqrt(h[i]))
         h_bar = (1/2)*(h[i-1]+h[i])
         c_hat = sqrt(g*h_bar) 
@@ -336,8 +297,6 @@ def rp2_swe(Q_ext,x,dx):
         # Eigenvalues
         l1 = u_hat - c_hat        
         l2 = u_hat + c_hat 
-
-        # Compute R and speeds based on these averages.
 
         # Eigenvectors
         r1 = array([1, l1])       
@@ -352,39 +311,30 @@ def rp2_swe(Q_ext,x,dx):
         ql = array([h[i-1],h[i-1]*u[i-1]])
         qr = array([h[i],h[i]*u[i]])
 
-        #flux-based wave decomposition
-        #beta_i+1/2
-        
-        # This should work (:-))
-        # delta = (flux(qr)-flux(ql)
-        # b1 = ((u_hat+c_hat)*d0[i-1]-d1[i-1])/(2*c_hat)
-        # b2 = (-(u_hat-c_hat)*d0[i-1]+d1[i-1])/(2*c_hat)
-
+        #reshape the flux to a column vector
         fr = reshape(flux(qr),(2,1))
         fl = reshape(flux(ql),(2,1))
-        dlt = fr - fl
-        d0t = dlt[0]
-        d1t = dlt[1]
-        b1 = ((u_hat+c_hat)*d0t-d1t)/(2*c_hat)
-        b2 = (-(u_hat-c_hat)*d0t+d1t)/(2*c_hat)
+
+        #flux diffrence with the source term
+        delta_flux = fr - fl - dx*psi(x,g,h_bar,dBdx)
+        d0 = delta_flux[0]
+        d1 = delta_flux[1]
         
-        # beta = linalg.inv(R)@(fr-fl)   # - dx*psi(x,g,h_bar,dBdx))
-        #beta = solve(R,fr-fl)
-#         b1 = beta[0]
-#         b2 = beta[1]
+        #beta_i+1/2
+        b1 = ((u_hat + c_hat)*d0 - d1)/(2*c_hat)
+        b2 = (-(u_hat - c_hat)*d0 + d1)/(2*c_hat)
         
         # f-wave and speed 1
-        z1[i] = b1*R[:,[0]].T
-        s1[i] = evals[0]
+        z1[i-1] = b1*R[:,[0]].T
+        s1[i-1] = evals[0]
 
         # f-wave and speed 2
-        z2[i] = b2*R[:,[1]].T
-        s2[i] = evals[1]
+        z2[i-1] = b2*R[:,[1]].T
+        s2[i-1] = evals[1]
          
     fwaves = (z1,z2)             # P^th wave at each interface
     speeds = (s1,s2)      
    
-
     # Fluctuations
     amdq = zeros(delta.shape)
     apdq = zeros(delta.shape)
@@ -394,27 +344,7 @@ def rp2_swe(Q_ext,x,dx):
         
         sp = where(speeds[mw] > 0, 1, 0)
         apdq += sp*fwaves[mw]
-
-#     # Fluctuations
-#     amdq = zeros(delta.shape)
-#     apdq = zeros(delta.shape)
-#     for m in range(mwaves):
-#         for mw in range(mwaves):
-#             sm = where(speeds[mw] <= 0, 1, 0)
-#             sp = where(speeds[mw] > 0, 1, 0)
-#             #if speeds[mw].all() < 0:
-#             amdq += sm*fwaves[mw]
-#             #elif speeds[mw].all() > 0:
-#             apdq += sp*fwaves[mw]
-#             #else:
-#               #  amdq += fwaves[mw]*0.5
-#                # apdq += fwaves[mw]*0.5
-#             #amdq += (speeds[mw]==0)*fwaves[mw]*0.5
-#             #apdq += (speeds[mw]==0)*fwaves[mw]*0.5
-#             #sp = where(speeds[mw] > 0, speeds[mw], 0)
-#             #apdq += sign(sp)*fwaves[mw]
-                
-     
+    
     return fwaves,speeds,amdq,apdq
 #End of Riemans solvers
 
