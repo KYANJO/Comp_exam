@@ -236,7 +236,7 @@ def rp1_swe(Q_ext,exact):
         evals =  array([l1,l2])        
         
         #alpha
-        alpha = linalg. inv(R)*(qr-ql)
+        alpha = linalg. inv(R)@(qr-ql)
         a1 = alpha[0]
         a2 = alpha[1]
         
@@ -478,156 +478,63 @@ def claw(ax, bx, mx, Tfinal, nout,ql,qr, \
     for n in range(0,nout):
         t = tvec[n]
 
+        # Add 2 ghost cells at each end of the domain;  
+        q_ext = bc(q)
+        
         # solver: 0 - Roe solver
         # solver: 1 - flux formulation solver
         # solver: 2 - f-wave approach(with source term) solver
-        if True:    #solver == 0:
-            # Add 2 ghost cells at each end of the domain;  
-            q_ext = bc(q)
-            # Get waves, speeds and fluctuations from the solver 
-            #waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
-            
-            use_fwaves = False
-            if solver == 0:
-                waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
-            elif solver == 1:
-                waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)                
-            elif solver == 2:
-                # fwaves
-                use_fwaves = True
-                waves, speeds, amdq, apdq = rp2_swe(q_ext,xc,dx)
-
-
-            # First order update
-            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
-            
-            # Second order corrections (with possible limiter)
-            if second_order:    
-                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
-                for p in range(mwaves):
-                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
-                    wavep = waves[p]
-                    if limiter_choice is not None:
-                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
-                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
-                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
-                    
-                        # Create mask to avoid dividing by 0. 
-                        m = w2 > 0
-                        r = ones(w2.shape)
-                        
-                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
-
-                        wlimiter = limiter(r,lim_choice=limiter_choice)
-                        wlimiter.shape = sp.shape
-                        
-                    else:
-                        wlimiter = 1
-                        
-                    if not use_fwaves:
-                        cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
-                    else:
-                        cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
-                        
-                        
-                    
-                Fp = cxx  # Second order derivatives
-                Fm = cxx
-            
-                # update with second order corrections
-                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
-    
-        elif solver == 1:
-
-             # Add 2 ghost cells at each end of the domain;  
-            q_ext = bc(q)
-
-            # Get waves, speeds and fluctuations
-            waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)
-                    
-            # First order update
-            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
-            
-            # Second order corrections (with possible limiter)
-            if second_order:    
-                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
-                for p in range(mwaves):
-                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
-                    wavep = waves[p]
-                    
-                    if limiter_choice is not None:
-                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
-                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
-                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
-                    
-                        # Create mask to avoid dividing by 0. 
-                        m = w2 > 0
-                        r = ones(w2.shape)
-                        
-                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
-
-                        wlimiter = limiter(r,lim_choice=limiter_choice)
-                        wlimiter.shape = sp.shape
-                        
-                    else:
-                        wlimiter = 1
-                        
-                    cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
-                    
-                    #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
-                    
-                Fp = cxx  # Second order derivatives
-                Fm = cxx
-            
-                # update with second order corrections
-                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
-
-        elif solver == 2:
- 
-            # Add 2 ghost cells at each end of the domain;  
-            q_ext = bc(q)
-
-            # Get waves, speeds and fluctuations
-            fwaves, speeds, amdq, apdq = rp2_swe(q_ext,exact,xc,dx)
-                    
-            # First order update
-            q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
-            
-            # Second order corrections (with possible limiter)
-            if second_order:    
-                cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
-                for p in range(mwaves):
-                    sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
-                    wavep = fwaves[p]
-                    
-                    if limiter_choice is not None:
-                        wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
-                        wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
-                        w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
-                    
-                        # Create mask to avoid dividing by 0. 
-                        m = w2 > 0
-                        r = ones(w2.shape)
-                        
-                        r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
-
-                        wlimiter = limiter(r,lim_choice=limiter_choice)
-                        wlimiter.shape = sp.shape
-                        
-                    else:
-                        wlimiter = 1
-                        
-                    
-                    cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
-                    
-                    #cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]
-                    
-                Fp = cxx  # Second order derivatives
-                Fm = cxx
-            
-                # update with second order corrections
-                q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
         
+        use_fwaves = False
+        if solver == 0:
+            # Get waves, speeds and fluctuations from the solver 
+            waves, speeds, amdq, apdq = rp0_swe(q_ext,meqn)
+        elif solver == 1:
+            # Get waves, speeds and fluctuations from the solver 
+            waves, speeds, amdq, apdq = rp1_swe(q_ext,exact)                
+        elif solver == 2:
+            # fwaves
+            use_fwaves = True
+            waves, speeds, amdq, apdq = rp2_swe(q_ext,xc,dx)
+
+
+        # First order update
+        q = q - dtdx*(apdq[1:-2,:] + amdq[2:-1,:])
+        
+        # Second order corrections (with possible limiter)
+        if second_order:    
+            cxx = zeros((q.shape[0]+1,meqn))  # Second order corrections defined at interfaces
+            for p in range(mwaves):
+                sp = speeds[p][1:-1]   # Remove unneeded ghost cell values added by Riemann solver.
+                wavep = waves[p]
+                if limiter_choice is not None:
+                    wl = sum(wavep[:-2,:] *wavep[1:-1,:],axis=1)  # Sum along dim=1
+                    wr = sum(wavep[2:,:]  *wavep[1:-1,:],axis=1)
+                    w2 = sum(wavep[1:-1,:]*wavep[1:-1,:],axis=1)
+                
+                    # Create mask to avoid dividing by 0. 
+                    m = w2 > 0
+                    r = ones(w2.shape)
+                    
+                    r[m] = where(sp[m,0] > 0,  wl[m]/w2[m],wr[m]/w2[m])
+
+                    wlimiter = limiter(r,lim_choice=limiter_choice)
+                    wlimiter.shape = sp.shape
+                    
+                else:
+                    wlimiter = 1
+                    
+                if not use_fwaves:
+                    cxx += 0.5*abs(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter
+                else:
+                    cxx += 0.5*sign(sp)*(1 - abs(sp)*dtdx)*wavep[1:-1,:]*wlimiter                  
+                
+            Fp = cxx  # Second order derivatives
+            Fm = cxx
+        
+            # update with second order corrections
+            q -= dtdx*(Fp[1:,:] - Fm[:-1,:])
+    
         Q[:,:,n+1] = q
 
     if solver == 0:
