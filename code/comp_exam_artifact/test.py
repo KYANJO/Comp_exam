@@ -259,7 +259,7 @@ def Riemannsoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
 
         #initialise the exact soln
         qeo = exact_solver.qexact(xc,to,mq,ql,qr,g)
-        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact Riemann Solver')
+        hde, = plot(xc,qeo,'r-',markersize=5,label='Exact Solution to Riemann problem')
 
         q0 = Q[:,mq,0]
         hdl, = plot(xc,q0,'b.',markersize=5,label='Finite Volume Scheme')

@@ -577,7 +577,7 @@ Furthermore, an efficient method (database) that dynamically reconstructed multi
 	Another interesting question is  how to solve the issue of depth negativity in the approximate solver for presence of wet and dry states, when the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ in equation \eqref{cellupdat} becomes larger than $Q_{i}^{n}$  after a few time step. This makes the input height values in the exact solver negative, which breaks the solver, hence we fail to obtain the intermediate state. 
 
 	\begin{itemize}
-	\item Software developments : adaptivity (forestclaw, Basilisk), parallelization, GPUs. \cite{qi-le-mo:2018,po:2015,be-ge-le-ma:2011}   
+	\item Software developments : adaptivity (forestclaw, Basilisk (popinet)), parallelization, GPUs. \cite{qi-le-mo:2018,po:2015,be-ge-le-ma:2011}   
 	\item Coupling to other software (an atmospheric code, for example).  Detect tsunami's by looking for signals in the atmosphere.
 	\item Modeling questions : dispersive corrections (Serre-Green-Naghdi solver  requiring a linear solver.  Multi-layer SWE also has "dry state" ) \cite{la-bo:2009,po:2020,po:2015}.
 	\end{itemize}
