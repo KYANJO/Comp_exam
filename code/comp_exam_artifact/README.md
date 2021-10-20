@@ -7,5 +7,5 @@ There are three scripts: [test.py](./test.py), [approximate_solver.py](./approxi
 * The notebook  [main.ipynb](./main.ipynb) imports the [test.py](./test.py) script to prompt the Riemannsoln function and other functions mentioned above to perform simulations. All the simulations are performed in this notebook, and it gives the user chance to cary out different test cases.
 
 __Usage:__ To run this artifact, the user has to read the user manaul provided in the [main.ipynb](./main.ipynb) notebook at the begining of the page. All adjustments are well explained in this notebook for all variables,parameters and cases. Executing this notebook will prompt the Riemannsoln function imported from the [test.py](./test.py) script to output temporal evolution of either height, velocity or momentum field.
-ffhjgcviki
+
 
