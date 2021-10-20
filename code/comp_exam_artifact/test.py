@@ -265,7 +265,7 @@ def Riemannsoln(umax,to,mq,case,itype,g,ax,bx, ay,by,mx, Tfinal, \
         hdl, = plot(xc,q0,'b.',markersize=5,label='Finite Volume Scheme')
 
         if mq == 0:
-            tstr = 'Height : t = {:.4f} 2nd order'
+            tstr = 'Height : t = {:.4f}'
         else:
             tstr = 'Momentum : t = {:.4f}'
 
