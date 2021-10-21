@@ -7,7 +7,7 @@
 \usepackage[english]{babel}
 
 %Import the natbib package and sets a bibliography  and citation styles
-\usepackage{natbib}
+\usepackage[round]{natbib}
 \usepackage{amsmath}
 \usepackage{amssymb}
 %\usepackage{natbib}
@@ -22,7 +22,7 @@
 \usepackage{tikz}
 \usepackage{verbatim}
 \usepackage[left=2cm,right=2cm,top=2.3cm,bottom=2.5cm]{geometry}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \hypersetup{
 	colorlinks=false,
 	linkcolor=blue,
@@ -588,8 +588,8 @@ Furthermore, an efficient method (database) that dynamically reconstructed multi
 	
 	%\nocite{*}
 	
-	%\bibliographystyle{abbrvnat}
-	\bibliographystyle{plain}
+	\bibliographystyle{abbrvnat}
+	%\bibliographystyle{plain}
 	\bibliography{geoclaw,literature}
 	
 \end{document}
