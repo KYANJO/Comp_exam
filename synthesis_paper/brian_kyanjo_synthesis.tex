@@ -169,7 +169,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	
 
 	\subsection{Exact Riemann Solver for two-shock SWE}
-The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \cite{leveque2002finite} for other cases. 
+The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \citet{leveque2002finite} for other cases. 
 
 We can achieve an exact solution to the Riemann Problem for the SWE as follows. 
 The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the Rankine Hugoniot conditions will be satisfied \cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}. 
@@ -223,7 +223,7 @@ By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates
 	\end{figure}
 
 	\subsection{General case}
-The Lax entropy condition requiring that $h_m > h_l, h_r$ may not be satisfied in all cases.  We can also connect states by a rarefaction wave. See Figure (\ref{allrare})  for illustration of the evolution of a Riemann problem  for a case in which both the left and  the right states are connected to the intemediate state by a left going rarefaction and a right going rarefaction wave  respectively.   We refer the reader to \cite{leveque2002finite} for more information about rarefactions.  Figure \ref{fig:allrare0} depicts the intial condition (Riemann problem) solution at  $t=0~s$  and figures \ref{fig:allrare3} and \ref{fig:allrare1} represents the evolution of the height field solution at $t = 0.3~s$, and $t = 1.0~s$.  This solutions are produced by the exact Riemann solver after applying $h_l = h_r = 1$, $u_l  =  -0.5$, and $u_r = 0.5$ as initial conditions in  the Riemann problem.
+The Lax entropy condition requiring that $h_m > h_l, h_r$ may not be satisfied in all cases.  We can also connect states by a rarefaction wave. See Figure (\ref{allrare})  for illustration of the evolution of a Riemann problem  for a case in which both the left and  the right states are connected to the intemediate state by a left going rarefaction and a right going rarefaction wave  respectively.   We refer the reader to \citet{leveque2002finite} for more information about rarefactions.  Figure \ref{fig:allrare0} depicts the intial condition (Riemann problem) solution at  $t=0~s$  and figures \ref{fig:allrare3} and \ref{fig:allrare1} represents the evolution of the height field solution at $t = 0.3~s$, and $t = 1.0~s$.  This solutions are produced by the exact Riemann solver after applying $h_l = h_r = 1$, $u_l  =  -0.5$, and $u_r = 0.5$ as initial conditions in  the Riemann problem.
 
 
  
@@ -454,7 +454,7 @@ The appearance of negative height values in equation \eqref{wpa2} after a few up
 		The wetting and drying can also be handled by the linear piecewise  Runge-Kutta discontinuous Galerkin approximation (RKDG)  to SWE solutions;  according to \citet{bu-ku-we-da:2009}, this method is based on the thin water layer approach to optimize both computational cost and accuracy on fixed meshes. The water depth of each dry or partially wet element is tracked and controlled by updating water surface elevations at every end of each Runge-Kutta time step. This maintains the depth positivity of the water column through redistributing mass within each element, which brings about a stable solution over the entire domain for the SWE. In addition, local mass is conserved since the sum of mass inside an element remains constant. The update is independent of the neighboring elements states because it highly depends on the element's velocity and surface elevation. The technique's special treatment of numerical fluxes enables the water mass positivity in each element \cite{bu-ku-we-da:2009,kubatko2007semi}. According to \citet{bokhove2005flooding,bu-ku-we-da:2009}, the locality minimizes the communication between subdomains which improves parallel efficiency. 
 
 	\subsection{Adaptive approach (Popinet)}
-Furthermore, an efficient method (database) that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed. \cite{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization. On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
+Furthermore, an efficient method (database) that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed. \citet{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization. On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
 
 
 	\subsection{Augmented Riemann solver (George)}
@@ -587,9 +587,9 @@ Furthermore, an efficient method (database) that dynamically reconstructed multi
 	
 	
 	%\nocite{*}
-	,
-	\bibliographystyle{abbrvnat}
-	%\bibliographystyle{plain}
+	
+	%\bibliographystyle{abbrvnat}
+	\bibliographystyle{plain}
 	\bibliography{geoclaw,literature}
 	
 \end{document}
