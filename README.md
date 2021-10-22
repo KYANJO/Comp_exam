@@ -9,6 +9,6 @@ The synthesis paper is found in this repo.
 
 ### Computing Artifact
 
-The Computing Artifact is found in this repo, it has its [README](./../../README) describing the usage.
+The Computing Artifact is found in this repo, it has its README describing its usage.
 
 
