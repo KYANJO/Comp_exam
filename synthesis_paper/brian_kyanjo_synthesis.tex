@@ -329,7 +329,7 @@ where  $f'(q) \in \mathbb{R}^{m\times m}$  flux Jacobian matrix.  Consider a Rie
 	\label{w4}   
 \end{equation}
 \subsubsection{Wave Propagation algorithm (WPA)}
- Here the formalism of the WPA, first described in \cite{le:1997} is presented.   The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$, where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$ \cite{leveque2002finite,toro2001shock}.  This decomposition takes the form
+ Here the formalism of the WPA, first described in \cite{le:1997} is presented.   The initial data (equation \eqref{w4}), is used by the exact Riemann solver to generate an intermediate state ($q_m = (h_m, hu_m)^T$), which is used to evaluate the eigenvalues ($\lambda_{i-1/2}$) and eigenvectors ($r_{i-1/2}$) at $x = x_{i-\frac{1}{2}}$. The $p^{th}$ wave at interface $i-1/2$ is given by $\mathcal W^p_{i-1/2} \equiv \alpha_{i-\frac{1}{2}} r^p_{i-\frac{1}{2}}$ with speeds $s^p_{i-1/2} = \lambda^p_{i-1/2}$, where $ \alpha_{i-\frac{1}{2}}$ depicts the coefficients of the the eigenvectors.  Waves and speeds are obtained as an eigenvector decomposition of the jump in $Q_i$ at the interface $i-\frac{1}{2}$.  This decomposition takes the form
 
 \begin{equation}
 	Q_{i} -  Q_{i-1} = \sum_{p=1}^{m}  \alpha_{i-\frac{1}{2}} r_{i-\frac{1}{2}} \equiv \sum_{p=1}^{m} \mathcal{W}_{i-\frac{1}{2}}^{p}
@@ -356,11 +356,11 @@ where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determi
 	\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
 	\label{wpa13}
 \end{equation}
-Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$ \cite{le:1997}.
+Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$. \ignore{\cite{le:1997}}.
 
 	\subsubsection{MUSCL approach}
 
-Monotone upstream-centered scheme for conservation laws (MUSCL) is a FVM that was developed by  \citet{van1979towards} to build the first high-order and high-resolution total variation diminishing techniques for hyperbolic PDEs. Many researchers have widely used MUSCL schemes to solve two-dimensional SWEs due to their monotonicity, stability preservation, and more significant order of accuracy by data reconstruction (e.g., \cite{song2011robust,zhao2019improved,marche2007evaluation,liang2009adaptive}).  These methods are extensions of the original Godunov scheme.     According to \citet{hou20132d}, cell-based and edge-based methods, also termed monoslope, and multi-slope MUSCL methods, are the two methods used for implementing MUSCL methods on unstructured grids. The numerical instabilities produced by the second-order scheme are eliminated by extrapolating the cell edges from their centers after applying a uniform limited slope to the cell. The Riemann fluxes across the boundaries are now computed from the reconstructed values stored at the edges.  These fluxes are used as input to the Riemann solver, and the resulting solutions are averaged and used to update the solution in time.  In addition, physical solutions without oscillations are obtained if and only if the solution is monotonic, and this is determined by monitoring the overtime reducing summation of each adjacent cell differences \cite{hou2014multislope}.
+Monotone upstream-centered scheme for conservation laws (MUSCL) is a FVM that was developed by  \citet{van1979towards} to build the first high-order and high-resolution total variation diminishing techniques for hyperbolic PDEs. Many researchers have widely used MUSCL schemes to solve two-dimensional SWEs due to their monotonicity, stability preservation, and more significant order of accuracy by data reconstruction (\cite{song2011robust,zhao2019improved,marche2007evaluation,liang2009adaptive}).  These methods are extensions of the original Godunov scheme.     According to \citet{hou20132d}, cell-based and edge-based methods, also termed monoslope, and multi-slope MUSCL methods, are the two methods used for implementing MUSCL methods on unstructured grids. The numerical instabilities produced by the second-order scheme are eliminated by extrapolating the cell edges from their centers after applying a uniform limited slope to the cell. The Riemann fluxes across the boundaries are now computed from the reconstructed values stored at the edges.  These fluxes are used as input to the Riemann solver, and the resulting solutions are averaged and used to update the solution in time.  In addition, physical solutions without oscillations are obtained if and only if the solution is monotonic, and this is determined by monitoring the overtime reducing summation of each adjacent cell differences (\cite{hou2014multislope}).
 
 
 
@@ -377,31 +377,27 @@ Monotone upstream-centered scheme for conservation laws (MUSCL) is a FVM that wa
 			(hu)_t + \left(hu^{2} + \frac{1}{2}gh^{2} \right)_x =& -ghB^{\prime}(x).
 			\label{bst}
 		\end{aligned}
-	\end{equation}
+	\end{equation}	
+	where $B(x)$ represents bottom elevation. 
 
 
-	General source terms are typically handled in an operator split approach.  However, for tsunami modeling, this can lead to oscillations in steady state solutions.  A better approach is to discretise the source term to generate values $-gh_{i-\frac{1}{2}}B^{\prime}(x_{i-\frac{1}{2}})$ at  cell interfaces  $x = x_{i-\frac{1}{2}}$. This approach is very useful, because the discrepancy caused due to the failure of the flux gradient to counterbalance the source term in a near steady state solution is decomposed into propagating waves  making the approach more robust than the quasi-steady wave propagation algorithm (WPA).  This source term balancing approach is described in \cite{ba-le-mi-ro:2003,chaabelasri1849simple}.
-	where $B(x)$ represents bottom elevation. This makes the scheme well-balanced  meaning it exactly capture all the smooth steady-state solutions, preserve depth positivity, and able to model shifts between wet/dry regions \cite{ba-le-mi-ro:2003}.
+	General source terms are typically handled in an operator split approach.  However, for tsunami modeling, this can lead to oscillations in steady state solutions.  An approach described by \cite{ba-le-mi-ro:2003} and based on the WPA is to discretise the source term to generate values $-gh_{i-\frac{1}{2}}B^{\prime}(x_{i-\frac{1}{2}})$ at  cell interfaces  $x = x_{i-\frac{1}{2}}$. This approach is very useful, because the discrepancy caused due to the failure of the flux gradient to counterbalance the source term in a near steady state solution is decomposed into propagating waves  making the approach more robust than the quasi-steady wave propagation algorithm .  This makes the scheme well-balanced  meaning it exactly capture all the smooth steady-state solutions, preserve depth positivity, and able to model shifts between wet/dry regions. This source term balancing approach was also used in \cite{chaabelasri1849simple}. 
 
 
 \section{Beach run-up and inundation}
 The wetting and drying processes have significant physical and biological impacts on shallow water systems and coastal environments. They can arise due to inundation effects on coastal mudflats and wave-driven run-up on beaches and dunes on periodic time scales, i.e., several hours for the rise and fall of the tide, several days for storm surge, and infragravity wave motions on the shoreface.  These effects can cause extreme devastating damages and coastal erosion.
 	With a basic understanding of the role that a Riemann solver plays in solving the shallow water wave equations, and the basic finite volume discretization approach, we will describe several approaches of handling wetting and drying processes.  
 
-The appearance of negative height values in equation \eqref{wpa2} after a few updates, 
-\donna{show up because when}
-
+At the interface between a wet and dry state, negative height values in equation \eqref{wpa2} can appear after a few updates because
 \begin{equation}
-	Q_{i}^{n} < \left(\frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) + \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )\right).
+	Q_{i}^{n} < \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) + \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} ).
 	\label{wpa22}
 \end{equation}
 
-So even though non-negative heights are supplied as inputs, negative height values can arise.  Negative height values will cause the Riemann solver to fail, and so must be mitigated.
+So even though non-negative heights are supplied as inputs, negative height values can arise.  Negative height values will cause the Riemann solver to fail, and so special solvers must be used to avoid this situation.
 
 \ignore{due to by numerical instabilities in the second-order correction term, making the update term on the right-hand side in equation  \eqref{wpa22} being greater than the left-hand side term.  This makes the left-hand side ($  Q_{i}^{n+1}  $) in equation \eqref{wpa2} be negative, causing negative height values on the following input values to the exact solver which breaks the solver, hence failing to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbitrary whenever $h<0$, but this may affect the accuracy of the results.}
 
-
-\donna{Move this equation close to where you describe the problem? }
 
 
 	\subsection{Riemann Problem for Wet/Dry States}
@@ -450,7 +446,7 @@ So even though non-negative heights are supplied as inputs, negative height valu
 	
 	\subsection{Relaxation method (Pelanti et al.)}
 
- \citet{pelanti2011riemann} formulated a Rieman solver based on the relaxation approach for both single-phase and double-phase shallow flow equations explaining a mixture of granular material and fluid. This approach is implemented by employing auxiliary variables to replace momenta in the spatial gradients of the original system. The eigenvalues of the relaxation model are determined from the coefficients of the linear equations governing the new auxiliary variables.  The Riemann solution for the height of the flow and relaxation variables are calculated as Roe's Riemann solution; this makes the resulting solver similar to the Roe solver. However, it has the advantage of certain freedom to specify wave speeds by choosing relaxation parameters. This added advantage makes the new solver more robust in handling wet/dry interfaces \cite{pelanti2008relaxation,pelanti2011riemann}.
+ \citet{pelanti2011riemann} formulated a Rieman solver based on the relaxation approach for both single-phase and double-phase shallow flow equations explaining a mixture of granular material and fluid. This approach is implemented by employing auxiliary variables to replace momenta in the spatial gradients of the original system. The eigenvalues of the relaxation model are determined from the coefficients of the linear equations governing the new auxiliary variables.  The Riemann solution for the height of the flow and relaxation variables are calculated as Roe's Riemann solution; this makes the resulting solver similar to the Roe solver. However, it has the advantage of certain freedom to specify wave speeds by choosing relaxation parameters. This added advantage makes the new solver more robust in handling wet/dry interfaces (\cite{pelanti2008relaxation,pelanti2011riemann}).
 
 	\subsection{Contact discontinuity  Method (Toro)}
 	\citet{toro2001shock} solved a Riemann problem with cases in which the dry regions are either present at the initial time or appear as a result of the interaction of two wet bed states. According to his approach, there are three possible cases to consider, as illustrated in fig.~\ref{fig:dry-wet}. Case (a) right dry bed, the solution exhibits a left-going rarefaction ({\em 1-rarefaction}) wave associated with the left eigenvalue $\lambda_1 = u - a$. Case (b) Left dry bed, the solution exhibits right-going rarefaction ({\em 2-rarefaction}) wave associated with the right eigenvalue $\lambda_2 = u + a$. Case (c) dry bed doesn't exit at $t=0$, but is created in the interaction between the two left and right wet bed regions if $S_{*L} \le S_{*R}$ where $a = \sqrt{gh}$.
@@ -467,15 +463,15 @@ So even though non-negative heights are supplied as inputs, negative height valu
 		The wetting and drying can also be handled by the linear piecewise  Runge-Kutta discontinuous Galerkin approximation (RKDG)  to SWE solutions;  according to \citet{bu-ku-we-da:2009}, this method is based on the thin water layer approach to optimize both computational cost and accuracy on fixed meshes. The water depth of each dry or partially wet element is tracked and controlled by updating water surface elevations at every end of each Runge-Kutta time step. This maintains the depth positivity of the water column through redistributing mass within each element, which brings about a stable solution over the entire domain for the SWE. In addition, local mass is conserved since the sum of mass inside an element remains constant. The update is independent of the neighboring elements states because it highly depends on the element's velocity and surface elevation. The technique's special treatment of numerical fluxes enables the water mass positivity in each element \cite{bu-ku-we-da:2009,kubatko2007semi}. According to \citet{bokhove2005flooding,bu-ku-we-da:2009}, the locality minimizes the communication between subdomains which improves parallel efficiency. 
 
 	\subsection{Adaptive approach (Popinet)}
-Furthermore, an efficient method \donna{???} (database) that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed. \citet{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization. On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
+\citet{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization.  Furthermore, an efficient method that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed.  While Popinet does not provide much detail on how the wetting/drying states are handled, the results in the paper suggest that the method is robust.  Furthermore, the wet/dry state solver is combined with a Boussinesq solver to preserve the robustness of Saint-Venant solver. The adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
+
+\ignore{
+On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.}
 
 
 	\subsection{Augmented Riemann solver (George)}
 
 	\subsubsection{Handling Wetting and drying in the wave propagation algorithm}
-	In \cite{ge:2011}, a method for handling wetting and drying in the wave propagation algorithm is described. 
-
-	\donna{Remove material already described.}
 	% ------------------------------- Ignore ZZZ ----------------------------------
 	\ignore{
 	The combination of equations in system \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
@@ -531,7 +527,9 @@ Furthermore, an efficient method \donna{???} (database) that dynamically reconst
 	}
 	% ------------------------------- Ignore ZZZ ----------------------------------
 
-	Here, we describe the approach taken by \citet{ge:2008}.  \citet{leveque2001class} proposed that equation \donna{reference earlier equation- equation (12)?} \eqref{p3} can be replaced with
+	In \cite{ge:2008,ge:2011}, a method for handling wetting and drying in the wave propagation algorithm is described.  In this method, it is suggested to replace 
+	\eqref{wpa19}
+
 
 	\begin{equation}
 		\begin{bmatrix} 
@@ -543,7 +541,7 @@ Furthermore, an efficient method \donna{???} (database) that dynamically reconst
 	
 	The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three components  in equation \eqref{p5} \cite{ba-le-mi-ro:2003}. Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
 	
-	\donna{why do we need the $\mathbf{I}_{2\times2}$ terms below?}
+	% \donna{why do we need the $\mathbf{I}_{2\times2}$ terms below?}
 
 	\begin{equation}
 		z_{i-\frac{1}{2}}^{p} = [\mathbf{0}_{2\times1} \quad \mathbf{I}_{2\times2}] \alpha_{i-\frac{1}{2}}^{p} w_{i-\frac{1}{2}}^{p}
@@ -556,9 +554,7 @@ Furthermore, an efficient method \donna{???} (database) that dynamically reconst
 		\label{p8}
 	\end{eqnarray}
 
-	\donna{I suggest removing the description below. It is probably too detailed.  }
-
-	\donna{Add a few conclusions that suggest this approach works.}
+	\donna{Add a few conclusions that suggest this approach works. }	
 
     %% ----------------------------- Ignore YYY ------------------------------------------
 	\ignore{
@@ -603,6 +599,8 @@ Furthermore, an efficient method \donna{???} (database) that dynamically reconst
 
 
 	\section{ Future research directions}
+
+	
 	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix (equation \eqref{n3}) change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
 	
 	Another interesting question is  how to solve the issue of depth negativity in the approximate solver for presence of wet and dry states, when the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ in equation \eqref{cellupdat} becomes larger than $Q_{i}^{n}$  after a few time step. This makes the input height values in the exact solver negative, which breaks the solver, hence we fail to obtain the intermediate state. 
@@ -622,7 +620,7 @@ Furthermore, an efficient method \donna{???} (database) that dynamically reconst
 	%\nocite{*}
 	
 	\bibliographystyle{abbrvnat}
-	%\bibliographystyle{plain}
+	% \bibliographystyle{plain}
 	\bibliography{geoclaw,literature}
 	
 \end{document}
