@@ -271,7 +271,7 @@ Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  wher
 		Q_{i}^{n} \approx \dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx
 		\label{wpa0}
 	\end{equation}
-	where $\Delta t = (t^{n+1} - t^{n})$ and  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. A discontinuity in $q$ violates the PDE in the classical sense and only holds for the integral conservation law (fundamental equation \eqref{fvm1}) \cite{leveque2002finite}. Therefore at grid points near discontinuities where PDEs don't hold, all classical finite difference methods breakdown, resorting to FVM which are based on \eqref{fvm1}. 	
+	where $\Delta t = (t^{n+1} - t^{n})$ and  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. A discontinuity in $q$ violates the PDE in the classical sense and only holds for the integral conservation law (fundamental equation \eqref{fvm1}) \cite{leveque2002finite}. Therefore at grid points near discontinuities where PDEs don't hold, all classical finite difference methods breakdown, resorting to FVM which are based on equation \eqref{fvm1}. 	
 	\begin{equation}
 		\frac{d}{dt} \int_{c_{i}} q(x,t)dx = f(q(x_{i-\frac{1}{2}},t)) -  f(q(x_{i+\frac{1}{2}},t))
 		\label{fvm1}
@@ -311,7 +311,7 @@ The above  scheme is essentially the original Godunov scheme \cite{godunov1959di
 
 
 	\subsection{Finite schemes in quasi-linear form}
-	Another approach to solving conservation laws is to write  them in  {\em quasilinear form} and develop numerical methods based on an eigen-decomposition of the Jacobian matrix. The general conservation law in \eqref{fvm0} can be written in {\em quasi-linear form}
+	Another approach to solving conservation laws is to write  them in  {\em quasilinear form} and develop numerical methods based on an eigen-decomposition of the Jacobian matrix. The general conservation law in equation\eqref{fvm0} can be written in {\em quasi-linear form}
 as
 \begin{equation}
 	q_{t} + f'(q)q_{x} = 0
@@ -386,7 +386,7 @@ Monotone upstream-centered scheme for conservation laws (MUSCL) is a FVM that wa
 The wetting and drying processes have significant physical and biological impacts on shallow water systems and coastal environments. They can arise due to inundation effects on coastal mudflats and wave-driven run-up on beaches and dunes on periodic time scales, i.e., several hours for the rise and fall of the tide, several days for storm surge, and infragravity wave motions on the shoreface.  These effects can cause extreme devastating damages and coastal erosion.
 	With a basic understanding of the role that a Riemann solver plays in solving the shallow water wave equations, and the basic finite volume discretization approach, we will describe several approaches of handling wetting and drying processes.  
 
-The appearance of negative height values in equation \eqref{wpa2} after a few updates, even though non-negative heights are supplied as inputs, is caused due by numerical instabilities in the second-order correction term, making the update term on the right-hand side in \eqref{wpa22} being greater than the left-hand side term. This makes the left-hand side ($  Q_{i}^{n+1}  $) in equation \eqref{wpa2} be negative, causing negative height values on the following input values to the exact solver which breaks the solver, hence failing to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbitrary whenever $h<0$, but this may affect the accuracy of the results.
+The appearance of negative height values in equation \eqref{wpa2} after a few updates, even though non-negative heights are supplied as inputs, is caused due by numerical instabilities in the second-order correction term, making the update term on the right-hand side in equation  \eqref{wpa22} being greater than the left-hand side term. This makes the left-hand side ($  Q_{i}^{n+1}  $) in equation \eqref{wpa2} be negative, causing negative height values on the following input values to the exact solver which breaks the solver, hence failing to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbitrary whenever $h<0$, but this may affect the accuracy of the results.
 \begin{equation}
 	Q_{i}^{n} < \left(- \frac{\Delta t}{\Delta x}(\mathcal{A^{+}}\Delta 	Q_{i-\frac{1}{2}}^{n} + \mathcal{A^{-}}Q_{i+\frac{1}{2}}^{n}) - \frac{\Delta t}{\Delta x} (\tilde{F}_{i+\frac{1}{2}}^{n} - \tilde{F}_{i-\frac{1}{2}}^{n} )\right)
 	\label{wpa22}
@@ -533,7 +533,7 @@ Furthermore, an efficient method (database) that dynamically reconstructed multi
 		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} z_{i+\frac{1}{2}}^{p}
 		\label{p8}
 	\end{eqnarray}
-	Equations \ref{p7} and \ref{p8} are determined by decomposing flux in a similar way as in the f-wave approach in \citet{ba-le-mi-ro:2003} and \citet{george2006finite}, however in  \citet{ge:2008}  its decomposed into three waves ($w^{p}_{i-\frac{1}{2}} ~\in ~\mathbb{R}^{3}$)  with three associated wave speeds ($s^{p}_{i-\frac{1}{2}} ~\text{for}~ p =1,2,3$)  rather than two  allowing a more accurate approximation to the Riemann problem with a large rarefaction and a natural entropy fix for transonic rarefactions. The first and third eigen pairs $\{w^{1,3}_{i-\frac{1}{2}},s^{1,3}_{i-\frac{1}{2}}\}  $    are related to the eigen pairs of \eqref{ep}, even though in  \citet{be-ge-le-ma:2011}, its the first and second pairs that relate to the original fields of SWE. Therefore from the three eigen pairs, we choose, 
+	Equations \ref{p7} and \ref{p8} are determined by decomposing flux in a similar way as in the f-wave approach in \citet{ba-le-mi-ro:2003} and \citet{george2006finite}, however in  \citet{ge:2008}  its decomposed into three waves ($w^{p}_{i-\frac{1}{2}} ~\in ~\mathbb{R}^{3}$)  with three associated wave speeds ($s^{p}_{i-\frac{1}{2}} ~\text{for}~ p =1,2,3$)  rather than two  allowing a more accurate approximation to the Riemann problem with a large rarefaction and a natural entropy fix for transonic rarefactions. The first and third eigen pairs $\{w^{1,3}_{i-\frac{1}{2}},s^{1,3}_{i-\frac{1}{2}}\}  $    are related to the eigen pairs of equation \eqref{ep}, even though in  \citet{be-ge-le-ma:2011}, its the first and second pairs that relate to the original fields of SWE. Therefore from the three eigen pairs, we choose, 
 	\begin{equation}
 		\begin{aligned}
 			\{w^{1}_{i-\frac{1}{2}},s^{1}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{-} ,(\check{s}_{i-\frac{1}{2}}^{-} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{-} \} \\
@@ -572,7 +572,7 @@ Furthermore, an efficient method (database) that dynamically reconstructed multi
 	
 
 	\section{ Future research directions}
-	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix (\eqref{n3}) change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
+	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix (equation \eqref{n3}) change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
 	
 	Another interesting question is  how to solve the issue of depth negativity in the approximate solver for presence of wet and dry states, when the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ in equation \eqref{cellupdat} becomes larger than $Q_{i}^{n}$  after a few time step. This makes the input height values in the exact solver negative, which breaks the solver, hence we fail to obtain the intermediate state. 
 
