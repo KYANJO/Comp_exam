@@ -346,6 +346,7 @@ def rp2_swe(Q_ext,x,dx):
         apdq += sp*fwaves[mw]
     
     return fwaves,speeds,amdq,apdq
+#end of the fwave solver
 #End of Riemans solvers
 
 
