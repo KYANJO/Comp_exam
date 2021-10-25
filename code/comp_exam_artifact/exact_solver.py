@@ -337,11 +337,13 @@ def qexact(x,t,mq,ql,qr,g):
     if t == 0:
         q1 = where(x<0,hl,hr)
         q2 = where(x<0,hl*ul,hr*ur)
+        q3 = where(x<0,ul,ur)
     else:
         
         q1 = zeros(x.shape)
         q2 = zeros(x.shape)
-                
+        q3 = zeros(x.shape)      
+
         #dry middle state
         if d_vl < d_vr:
             hmr = 0
@@ -377,6 +379,7 @@ def qexact(x,t,mq,ql,qr,g):
                     
                 q1[i] = h
                 q2[i] = hu
+                q3[i] = u
                 
         #dry left state (2-rarefaction only)
         elif hl == 0:
@@ -404,6 +407,7 @@ def qexact(x,t,mq,ql,qr,g):
                 
                 q1[i] = h
                 q2[i] = hu   
+                q3[i] = u
             
                 
         #dry right state (1-rarefaction only)
@@ -432,8 +436,8 @@ def qexact(x,t,mq,ql,qr,g):
                     
                 q1[i] = h
                 q2[i] = hu
-        
-        
+                q3[i] = u
+                
         else:
         
             #for shock soln
@@ -505,11 +509,14 @@ def qexact(x,t,mq,ql,qr,g):
                             hu = h*u
                 q1[i] = h
                 q2[i] = hu
+                q3[i] = u
         
     if mq==0:
         return q1 #hieght field
     elif mq==1:
         return q2 #momentum field
+    elif mq==3:
+        return q3 #velocity field
 #end qexact solver
 
 #-------------------------------------------------------------------
