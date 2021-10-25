@@ -17,7 +17,6 @@ qm  - Is an array containing height(hm) and momentum(hum) intermidiate states ([
 qms - Is an array containing height(hms) and momentum(hums) intermidiate shock states ([hms,hums])
 qmr - Is an array containing height(hmr) and momentum(humr) intermidiate rarefaction states ([hmr,humr])
 g   - gravity
- 
 '''
 
 from numpy import *
@@ -26,7 +25,7 @@ import approximate_solver #Contains approximate solvers
 from matplotlib.pylab import *
 from sys import exit
 import warnings
-warnings.filterwarnings('ignore')
+warnings.filterwarnings('ignore') 
 
 # Initial conditions
 #The solver should supply an initialization routine to initialize  q(x,t)  at time  t=0 .
