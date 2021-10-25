@@ -48,7 +48,7 @@
 
 %%%%%%%%%%%%%%%%%%%%% students data %%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\student}{Brian KYANJO }
-\newcommand{\course}{Dr. Jodi Mead, Michal Kopera, and Dylan Mikesell}
+\newcommand{\course}{Prof. Jodi Mead, Michal Kopera, and Dylan Mikesell}
 \newcommand{\assignment}{ Prof. Donna Calhoun}
 
 
@@ -84,7 +84,7 @@
 	
 	\section{Introduction}
 	
-				A tsunami is a series of energetic water waves generated due to the displacement of large volumes of water by different mechanisms such as earthquakes, volcanic eruptions, underwater landslides, and local landslides along the coast. According to the recent tragic events in December 2004 in Indonesia and  South Africa, tsunamis may be extremely catastrophic: they can lead to the loss of human lives and destroy buildings and roads. Typically, they cause devastative damages to infrastructures. Deep knowledge of tsunamis is required to provide early warning messages to the regions that may be affected, carry out necessary evacuations, and also anticipate the highest run-ups and run-downs    \cite{sanchez2016uncertainty,dutykh2007water,dias2007dynamics}.
+				A tsunami is a series of energetic water waves generated due to the displacement of large volumes of water by different mechanisms such as earthquakes, volcanic eruptions, underwater landslides, and local landslides along the coast. According to the recent tragic events in December 2004 in Indonesia and  South Africa, tsunamis may be extremely catastrophic: they can lead to the loss of human lives and destroy buildings and roads. Typically, they cause devastative damages to infrastructures. Deep knowledge of tsunamis is required to provide early warning messages to the regions that may be affected, carry out necessary evacuations, and also anticipate the highest run-ups and run-downs    (\cite{sanchez2016uncertainty,dutykh2007water,dias2007dynamics}).
 				
 				Most numerical tsunami models rely on solving Riemann problems which can robustly track wetting and drying interfaces to model run-up on beaches and inundation into harbors and communities along the affected coastlines.  Various approaches have been taken to handle these wetting and drying states. For instance, \citet{ge:2011,li-ta-wa-ca-ba-ch-li:2021,fivser2016mass} used Godunov-type finite volume methods to model inundation by allowing cells to shift from dry to wet near refinement boundaries dynamically. Furthermore, \citet{barzgaran2019numerical}  used an augumented Riemann solver coupled with a second-order finite volume method to simulate bedload sediment transport. Results proved that this efficient method is capable of modeling wet/dry interfaces and investigated flow regimes. In addition, the technique employed wave decomposition and the flux-wave formula, which made bed variations vary as four waves propagated from each cell interface. Many more other techniques to manage dry/wet interfaces have been proposed by various researchers in unique ways, for instance, see \citet{po:2015, po:2018, pe-bo-ma:2011, toro2001shock, chaabelasri1849simple,nikolos2009unstructured,huang2013well, bi2014finite,song2011unstructured,buttinger2019fast}.
 		
@@ -93,9 +93,9 @@
 	\label{sec2}
 	Shallow water models have been frequently used to handle the propagation of tsunami waves in the ocean see for instance \citet{dutykh2007water,le-ge-be:2011,dias2007dynamics}. The SWE assumption is applicable as the average ocean depth is very shallow compared to the tsunami's wavelength. In addition, the amplitude of tsunami is minimal offshore, typically less than 1m, to justify the shallowness assumption. 
 	
-		The shallow water wave equations (SWE) are a system of hyperbolic partial differential equations (PDEs) governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible and horizontal velocity roughly constant throughout any cross-section of the channel \cite{ge:2008}.  
+		The shallow water wave equations (SWE) are a system of hyperbolic partial differential equations (PDEs) governing the flow below a pressure surface in a fluid. They arise from the Navier-Stokes equations.  In one dimension, the SWE  can be used to model a fluid in a channel of unit width, taking the vertical velocity negligible and horizontal velocity roughly constant throughout any cross-section of the channel (\cite{ge:2008}).  
 		
-		Consider small-amplitude waves in a one-dimensional fluid channel that is shallow relative to its wavelength. The conservation \donna{mass and} of momentum equation is written in terms of \donna{height h(t), momentrum hu and } pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, which breaks down into system \eqref{p2}
+		Consider small-amplitude waves in a one-dimensional fluid channel that is shallow relative to its wavelength. The conservation mass and of momentum equation is written in terms of height $h(t)$, momentrum $hu$ and  pressure, $p(x,t) = \frac{1}{2}\rho gh^{2}$, which breaks down into system \eqref{p2}
 	\begin{equation}
 		\begin{aligned}
 			h_{t} + (hu)_x &= 0 \\
@@ -103,7 +103,7 @@
 		\end{aligned}
 		\label{p2}
 	\end{equation}	
-	where $hu$ measures the flow rate of water past a point,  $\rho$ $(kg/m^{3})$ is the constant density of the in-compressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity  \cite{leveque2002finite,toro2001shock}.  We will set $\rho = 1$ here.
+	where $hu$ measures the flow rate of water past a point,  $\rho$ $(kg/m^{3})$ is the constant density of the in-compressible fluid, and $u(x,t)$ ($m/s$) is the horizontal velocity  (\cite{leveque2002finite,toro2001shock}).  We will set $\rho = 1$ here.
 	
 	A simple set of initial conditions is a single discontinuity at the middle of the channel.  In this case, we set $h$ and $hu$ equal to constants on either side of the medium.  This problem is a classic Riemann Problem, and the SWE has an exact solution.  We assume the discontinuity is at $x = 0$; its associated Riemann problem is the initial value problem initial conditions of:
 		\begin{eqnarray}
@@ -116,7 +116,7 @@
 	\end{eqnarray}
 where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a discontinuity. 
 
-	The variation of $h$ and $hu$ on either side of the discontinuity leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions) \cite{leveque2002finite}.  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$) and right($q_{r}$) states are given by: 
+	The variation of $h$ and $hu$ on either side of the discontinuity leads the waves in the Riemann problem to move at different speeds creating discontinuities (shocks) or changing regions (rarefactions) (\cite{leveque2002finite}).  At $x = 0$ and $t = 0$,   the discontinuity is located between the left and right state, so the solution at the left ($q_{l}$) and right($q_{r}$) states are given by: 
 	\begin{equation}
 		q_{l} = \begin{bmatrix}
 			h_{l} \\( hu)_{l}
@@ -129,11 +129,11 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.8\linewidth]{images/geo11}
+		\includegraphics[width=.77\linewidth]{images/geo11}
 		\caption{ x-t plane showing the connection of states, {\em left-going rarefaction}, and the {\em right-going shock} are depicted by: (a). Structure of the characteristic curves for the  Riemann solution profile and (b). Actual representation of the states in the Riemann solution.}
 		\label{fig:x-tplane}
 	\end{figure}
-	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers \cite{roe1981approximate}.
+	The intermediate state is obtained by solving the Riemann problem using the exact or approximate method. Approximate methods are widely used due to their cheap computational cost compared to the exact solvers (\cite{roe1981approximate}).
 	
 	
 	Figure \ref{hor2} represents four plots showing initial conditions \ref{fig:t0}, and the temporal evolution of a left going  rarefaction and a right going shock. This solutions are produced by the exact Riemann solver after applying $h_l = 2$, $h_r = 1$, and $u_l = u_r = 0$ as initial conditions in  the Riemann problem.
@@ -172,7 +172,7 @@ where $q_{l}$ and $q_{r}$ are two piece-wise constant states separated by a disc
 The states in \ref{fig:x-tplane} are separated by either {\em shocks} or {\em rarefactions}. General left, and right states will be connected by a combination of the two (either two shocks, two rarefactions, or one of each).  We describe how to determine if a shock connects two states.  We refer the reader to \citet{leveque2002finite} for other cases. 
 
 We can achieve an exact solution to the Riemann Problem for the SWE as follows. 
-The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the Rankine Hugoniot conditions will be satisfied \donna{reference Leveque or Toro here;  not mandli} \ignore{\cite{ma-ah-be-ca-ge-ha-ke-le-le:2016}.}
+The shock speed, $s(t)$,  from the shock wave as the solution emerges is determined from the Rankine-Hugoniot jump condition given by equation \eqref{e1}  which must be satisfied across any shock wave.  If $q_l$ and $q_r$ are connected by a shock, the Rankine Hugoniot conditions will be satisfied (\cite{leveque2002finite,toro2001shock}).
 	\begin{equation}
 		\begin{aligned}
 			s_1(q_{m} - q_{l}) & = f(q_{m}) - f(q_{l}) \\
@@ -218,7 +218,7 @@ By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates
 			\caption{}
 			\label{fig:allshockv1}
 		\end{subfigure}
-		\caption{Temporal evolution of the height and velocity field solution for the all-shock case with {\em left-going shock} and a {\em right-going shock}  are depicted by (a), (b), (c), (d), (e), and (f) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$. \donna{These figures can be slightly larger; also looks like titles got reversed.}}
+		\caption{Temporal evolution of the height and velocity field solution for the all-shock case with {\em left-going shock} and a {\em right-going shock}  are depicted by (a), (b), (c), (d), (e), and (f) at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$. }
 		\label{fig:allshock}
 	\end{figure}
 
@@ -258,8 +258,6 @@ The Lax entropy condition requiring that $h_m > h_l, h_r$ may not be satisfied i
 
 	\subsection{Finite volume discretization}
 Finite volume discretizations are widely used in tsunami modeling since they are: well suited for inundation regimes, robust in the presence of drying regions, well-balanced, and can capture the inundating shoreline and run-up features, see for instance \citet{ge:2008,ge:2011,george2006finite,be-ge-le-ma:2011,bi2014finite,leveque2002finite,ba-le-mi-ro:2003}. The finite volume schemes rely on exact or approximate solutions to the Riemann problem described above.  
-
-\donna{Probably no need to cite  more references in this general section.}
 
 Consider a one dimensional (1D) conservation law  (equation \eqref{fvm0}),  where $q$ is the measure of conserved quantity density and $f(q)$ is a flux function
 
@@ -356,7 +354,7 @@ where $\tilde{F}_{i-\frac{1}{2}}^{n} $ are second order correction terms determi
 	\tilde{F}_{i-\frac{1}{2}}^{n} = \frac{1}{2} \sum_{p=1}^{m}  |s_{i- \frac{1}{2}}^{p}| \left( 1 - \frac{\Delta t}{\Delta x} |s_{i- \frac{1}{2}}^{p}|\right) \tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} 
 	\label{wpa13}
 \end{equation}
-Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$. \ignore{\cite{le:1997}}.
+Here $\tilde{\mathcal{W}}_{i-\frac{1}{2}}^{p} $ depicts a limited version of the wave $\mathcal{W}_{i-\frac{1}{2}}^{p} $, which is obtained after a comparison between $\mathcal{W}_{i-\frac{1}{2}}^{p} $ and $\mathcal{W}_{i-\frac{3}{2}}^{p} $ when $s^{p} >0$.
 
 	\subsubsection{MUSCL approach}
 
@@ -396,16 +394,13 @@ At the interface between a wet and dry state, negative height values in equation
 
 So even though non-negative heights are supplied as inputs, negative height values can arise.  Negative height values will cause the Riemann solver to fail, and so special solvers must be used to avoid this situation.
 
-\ignore{due to by numerical instabilities in the second-order correction term, making the update term on the right-hand side in equation  \eqref{wpa22} being greater than the left-hand side term.  This makes the left-hand side ($  Q_{i}^{n+1}  $) in equation \eqref{wpa2} be negative, causing negative height values on the following input values to the exact solver which breaks the solver, hence failing to yield an intermediate state at those respective interfaces. However, we can always set $h$ to be arbitrary whenever $h<0$, but this may affect the accuracy of the results.}
-
-
 
 	\subsection{Riemann Problem for Wet/Dry States}
 	
 	In the previous section we discussed how the exact solver solved the Riemann problem for cases in which the water height field is strictly positive everywhere. Dry states are regions with zero water depth. In such states SWEs are not applicable, so we consider wet states adjacent to dry regions as shown in figure~\ref{fig:dry-bed}. This enables solving SWEs in wet states, right up the boundary between wet and dry states \cite{toro2001shock,ge:2008}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.4\linewidth]{images/dd1}
+		\includegraphics[width=0.5\linewidth]{images/dd1}
 		\caption{ The Riemann problem with a dry bed (has no water) in one of the data state. }
 		\label{fig:dry-bed}
 	\end{figure}
@@ -439,7 +434,7 @@ So even though non-negative heights are supplied as inputs, negative height valu
 	\label{right}
 \end{figure}
 
-\donna{Below, we describe different methods that appear in the literature for handling the wetting and drying problem.}
+Below, we describe different methods that appear in the literature for handling the wetting and drying problem.
 
 	\subsection{Four elevation modification  method (Liu et al.)}
 		\citet{li-ta-wa-ca-ba-ch-li:2021} also used the Godunov-type finite volume methods to process dry and wet/dry front cells to predict flood elevation. This was done by taking four elevation modifications: (1).  Identifying four types of intercell through estimating their properties based on the depth of the flow and surface elevation difference; (2). Updating interface elevation depends on their properties to achieve gravity balance and prevent non-physical flux predictions;  (3).  Calculating dry cell's center elevations by taking the average of the two surrounding intercell elevations; (4). Modifying the first term of the slope limiter based on the elevation difference between intercell elevations dividing two times the mesh size. Furthermore, the first term of the slope limiter function in the dry cell is used to finalize matrix simulation of the entire area and solve the wet/dry problem; this enables SWE application to areas with complex geometry, preventing more elevation modifications.
@@ -465,70 +460,13 @@ So even though non-negative heights are supplied as inputs, negative height valu
 	\subsection{Adaptive approach (Popinet)}
 \citet{popinet2011quadtree} modeled the 2004 Indian ocean tsunami using adaptive modeling by generalizing the \citet{audusse2004fast} well-balanced and positivity preserving scheme for solving the Saint-Venant equations with wetting and drying to an adaptive quadtree spatial discretization.  Furthermore, an efficient method that dynamically reconstructed multiscale bathymetry depending on vast datasets was discussed.  While Popinet does not provide much detail on how the wetting/drying states are handled, the results in the paper suggest that the method is robust.  Furthermore, the wet/dry state solver is combined with a Boussinesq solver to preserve the robustness of Saint-Venant solver. The adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.
 
-\ignore{
-On successfully combining the methods, the exponent power-law describing the computational cost as the function of spatial resolution was significantly reduced by adaptivity. The new exponent is directly associated with the fractal size of the geometric systems that symbolize the propagation of the tsunami. However, Serre-Green-Naghdi equations, also known as the fully-nonlinear Boussinesq wave equations presented in \citet{popinet2015quadtree} proved to preserve the robustness of Saint-Venant solver and generalized automatically to adaptive quadtree meshes.  In addition, the adaptive mesh refinement provided higher orders of magnitude gains in memory and speed when the approach was subjected to the dispersive wave propagations that occurred during the Tohoku tsunami.}
-
 
 	\subsection{Augmented Riemann solver (George)}
 
 	\subsubsection{Handling Wetting and drying in the wave propagation algorithm}
-	% ------------------------------- Ignore ZZZ ----------------------------------
-	\ignore{
-	The combination of equations in system \eqref{p2}, forms a system of one-dimensional SWEs given by equation \eqref{p3}
 	
-	\begin{eqnarray}
-		\begin{bmatrix} h \\ hu \end{bmatrix}_t + \begin{bmatrix} uh \\ hu^{2} + \frac{1}{2} gh^{2} \end{bmatrix}_x  = 0 
-		\label{p3}
-	\end{eqnarray}
-	Equation \eqref{p3} can be written as a quasi-linear system as shown in equation \eqref{p4}:
-	
-	\begin{equation}
-		\begin{bmatrix} h \\ hu \end{bmatrix}_t + 
-		\begin{bmatrix} 0 &  1 \\ -u^{2} + gh & 2u \end{bmatrix} 
-		\begin{bmatrix} h \\ hu \end{bmatrix}_x =  
-		\begin{bmatrix} 0 \\ 0 \end{bmatrix}
-		\label{p4}
-	\end{equation}
-	where the flux Jacobian matrix $f'(q)$ is given by 
-	\begin{equation}
-		f'(q) = \begin{bmatrix} 0 &  1 \\ -u^{2} + gh & 2u \end{bmatrix} 
-		\label{ep}
-	\end{equation}
-	The non linear problem (equation \eqref{fvm0}), can be replaced by a linearized problem defined locally at each cell interface \cite{le-ge-be:2011},
-	\begin{equation}
-		\hat{q}_t + \hat{A}_{i-\frac{1}{2}}  \hat{q}_x  = 0
-		\label{n2}
-	\end{equation}
-	where $2 \times 2$ matrix $\hat{A}_{i-\frac{1}{2}} $ (equation \eqref{n3}) is selected to be an approximation of $f^{\prime}(q)$ that is valid in the neighbourhood of the intial data $Q_{i-1}$ and $Q_{i}$.
-	\begin{equation}
-		\hat{A}_{i-\frac{1}{2}} =  \begin{bmatrix} 0 &  1 \\ -\hat{u}^{2} + g\bar{h} & 2\hat{u} \end{bmatrix} 
-		\label{n3}
-	\end{equation}
-	where $\bar{h} = \frac{1}{2}(h_{i-1} + h_{i})$ is the average between end points $h_{i-1}$ and $h_{i}$, $g$ is the acceleration due to gravity, and $\hat{u} = (\sqrt{h_{i-1} }u_{i-1} + \sqrt{h_i}u_i)/(\sqrt{h_{i-1}} + \sqrt{h_i})$ is the Roe average. Since $\hat{A}_{i-\frac{1}{2}} $ is a real diagonalizable Jacobian matrix evaluated at $\hat{q} = (\bar{h},\bar{h}\hat{u})$, then its eigenvalues ($\hat{\lambda}$) and eigenvectors ($\hat{r}$) are given by equations  \eqref{eg} and \eqref{vec} respectively \cite{leveque2001class}.
-	\begin{equation}
-		\hat{\lambda}^1 = \hat{u} - \hat{c}, \qquad 	\hat{\lambda}^2 = \hat{u} + \hat{c}
-		\label{eg}
-	\end{equation}
-	
-	\begin{equation}
-		\hat{r}^1 =  \begin{bmatrix} 1 \\ 	\hat{\lambda}^1 \end{bmatrix}, \qquad 	\hat{r}^2 =  
-		\begin{bmatrix} 1 \\ 	\hat{\lambda}^2 \end{bmatrix}
-		\label{vec}
-	\end{equation}
-	where $\hat{c} = \sqrt{gh}$, the approximate Riemann solver is used to decompose the vector  $ \delta \equiv Q_{i} - Q_{i-1}$ into two waves: $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^1$ and $\alpha_{i-\frac{1}{2}}^{1} \hat{r}^2$ as 
-	\begin{equation}
-		Q_{i} - Q_{i-1} = \alpha_{i-\frac{1}{2}}^{1} \hat{r}^1 + \alpha_{i-\frac{1}{2}}^{1} \hat{r}^2 \equiv \mathcal{W}_{i-\frac{1}{2}}^{1} + \mathcal{W}_{i-\frac{1}{2}}^{2}
-	\end{equation}
-	where the coefficients $\alpha_{i-\frac{1}{2}}^{1}$ are given by:
-	\begin{eqnarray}
-		\alpha_{i-\frac{1}{2}}^{1} &=& \frac{(\hat{u} + \hat{c})\delta^{1} - \delta^2}{2\hat{c}}\\
-		\alpha_{i-\frac{1}{2}}^{2} &=& \frac{-(\hat{u} - \hat{c})\delta^{1} + \delta^2}{2\hat{c}}
-	\end{eqnarray}
-	}
-	% ------------------------------- Ignore ZZZ ----------------------------------
 
-	In \cite{ge:2008,ge:2011}, a method for handling wetting and drying in the wave propagation algorithm is described.  In this method, it is suggested to replace 
-	\eqref{wpa19}
+	In \cite{ge:2008,ge:2011}, a method for handling wetting and drying in the wave propagation algorithm is described.  In this method, it is suggested to replace  equation	\eqref{wpa19} by  \eqref{p5}
 
 
 	\begin{equation}
@@ -539,7 +477,7 @@ On successfully combining the methods, the exponent power-law describing the com
 	\end{equation}
 	where the momentum flux $\varphi(q) = (hu^{2} + \frac{1}{2} gh^{2})$, $Q_{i} = (H_{i},HU_{i})^{T}$ represents the numerical solution of $q = (h,hu)^{T}$ in $C_{i}$, and $w_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{3}$ ,$\forall ~ p \in [1,3] $ with $p$ a set of chosen independent vectors. \\
 	
-	The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three components  in equation \eqref{p5} \cite{ba-le-mi-ro:2003}. Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
+	The decomposition of the solutions $Q_{i} - Q_{i-1} $  and  $f(Q_{i}) - f(Q_{i-1})$ $ \in  \mathbb{R}^{2}$ are represented by the first two and last two components of the three components of the decomposition \eqref{p5} respectively.  Conservation is maintained by modifying fluctuations using the last two of the three components  in equation \eqref{p5} . Then  consider $z_{i-\frac{1}{2}}^{p} \in \mathbb{R}^{2}$ for each $p \in [1,3]$ to be flux waves defined by:
 	
 	% \donna{why do we need the $\mathbf{I}_{2\times2}$ terms below?}
 
@@ -553,66 +491,33 @@ On successfully combining the methods, the exponent power-law describing the com
 		\mathcal{A^{-}}\Delta Q_{i+\frac{1}{2}}^{n} = \sum_{\{ p:s_{i+\frac{1}{2}}^{p}<0\}} z_{i+\frac{1}{2}}^{p}
 		\label{p8}
 	\end{eqnarray}
-
-	\donna{Add a few conclusions that suggest this approach works. }	
-
-    %% ----------------------------- Ignore YYY ------------------------------------------
-	\ignore{
-	Equations \ref{p7} and \ref{p8} are determined by decomposing flux in a similar way as in the f-wave approach in \citet{ba-le-mi-ro:2003} and \citet{george2006finite}, however in  \citet{ge:2008}  its decomposed into three waves ($w^{p}_{i-\frac{1}{2}} ~\in ~\mathbb{R}^{3}$)  with three associated wave speeds ($s^{p}_{i-\frac{1}{2}} ~\text{for}~ p =1,2,3$)  rather than two  allowing a more accurate approximation to the Riemann problem with a large rarefaction and a natural entropy fix for transonic rarefactions. The first and third eigen pairs $\{w^{1,3}_{i-\frac{1}{2}},s^{1,3}_{i-\frac{1}{2}}\}  $    are related to the eigen pairs of equation \eqref{ep}, even though in  \citet{be-ge-le-ma:2011}, its the first and second pairs that relate to the original fields of SWE. Therefore from the three eigen pairs, we choose, 
-	\begin{equation}
-		\begin{aligned}
-			\{w^{1}_{i-\frac{1}{2}},s^{1}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{-} ,(\check{s}_{i-\frac{1}{2}}^{-} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{-} \} \\
-			\{w^{3}_{i-\frac{1}{2}},s^{3}_{i-\frac{1}{2}}\} &= \{(1,\check{s}_{i-\frac{1}{2}}^{+} ,(\check{s}_{i-\frac{1}{2}}^{+} )^{2})^{T},\check{s}_{i-\frac{1}{2}}^{+} \} 
-		\end{aligned}
-	\end{equation}
-	where $\check{s}_{i-\frac{1}{2}}^{\pm}$ are the Einfeldt speeds \cite{barzgaran2019numerical,ge:2008,be-ge-le-ma:2011} defined by:
-	\begin{equation}
-		\begin{aligned}
-			\check{s}_{i-\frac{1}{2}}^{-} &= \text{min}(\lambda^{-}(Q^n_{i-1}),\hat{\lambda}_{i-\frac{1}{2}}^{-}) \\
-			\check{s}_{i-\frac{1}{2}}^{+} &= \text{max}(\lambda^{+}(Q^n_{i}),\hat{\lambda}_{i-\frac{1}{2}}^{+})
-		\end{aligned}
-		\label{EE}
-	\end{equation}
-	where $\lambda^{\pm} = u\pm \sqrt{gh}$ are eigen values of equation \eqref{ep} and $\check{\lambda}_{i-\frac{1}{2}}^{\pm}$ are eigen values of the Roe averaged Jacobian matrix $\hat{A}_{i-\frac{1}{2}}$ in equation \eqref{n3}. The second pair $	\{w^{2}_{i-\frac{1}{2}},s^{2}_{i-\frac{1}{2}}\}$  that result into the second wave named corrector wave and speed is arbitrary chosen in various ways. The corrector wave corrects inaccurate, non-conservative and entropy violating approximate Riemann solutions with only two waves \cite{be-ge-le-ma:2011}.
-	
-	
-	There is only one rarefaction in the exact Riemann solution, that connects wet to dry state. The developing wet/dry interface is in this case single edge of the rarefaction, making it possible to determine the interface propagating speed using the corresponding characteristics field of the Riemann invariants \cite{le-ge-be:2011}. In  \citet{george2006finite,ge:2008}, Einfeldt speeds (\eqref{EE})  define two propagating discontinuities, the  middle state between them is determined to maintain conservation and its depth at interface $x_{i-\frac{1}{2}}$ is given by:
-	\begin{equation}
-		\check{H}^{*}_{i-\frac{1}{2}} = \frac{HU_{i-1} -HU_{i} + \check{s}_{i-\frac{1}{2}}^{+}H_{i} -\check{s}_{i-\frac{1}{2}}^{-} H_{i-1}  }{\check{s}_{i-\frac{1}{2}}^{+} - \check{s}_{i-\frac{1}{2}}^{-}  }
-	\end{equation}
-	
-	The wet/dry interface propagation  speed  is given by equation \eqref{wd0}, since the right state in figure \ref{fig:dry-bed}, is considered as the initial dry state, which also makes the rarefaction to be in the first characteristic field as shown in figure \ref{fig:dry-wet}.(a)  \cite{ge:2008}.
-	
-	\begin{equation}
-		s_{i-\frac{1}{2}}^{3} = \check{s}_{i-\frac{1}{2}}^{+} = \lambda_{i-\frac{1}{2}}^{-*}(H^{*}_{i-\frac{1}{2}}=0)= U_{i-1} - 2\sqrt{gH_{i-1}}
-		\label{wd0}
-	\end{equation}
-	If the left state in figure \ref{fig:dry-bed}, is considered as the initial dry state, then the  wet/dry interface propagation  speed  is given by equation \eqref{wd1}, and the  rarefaction is in the second characteristic field  as shown in figure \ref{fig:dry-wet}.(b)  \cite{ge:2008}.
-	
-	\begin{equation}
-		s_{i-\frac{1}{2}}^{1} = \check{s}_{i-\frac{1}{2}}^{-} = \lambda_{i-\frac{1}{2}}^{+*}(H^{*}_{i-\frac{1}{2}}=0)= U_{i} - 2\sqrt{gH_{i}}
-		\label{wd1}
-	\end{equation}
-	Note that the middle state depth $H^{*}_{i-\frac{1}{2}}=0$ since it corresponds to the initial dry state
-	} 
-	%% ----------------------------- End Ignore YYY --------------------------------------
-
+The decomposition of the four variables: depth, momentum, momentum flux, and bathymetry into four propagating waves give the solver unique features, i.e.,  Riemann problems with a large rarefaction are accurately more approximated, a natural entropy fix for transonic rarefactions,  stationery oceans at a steady-state and discretized smooth, steady states over variable bathymetry are preserved, and shockwave solution is captured due to the solver's equivalency to the Roe solver.
+Furthermore, in the absence of the source term, the solver preserves depth negativity and is well balanced in the presence of a source term.  
 
 	\section{ Future research directions}
 
 	
-	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix (equation \eqref{n3}) change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
+	Several exciting research questions remain unanswered yet, for instance, in the case when eigenvalues of the Jacobian matrix  change sign. Results show that the available approaches, i.e.,  \citet{ba-le-mi-ro:2003} approach, can be applied to problems of that type and obtain high-resolution results; however, the proper treatment of such sonic points is critical. 
 	
 	Another interesting question is  how to solve the issue of depth negativity in the approximate solver for presence of wet and dry states, when the update term $  \frac{\Delta t}{\Delta x} \left[ \mathcal{F}(Q_{i} , Q_{i+1} ) - \mathcal{F}(Q_{i-1} , Q_{i} ) \right]$ in equation \eqref{cellupdat} becomes larger than $Q_{i}^{n}$  after a few time step. This makes the input height values in the exact solver negative, which breaks the solver, hence we fail to obtain the intermediate state. 
 
-	\donna{This still needs to be expanded more.  Maybe I don't have the latest version? }
-
 	\begin{itemize}
-	\item Software developments : adaptivity (forestclaw, Basilisk (popinet)), parallelization, GPUs. \cite{qi-le-mo:2018,po:2015,be-ge-le-ma:2011}   
-	\item Coupling to other software (an atmospheric code, for example).  Detect tsunami's by looking for signals in the atmosphere.
-	\item Modeling questions : dispersive corrections (Serre-Green-Naghdi solver  requiring a linear solver.  Multi-layer SWE also has "dry state" ) \cite{la-bo:2009,po:2020,po:2015}.
+	%\item Software developments : adaptivity (forestclaw, Basilisk (popinet)), parallelization, GPUs. (\cite{qi-le-mo:2018,po:2015,be-ge-le-ma:2011}) 
+	%\item Coupling to other software (an atmospheric code, for example).  Detect tsunami's by looking for signals in the atmosphere.
+	\item Modeling questions : dispersive corrections (Serre-Green-Naghdi solver  requiring a linear solver.  Multi-layer SWE also has "dry state" ) (\cite{la-bo:2009,po:2020,po:2015}).
+%	\item Implementing SWE on a cubed sphere grid with AMR (\cite{gaudreault2021high})
 	\end{itemize}
+
+
+Tsunamis can also be detected in real-time through observation of signals in the atmosphere. The occurrence of earthquakes triggers tiny atmospheric waves that propagate through the earth's surface to the ionosphere. These tiny waves cause detectable changes to the density of electrons in the ionosphere, which can be measured and recorded by the global navigation satellite systems (GNSS). 
+Once a tsunami forms and moves across the ocean, it generates waves with crests and troughs, which compress and expand the air above them. This creates gravity waves (motions in the atmosphere) which are amplified as they travel upward into the atmosphere.  GNSS satellites detect these waves once they reach the ionosphere.  Detecting both the gravity waves and electron density variations in the ionosphere by the GNSS can help us detect both the location of the earthquake and the movements of the tsunami in real-time. 
+Also, existing software for predicting tsunamis can be incorporated with other atmospheric models to improve forecasts. For instance, Variometric Approach for Real-time Ionosphere Observation (VARION)  is coupled with tsunami detection systems based on data from various sources: seismometers, ocean bottom pressure sensors, buoys, and GNSS receivers (\cite{savastano2017real}). Once an earth quate is detected in a region, VARION starts to process real-time measurements of the distribution of electrons from several ground stations near the earthquake's epicenter while searching for changes correlating to the expected formation of a tsunami.
+
+
 	
+	Apart from using single programming SWE models described above in this paper, tsunami simulations can also be handled by parallel programming models, which also use finite volume solvers.  The computational domain may be obtained using patches of cartesian grids connected via ghost layers. Then the FVM can be restricted to piecewise constant approximation in each grid cell. The fluxes between cells may be computed using the Lax-Friedrichs,f-wave, Argumented Riemann solver, or any hybrid solver. We can then use GPUS (executing CUDA kernels), MPI (data exchange), OpenMP(loop parallelism), etc., to study parallelization of this model through testing and comparing of weak and strong scaling plots (\cite{qi-le-mo:2018}).  We also plan to test SWE on software with adaptivity: forestclaw (\cite{be-ge-le-ma:2011}) and  Basilisk (\cite{po:2015})
+
+	We are also interested in implementing SWE on a cubed sphere grid with adaptive mesh refinement (AMR).  According to \citet{mccorquodale2015adaptive}, this can be modeled with multiblock grids by combining a Runge-Kutte time discretization with a fourth-order accurate spatial discretization that includes adaptive mesh refinement and refinement in time.  We think this can also be obtained by subjecting the SWE to locally refined uniform grid finite volume discretization on the sphere's surface. We also anticipate using immersed boundary methods (\cite{lundquist2010immersed}, terrain-following coordinates, and coupling climate cloud microphysics to apply AMR to very high-resolution simulations.
 	
 	
 	
