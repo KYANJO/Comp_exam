@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[9pt,a4paper]{article}
 
 %%%%%%%%%%%%%%%%%%%%%%%%% packages %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -21,7 +21,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{verbatim}
-\usepackage[left=2cm,right=2cm,top=2.3cm,bottom=2.5cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=1.7cm]{geometry}
 \usepackage[hidelinks]{hyperref}
 \hypersetup{
 	colorlinks=false,
@@ -101,11 +101,11 @@
 	\begin{equation}
 		\begin{aligned}
 			h_{t} + (hu)_x &= 0, \\
-			(hu)_t + \left(hu^{2} + \frac{1}{2}\rho gh^{2} \right)_x & = 0,
+			(hu)_t + \left(hu^{2} + \frac{1}{2} gh^{2} \right)_x & = 0,
 		\end{aligned}
 		\label{p2}
 	\end{equation}	
-	where $g$ is acceleration due to gravity, $hu$ measures the flow rate of water past a point and $u(x,t)$ ($m/s$) is the horizontal velocity  \citep{leveque2002finite,toro2001shock}.  We will set $\rho = 1$ here.
+	where $g$ $(m/s^{2})$ is acceleration due to gravity, $hu$ measures the flow rate of water past a point and $u(x,t)$ ($m/s$) is the horizontal velocity  \citep{leveque2002finite,toro2001shock}.  
 	
 	A simple set of initial conditions is a single discontinuity at the middle of the channel.  In this case, we set $h$ and $hu$ equal to constants on either side of the interface.  This problem is a classic Riemann problem, and the SWE has an exact solution.  We assume the discontinuity is at $x = 0$; its associated Riemann problem is the initial value problem with initial conditions given by equation \eqref{rp1}.
 	\begin{eqnarray}
@@ -184,7 +184,7 @@
 		\end{aligned}
 		\label{e1}
 	\end{equation}
-	where $f$ is the numerical flux function and $q_m$ is the intermediate state. 
+	where $s_1$ is the speed of the left going shock,  $s_2$ is the speed of the right going shock, and $f$ is the numerical flux function and $q_m$ is the intermediate state. 
 	
 	By applying condition  \eqref{e1} to shallow water equations \eqref{p2}  creates a system of four equations that must be satisfied simultaneously. The temporal evolution of the height and velocity fields solution at time steps: $t=0~s$ (initial conditions), $t = 0.3~s$, and $t = 1.0~s$ are  depicted in \Fig{allshock}. The Figures: \ref{fig:allshock0}, \ref{fig:allshock3}, \ref{fig:allshock1} in the first row exhibit the evolution of the height field solution profile from the initial condition to the exact Riemann solution at time $t = 1.0~s$. Similarly Figures: \ref{fig:allshockv0}, \ref{fig:allshockv3}, \ref{fig:allshockv1} in the second row show the evolution of the velocity field solution profile from the initial condition to the exact Riemann solution at time $t = 1.0~s$. This solutions are produced by the exact Riemann solver after applying $h_l = h_r = 1$, $u_l  =  0.5$, and $u_r = -0.5$ as initial conditions in  the Riemann problem.
 	
@@ -272,7 +272,8 @@
 		Q_{i}^{n} \approx \dfrac{1}{\Delta x} \int_{C_{i}}q(x,t^{n})dx,
 		\label{wpa0}
 	\end{equation}
-	where $\Delta t = (t^{n+1} - t^{n})$ and  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. A discontinuity in $q$ violates the PDE in the classical sense and only holds for the integral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuities where PDEs don't hold, all classical finite difference methods breakdown, resorting to FVM which are based on equation \eqref{fvm1}. 	
+	where $\Delta t = (t^{n+1} - t^{n})$ and  $\Delta x = (x_{i+\frac{1}{2}} - x_{i-\frac{1}{2}})$ is the cell length. A discontinuity in $q$ violates the PDE in the classical sense and only holds for the integral conservation law (fundamental equation \eqref{fvm1}). Therefore at grid points near discontinuities where PDEs don't hold, finite difference methods break down, so we have to solve the weak form of
+	the equations given by  \eqref{fvm1}. 	
 	\begin{equation}
 		\frac{d}{dt} \int_{C_{i}} q(x,t)dx = f(q(x_{i-\frac{1}{2}},t)) -  f(q(x_{i+\frac{1}{2}},t)).
 		\label{fvm1}
@@ -414,7 +415,7 @@
 	\begin{figure}[H]
 		\subfloat[]{
 			\begin{minipage}[c][1\width]{
-					0.34\textwidth}
+					0.32\textwidth}
 				\centering
 				%\caption{}
 				\includegraphics[width=\linewidth, height=5cm]{images/right0}
@@ -422,7 +423,7 @@
 		\end{minipage}}
 		\subfloat[]{
 			\begin{minipage}[c][1\width]{
-					0.34\textwidth}
+					0.32\textwidth}
 				\centering
 				\includegraphics[width=\linewidth, height=5cm]{images/right5}
 				\label{fig:right5}
@@ -430,7 +431,7 @@
 		\hfill
 		\subfloat[]{
 			\begin{minipage}[c][1\width]{
-					0.34\textwidth}
+					0.32\textwidth}
 				\centering
 				\includegraphics[width=\linewidth,height=5cm]{images/right15}
 				\label{fig:right2}
@@ -497,7 +498,7 @@
 		\label{p8}
 	\end{eqnarray}
 	The decomposition of the four variables: depth, momentum, momentum flux, and bathymetry into four propagating waves give the solver unique features, i.e.,  Riemann problems with a large rarefaction are accurately more approximated, a natural entropy fix for transonic rarefactions,  stationery oceans at a steady-state and discretized smooth, steady states over variable bathymetry are preserved, and shock wave solution is captured due to the solver's equivalency to the Roe solver.
-	Furthermore, in the absence of the source term, the solver preserves depth non-negativity and is well balanced in the presence of a source term.  
+	Furthermore, in the absence of the source term, the solver preserves non-negative height fields and is well balanced in the presence of a source term.  
 	
 	
 	\section{ Future research directions}
